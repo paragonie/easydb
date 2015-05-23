@@ -1,0 +1,38 @@
+{
+    "name":         "paragonie/easydb",
+    "description":  "Easy-to-use database abstraction",
+    "version":      "0.2.0",
+    "keywords": [
+            "database",
+            "PDO",
+            "sql",
+            "tool",
+            "utility",
+            "security",
+            "mysql",
+            "postgresql",
+            "pgsql",
+            "sql server", "sqlserver", "sql-server",
+            "sqlite"
+        ],
+    "license":      "MIT",
+    "type":         "library",
+    "authors": [
+            {
+                "name":     "Scott Arciszewski",
+                "email":    "scott@paragonie.com",
+                "homepage": "https://paragonie.com",
+                "role":     "Developer"
+            }
+        ],
+    "support": {
+        "issues":   "https://github.com/paragonie/easydb/issues",
+        "email":    "info@paragonie.com",
+        "source":   "https://github.com/paragonie/easydb"
+    },
+    "autoload": {
+        "psr-4": {
+            "ParagonIE\\EasyDB": "src"
+        }
+    }
+}
