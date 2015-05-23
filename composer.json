@@ -32,7 +32,7 @@
     },
     "autoload": {
         "psr-4": {
-            "ParagonIE\\EasyDB": "src"
+            "ParagonIE\\EasyDB\\": "src"
         }
     }
 }
