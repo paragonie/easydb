@@ -289,4 +289,113 @@ class EasyDB
 
         return $this->safeQuery($queryString, $params);
     }
+    
+    /**
+     ***************************************************************************
+     ***************************************************************************
+     ****             PUNTER METHODS - see PDO class definition             ****
+     ***************************************************************************
+     ***************************************************************************
+    **/
+    
+    /**
+     * Initiates a transaction
+     */
+    public function beginTransaction(...$args)
+    {
+        return $this->pdo->beginTransaction(...$args);
+    }
+    /**
+     * Commits a transaction
+     */
+    public function commit(...$args)
+    {
+        return $this->pdo->commit(...$args);
+    }
+    /**
+     * Fetch the SQLSTATE associated with the last operation on the database
+     * handle
+     */
+    public function errorCode(...$args)
+    {
+        return $this->pdo->errorCode(...$args);
+    }
+    /**
+     * Fetch extended error information associated with the last operation on 
+     * the database handle
+     */
+    public function errorInfo(...$args)
+    {
+        return $this->pdo->errorInfo(...$args);
+    }
+    /**
+     * Execute an SQL statement and return the number of affected rows
+     */
+    public function exec(...$args)
+    {
+        return $this->pdo->exec(...$args);
+    }
+    /**
+     * Retrieve a database connection attribute
+     */
+    public function getAttribute(...$args)
+    {
+        return $this->pdo->getAttribute(...$args);
+    }
+    /**
+     * Return an array of available PDO drivers
+     */
+    public function getAvailableDrivers(...$args)
+    {
+        return $this->pdo->getAvailableDrivers(...$args);
+    }
+    /**
+     * Checks if inside a transaction
+     */
+    public function inTransaction(...$args)
+    {
+        return $this->pdo->inTransaction(...$args);
+    }
+    /**
+     * Returns the ID of the last inserted row or sequence value
+     */
+    public function lastInsertId(...$args)
+    {
+        return $this->pdo->lastInsertId(...$args);
+    }
+    /**
+     * Prepares a statement for execution and returns a statement object
+     */
+    public function prepare(...$args)
+    {
+        return $this->pdo->prepare(...$args);
+    }
+    /**
+     * Executes an SQL statement, returning a result set as a PDOStatement object
+     */
+    public function query(...$args)
+    {
+        return $this->pdo->execute(...$args);
+    }
+    /**
+     * Quotes a string for use in a query
+     */
+    public function quote(...$args)
+    {
+        return $this->pdo->quote(...$args);
+    }
+    /**
+     * Rolls back a transaction
+     */
+    public function rollBack(...$args)
+    {
+        return $this->pdo->rollBack(...$args);
+    }
+    /**
+     * Set an attribute
+     */
+    public function setAttribute(...$args)
+    {
+        return $this->pdo->setAttribute(...$args);
+    }
 }
