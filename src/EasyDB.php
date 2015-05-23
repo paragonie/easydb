@@ -8,42 +8,10 @@ class EasyDB
     protected $dbengine = null;
     protected $pdo = null;
     
-    public function __construct($dsn, $username = null, $password = null, $options = [])
+    public function __construct(\PDO $pdo, $dbengine = '')
     {
-        $post_query = null;
-
-        // Let's grab the DB engine
-        if (strpos($dsn, ':') !== false) {
-            $this->dbengine = explode(':', $dsn)[0];
-        }
-
-        // If no charset is specified, default to UTF-8
-        switch ($this->dbengine) {
-            case 'mysql':
-                if (strpos($dsn, ';charset=') === false) {
-                    $dsn .= ';charset=utf8';
-                }
-                break;
-            case 'pgsql':
-                $post_query = 'SET NAMES UNICODE';
-                break;
-        }
-        
-        // Let's call the parent constructor now
-        try {
-            $this->pdo = new \PDO($dsn, $username, $password, $options);
-        } catch (\PDOException $e) {
-            throw new Issues\ConstructorFailed(
-                'Could not create a PDO connection. Please check your username and password.'
-            );
-        }
-
-        // Let's turn off emulated prepares
-        $this->pdo->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
-
-        if (!empty($post_query)) {
-            $this->pdo->query($post_query);
-        }
+        $this->pdo = $pdo;
+        $this->dbengine = $driver;
     }
     
     /**

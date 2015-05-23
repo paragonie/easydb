@@ -11,7 +11,9 @@ as part of our effort to encourage better [application security](https://paragon
 Let's refactor the following legacy insecure code snippet to prevent SQL injection.
 
 ```php
-$query = mysql_query("SELECT * FROM comments WHERE blogpostid = {$_GET['blogpostid']} ORDER BY created ASC");
+$query = mysql_query(
+    "SELECT * FROM comments WHERE blogpostid = {$_GET['blogpostid']} ORDER BY created ASC"
+);
 while($row = mysql_fetch_assoc($query)) {
     $template_engine->render('comment', $row);
 }
@@ -20,7 +22,11 @@ while($row = mysql_fetch_assoc($query)) {
 ### The PDO Way
 
 ```php
-$db = new \PDO('mysql;host=localhost;dbname=something', 'username', 'putastrongpasswordhere');
+$db = new \PDO(
+    'mysql;host=localhost;dbname=something',
+    'username',
+    'putastrongpasswordhere'
+);
 
 $statement = $db->prepare(
     'SELECT * FROM comments WHERE blogpostid = ? ORDER BY created ASC'
@@ -40,7 +46,11 @@ we end up repeating ourselves a lot.
 ### The EasyDB Solution
 
 ```php
-$db = new EasyDB('mysql;host=localhost;dbname=something', 'username', 'putastrongpasswordhere');
+$db = \ParagonIE\EasyDB\Factory::create(
+    'mysql;host=localhost;dbname=something',
+    'username',
+    'putastrongpasswordhere'
+);
 
 $rows = $db->run('SELECT * FROM comments WHERE blogpostid = ? ORDER BY created ASC', $_GET['blogpostid']);
 foreach ($rows as $row) {
@@ -111,4 +121,12 @@ $exists = $db->single(
 
 ```php
 $pdo = $db->getPdo();
+```
+
+### Can I create an EasyDB wrapper for an existing PDO instance?
+
+**Yes!** It's as simple as doing this:
+
+```php
+$easy = new \ParagonIE\EasyDB\EasyDB($pdo, 'mysql');
 ```
