@@ -5,8 +5,8 @@ use \Paragonie\EasyDB\Exception as Issues;
 
 class EasyDB
 {
-    public $dbengine = null;
-    public $pdo = null;
+    protected $dbengine = null;
+    protected $pdo = null;
     
     public function __construct($dsn, $username = null, $password = null, $options = [])
     {
@@ -30,7 +30,13 @@ class EasyDB
         }
         
         // Let's call the parent constructor now
-        $this->pdo = new \PDO($dsn, $username, $password, $options);
+        try {
+            $this->pdo = new \PDO($dsn, $username, $password, $options);
+        } catch (\PDOException $e) {
+            throw new Issues\ConstructorFailed(
+                'Could not create a PDO connection. Please check your username and password.'
+            );
+        }
 
         // Let's turn off emulated prepares
         $this->pdo->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
@@ -78,31 +84,6 @@ class EasyDB
     public function cell($statement, ...$params)
     {
         return $this->single($statement, $params);
-    }
-
-    /**
-     * Perform a Parameterized Query
-     *
-     * @param string $statement
-     * @param array $params
-     * @param const $fetch_style
-     * @return mixed -- array if SELECT
-     */
-    public function safeQuery($statement, $params = [], $fetch_style = \PDO::FETCH_ASSOC)
-    {
-        if (empty($params)) {
-            $stmt = $this->pdo->query($statement);
-            if ($stmt !== false) {
-                return $stmt->fetchAll($fetch_style);
-            }
-            return false;
-        }
-        $stmt = $this->pdo->prepare($statement);
-        $exec = $stmt->execute($params);
-        if ($exec === false) {
-            throw new Issues\QueryError($statement, $params);
-        }
-        return $stmt->fetchAll($fetch_style);
     }
     
     /**
@@ -160,6 +141,26 @@ class EasyDB
             }
         }
         return $str;
+    }
+    
+    /**
+     * Which database driver are we operating on?
+     * 
+     * @return string
+     */
+    public function getDriver()
+    {
+        return $this->driver;
+    }
+    
+    /**
+     * Return the PDO object directly
+     * 
+     * @return \PDO
+     */
+    public function getPdo()
+    {
+        return $this->pdo;
     }
 
     /**
@@ -241,6 +242,31 @@ class EasyDB
     public function run($statement, ...$params)
     {
         return $this->safeQuery($statement, $params);
+    }
+
+    /**
+     * Perform a Parameterized Query
+     *
+     * @param string $statement
+     * @param array $params
+     * @param const $fetch_style
+     * @return mixed -- array if SELECT
+     */
+    public function safeQuery($statement, $params = [], $fetch_style = \PDO::FETCH_ASSOC)
+    {
+        if (empty($params)) {
+            $stmt = $this->pdo->query($statement);
+            if ($stmt !== false) {
+                return $stmt->fetchAll($fetch_style);
+            }
+            return false;
+        }
+        $stmt = $this->pdo->prepare($statement);
+        $exec = $stmt->execute($params);
+        if ($exec === false) {
+            throw new Issues\QueryError($statement, $params);
+        }
+        return $stmt->fetchAll($fetch_style);
     }
 
     /**
