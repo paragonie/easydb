@@ -95,7 +95,7 @@ $db->delete('comments', [
 ### Fetch a single row from a table
 
 ```php
-$exists = $db->row(
+$userData = $db->row(
     "SELECT * FROM users WHERE userid = ?",
     $_GET['userid']
 );
