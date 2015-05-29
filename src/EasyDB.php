@@ -30,14 +30,7 @@ class EasyDB
         $stmt = $this->pdo->prepare($statement);
         $exec = $stmt->execute($params);
         if ($exec) {
-            do {
-                $curr = $stmt->fetchColumn($offset);
-                if ($curr === false) {
-                    break;
-                }
-                $columns[] = $curr;
-            } while($curr !== false);
-            return $curr;
+            return $stmt->fetchAll(\PDO::FETCH_ASSOC, \PDO::FETCH_COLUMN, $offset);
         }
         return false;
     }
