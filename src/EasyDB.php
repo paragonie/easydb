@@ -8,10 +8,16 @@ class EasyDB
     protected $dbengine = null;
     protected $pdo = null;
     
+    /**
+     * Dependency-Injectable constructor
+     * 
+     * @param \PDO $pdo
+     * @param string $dbengine
+     */
     public function __construct(\PDO $pdo, $dbengine = '')
     {
         $this->pdo = $pdo;
-        $this->dbengine = $driver;
+        $this->dbengine = $dbengine;
     }
     
     /**
@@ -23,10 +29,7 @@ class EasyDB
      * @return mixed
      */
     public function column($statement, $params = [], $offset = 0)
-    {
-        // This array accumulates our results
-        $columns = [];
-        
+    {   
         $stmt = $this->pdo->prepare($statement);
         $exec = $stmt->execute($params);
         if ($exec) {
@@ -165,6 +168,59 @@ class EasyDB
             $queryString,
             \array_values($map)
         );
+    }
+    
+    /**
+     * Insert many new rows to a table in a database. using the same prepared statement
+     *
+     * @param string $table - table name
+     * @param array $maps - array of associative array specifying values should be assigned to each field
+     */
+    public function insertMany($table, array $maps)
+    {
+        if (empty($maps)) {
+            return null;
+        }
+        $first = $maps[0];
+        foreach ($maps as $map) {
+            if (\count($map) < 1 || \count($map) !== \count($first)) {
+                throw new \InvalidArgumentException('Every map in the second argument should have the same number of columns');
+            }
+        }
+
+        // Begin query string
+        $queryString = "INSERT INTO ".$this->escapeIdentifier($table)." (";
+
+        // Let's make sure our keys are escaped.
+        $keys = \array_keys($first);
+        foreach ($keys as $i => $v) {
+            $keys[$i] = $this->escapeIdentifier($v);
+        }
+
+        // Now let's append a list of our columns.
+        $queryString .= \implode(', ', $keys);
+
+        // This is the middle piece.
+        $queryString .= ") VALUES (";
+
+        // Now let's concatenate the ? placeholders
+        $queryString .= \implode(
+            ', ', 
+            \array_fill(0, \count($first), '?')
+        );
+
+        // Necessary to close the open ( above
+        $queryString .= ");";
+
+        // Now let's run a query with the parameters
+        $stmt = $this->pdo->prepare($queryString);
+        foreach ($maps as $params) {
+            $exec = $stmt->execute($params);
+            if ($exec === false) {
+                throw new Issues\QueryError($queryString, $params);
+            }
+        }
+        return $exec;
     }
 
     /**
