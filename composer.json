@@ -1,7 +1,7 @@
 {
     "name":         "paragonie/easydb",
     "description":  "Easy-to-use database abstraction",
-    "version":      "0.1.0",
+    "version":      "0.2.0",
     "keywords": [
             "database",
             "PDO",
