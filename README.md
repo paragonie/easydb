@@ -6,6 +6,8 @@ easy (and aesthetically pleasing).
 EasyDB was created by [Paragon Initiative Enterprises](https://paragonie.com)
 as part of our effort to encourage better [application security](https://paragonie.com/service/appsec) practices.
 
+Check out our other [open source projects](https://paragonie.com/projects) too.
+
 ## Why Use EasyDB? Because it's cleaner!
 
 Let's refactor the following legacy insecure code snippet to prevent SQL injection.
