@@ -17,6 +17,7 @@ class EasyDB
     public function __construct(\PDO $pdo, $dbengine = '')
     {
         $this->pdo = $pdo;
+        $this->pdo->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
         $this->dbengine = $dbengine;
     }
     
