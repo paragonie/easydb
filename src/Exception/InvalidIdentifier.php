@@ -1,5 +1,5 @@
 <?php
-namespace \ParagonIE\Exception\InvalidIdentifier;
+namespace \ParagonIE\EasyDB\Exception;
 
 class InvalidIdentifier extends \InvalidArgumentException
 {    
