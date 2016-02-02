@@ -1,5 +1,5 @@
 <?php
-namespace \ParagonIE\EasyDB\Exception;
+namespace ParagonIE\EasyDB\Exception;
 
 class ConstructorFailed extends \RuntimeException
 {
