@@ -1,7 +1,7 @@
 <?php
 namespace ParagonIE\EasyDB;
 
-use \Paragonie\EasyDB\Exception as Issues;
+use \ParagonIE\EasyDB\Exception as Issues;
 
 abstract class Factory
 {
