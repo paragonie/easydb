@@ -218,7 +218,7 @@ class EasyDB
         foreach ($maps as $params) {
             $exec = $stmt->execute($params);
             if ($exec === false) {
-                throw new Issues\QueryError(json_encode([$queryString, $params]));
+                throw new Issues\QueryError(json_encode([$queryString, $params, $this->pdo->errorInfo()]));
             }
         }
         return $exec;
@@ -282,7 +282,7 @@ class EasyDB
         $stmt = $this->pdo->prepare($statement);
         $exec = $stmt->execute($params);
         if ($exec === false) {
-            throw new Issues\QueryError(json_encode([$stmt, $params]));
+            throw new Issues\QueryError(json_encode([$stmt, $params, $this->pdo->errorInfo()]));
         }
         return $stmt->fetchAll($fetch_style);
     }
@@ -299,7 +299,7 @@ class EasyDB
         $stmt = $this->pdo->prepare($statement);
         $exec = $stmt->execute($params);
         if ($exec === false) {
-            throw new Issues\QueryError(json_encode([$stmt, $params]));
+            throw new Issues\QueryError(json_encode([$stmt, $params, $this->pdo->errorInfo()]));
         }
         return $stmt->fetchColumn(0);
     }
