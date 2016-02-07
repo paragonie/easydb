@@ -56,9 +56,14 @@ class EasyDB
      *
      * @param string $table - table name
      * @param array $conditions - WHERE clause
+     * @return mixed
+     * @throws InvalidArgumentException
      */
     public function delete($table, array $conditions)
     {
+        if (!is_string($table)) {
+            throw new \InvalidArgumentException("Table name must be a string");
+        }
         if (empty($conditions)) {
             // Don't allow foot-bullets
             return null;
@@ -85,9 +90,13 @@ class EasyDB
      * @param string $string - table or column name
      * @param boolean $quote - certain SQLs escape column names (i.e. mysql with `backticks`)
      * @return string
+     * @throws InvalidArgumentException
      */
     public function escapeIdentifier($string, $quote = true)
     {
+        if (!is_string($string)) {
+            throw new Issues\InvalidIdentifier("Invalid identifier: Must be a string.");
+        }
         $str = \preg_replace('/[^0-9a-zA-Z_]/', '', $string);
         
         // The first character cannot be [0-9]:
@@ -133,9 +142,13 @@ class EasyDB
      *
      * @param string $table - table name
      * @param array $map - associative array of which values should be assigned to each field
+     * @throws InvalidArgumentException
      */
     public function insert($table, array $map)
     {
+        if (!is_string($table)) {
+            throw new \InvalidArgumentException("Table name must be a string");
+        }
         if (empty($map)) {
             return null;
         }
@@ -146,6 +159,9 @@ class EasyDB
         // Let's make sure our keys are escaped.
         $keys = \array_keys($map);
         foreach ($keys as $i => $v) {
+            if (!is_string($v)) {
+                throw new \InvalidArgumentException("Column name must be a string");
+            }
             $keys[$i] = $this->escapeIdentifier($v);
         }
 
@@ -176,9 +192,14 @@ class EasyDB
      *
      * @param string $table - table name
      * @param array $maps - array of associative array specifying values should be assigned to each field
+     * @throws InvalidArgumentException
+     * @throws Issues\QueryError
      */
     public function insertMany($table, array $maps)
     {
+        if (!is_string($table)) {
+            throw new \InvalidArgumentException("Table name must be a string");
+        }
         if (empty($maps)) {
             return null;
         }
@@ -195,6 +216,9 @@ class EasyDB
         // Let's make sure our keys are escaped.
         $keys = \array_keys($first);
         foreach ($keys as $i => $v) {
+            if (!is_string($v)) {
+                throw new \InvalidArgumentException("Column name must be a string");
+            }
             $keys[$i] = $this->escapeIdentifier($v);
         }
 
@@ -269,9 +293,14 @@ class EasyDB
      * @param array $params
      * @param const $fetch_style
      * @return mixed -- array if SELECT
+     * @throws InvalidArgumentException
+     * @throws Issues\QueryError
      */
     public function safeQuery($statement, $params = [], $fetch_style = \PDO::FETCH_ASSOC)
     {
+        if (!is_string($statement)) {
+            throw new \InvalidArgumentException("Statement must be a string");
+        }
         if (empty($params)) {
             $stmt = $this->pdo->query($statement);
             if ($stmt !== false) {
@@ -293,9 +322,14 @@ class EasyDB
      * @param string $statement
      * @param array $params
      * @return mixed
+     * @throws InvalidArgumentException
+     * @throws Issues\QueryError
      */
     public function single($statement, $params = [])
     {
+        if (!is_string($statement)) {
+            throw new \InvalidArgumentException("Statement must be a string");
+        }
         $stmt = $this->pdo->prepare($statement);
         $exec = $stmt->execute($params);
         if ($exec === false) {
@@ -310,9 +344,14 @@ class EasyDB
      * @param string $table - table name
      * @param array $changes - associative array of which values should be assigned to each field
      * @param array $conditions - WHERE clause
+     * @throws InvalidArgumentException
+     * @throws Issues\QueryError
      */
     public function update($table, array $changes, array $conditions)
     {
+        if (!is_string($table)) {
+            throw new \InvalidArgumentException("Table name must be a string");
+        }
         if (empty($changes) || empty($conditions)) {
             return null;
         }
@@ -321,6 +360,9 @@ class EasyDB
         // The first set (pre WHERE)
         $pre = [];
         foreach ($changes as $i => $v) {
+            if (!is_string($i)) {
+                throw new \InvalidArgumentException("Column name must be a string");
+            }
             $i = $this->escapeIdentifier($i);
             $pre []= " {$i} = ?";
             $params[] = $v;
@@ -331,6 +373,9 @@ class EasyDB
         // The last set (post WHERE)
         $post = [];
         foreach ($conditions as $i => $v) {
+            if (!is_string($i)) {
+                throw new \InvalidArgumentException("Column name must be a string");
+            }
             $i = $this->escapeIdentifier($i);
             $post []= " {$i} = ? ";
             $params[] = $v;
