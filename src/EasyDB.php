@@ -37,7 +37,11 @@ class EasyDB
         }
         $exec = $stmt->execute($params);
         if ($exec) {
-            return $stmt->fetchAll(\PDO::FETCH_ASSOC, \PDO::FETCH_COLUMN, $offset);
+            return $stmt->fetchAll(
+                \PDO::FETCH_ASSOC,
+                \PDO::FETCH_COLUMN,
+                $offset
+            );
         }
         return false;
     }
@@ -77,8 +81,18 @@ class EasyDB
         $arr = [];
         foreach ($conditions as $i => $v) {
             $i = $this->escapeIdentifier($i);
-            $arr []= " {$i} = ? ";
-            $params[] = $v;
+            if ($v === null) {
+                $arr [] = " {$i} IS NULL ";
+            } elseif ($v === true) {
+                $arr [] = " {$i} = TRUE ";
+            } elseif ($v === false) {
+                $arr [] = " {$i} = FALSE ";
+            } elseif (\is_array($v)) {
+                \InvalidArgumentException("Only one dimensional arrays are allowed");
+            } else {
+                $arr []= " {$i} = ? ";
+                $params[] = $v;
+            }
         }
         $queryString .= \implode(' AND ', $arr);
 
@@ -97,7 +111,7 @@ class EasyDB
      */
     public function escapeIdentifier($string, $quote = true)
     {
-        if (!is_string($string)) {
+        if (!\is_string($string)) {
             throw new Issues\InvalidIdentifier("Invalid identifier: Must be a string.");
         }
         $str = \preg_replace('/[^0-9a-zA-Z_]/', '', $string);
@@ -149,45 +163,45 @@ class EasyDB
      */
     public function insert($table, array $map)
     {
-        if (!is_string($table)) {
-            throw new \InvalidArgumentException("Table name must be a string");
-        }
         if (empty($map)) {
             return null;
         }
-
         // Begin query string
         $queryString = "INSERT INTO ".$this->escapeIdentifier($table)." (";
-
-        // Let's make sure our keys are escaped.
-        $keys = \array_keys($map);
-        foreach ($keys as $i => $v) {
-            if (!is_string($v)) {
-                throw new \InvalidArgumentException("Column name must be a string");
+        $phold = [];
+        $_keys = [];
+        $params = [];
+        foreach ($map as $k => $v) {
+            if ($v !== null) {
+                $_keys[] = $k;
+                if ($v === true) {
+                    $phold[] = 'TRUE';
+                } elseif ($v === false) {
+                    $phold[] = 'FALSE';
+                } elseif (\is_array($v)) {
+                    \InvalidArgumentException("Only one dimensional arrays are allowed");
+                } else {
+                    // When all else fails, use prepared statements:
+                    $phold[] = '?';
+                    $params[] = $v;
+                }
             }
-            $keys[$i] = $this->escapeIdentifier($v);
         }
-
+        // Let's make sure our keys are escaped.
+        $keys = [];
+        foreach ($_keys as $i => $v) {
+            $keys[] = $this->escapeIdentifier($v);
+        }
         // Now let's append a list of our columns.
         $queryString .= \implode(', ', $keys);
-
         // This is the middle piece.
         $queryString .= ") VALUES (";
-
         // Now let's concatenate the ? placeholders
-        $queryString .= \implode(
-            ', ', 
-            \array_fill(0, \count($map), '?')
-        );
-
+        $queryString .= \implode(', ', $phold);
         // Necessary to close the open ( above
         $queryString .= ");";
-
         // Now let's run a query with the parameters
-        return $this->safeQuery(
-            $queryString,
-            \array_values($map)
-        );
+        return $this->safeQuery($queryString, $params);
     }
     
     /**
@@ -210,6 +224,9 @@ class EasyDB
         foreach ($maps as $map) {
             if (\count($map) < 1 || \count($map) !== \count($first)) {
                 throw new \InvalidArgumentException('Every map in the second argument should have the same number of columns');
+            }
+            if (\count($map) !== \count($map, COUNT_RECURSIVE)) {
+                throw new \InvalidArgumentException('insertMany() only accepts a two-dimensional array; you attempted to pass at least three dimensions');
             }
         }
 
@@ -315,12 +332,18 @@ class EasyDB
             return false;
         }
         $stmt = $this->pdo->prepare($statement);
-        if (\count($params) !== \count($params,COUNT_RECURSIVE)){
+        if (\count($params) !== \count($params, COUNT_RECURSIVE)){
             throw new \InvalidArgumentException("Invalid params");
         }
         $exec = $stmt->execute($params);
         if ($exec === false) {
-            throw new Issues\QueryError(json_encode([$stmt, $params, $this->pdo->errorInfo()]));
+            throw new Issues\QueryError(
+                \json_encode([
+                    $stmt,
+                    $params, 
+                    $this->pdo->errorInfo()
+                ])
+            );
         }
         return $stmt->fetchAll($fetch_style);
     }
@@ -342,7 +365,13 @@ class EasyDB
         $stmt = $this->pdo->prepare($statement);
         $exec = $stmt->execute($params);
         if ($exec === false) {
-            throw new Issues\QueryError(json_encode([$stmt, $params, $this->pdo->errorInfo()]));
+            throw new Issues\QueryError(
+                \json_encode([
+                    $stmt,
+                    $params, 
+                    $this->pdo->errorInfo()
+                ])
+            );
         }
         return $stmt->fetchColumn(0);
     }
@@ -373,8 +402,16 @@ class EasyDB
                 throw new \InvalidArgumentException("Column name must be a string");
             }
             $i = $this->escapeIdentifier($i);
-            $pre []= " {$i} = ?";
-            $params[] = $v;
+            if ($v === null) {
+                $pre []= " {$i} = NULL";
+            } elseif ($v === true) {
+                $pre []= " {$i} = TRUE";
+            } elseif ($v === false) {
+                $pre []= " {$i} = FALSE";
+            } else {
+                $pre []= " {$i} = ?";
+                $params[] = $v;
+            }
         }
         $queryString .= \implode(', ', $pre);
         $queryString .= " WHERE ";
@@ -386,8 +423,16 @@ class EasyDB
                 throw new \InvalidArgumentException("Column name must be a string");
             }
             $i = $this->escapeIdentifier($i);
-            $post []= " {$i} = ? ";
-            $params[] = $v;
+            if ($v === null) {
+                $post []= " {$i} IS NULL";
+            } elseif ($v === true) {
+                $post []= " {$i} = TRUE";
+            } elseif ($v === false) {
+                $post []= " {$i} = FALSE";
+            } else {
+                $post []= " {$i} = ? ";
+                $params[] = $v;
+            }
         }
         $queryString .= \implode(' AND ', $post);
 
