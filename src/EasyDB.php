@@ -32,6 +32,9 @@ class EasyDB
     public function column($statement, $params = [], $offset = 0)
     {   
         $stmt = $this->pdo->prepare($statement);
+        if (\count($params) !== \count($params, COUNT_RECURSIVE)){
+            throw new \InvalidArgumentException("Invalid params");
+        }
         $exec = $stmt->execute($params);
         if ($exec) {
             return $stmt->fetchAll(\PDO::FETCH_ASSOC, \PDO::FETCH_COLUMN, $offset);
@@ -240,6 +243,9 @@ class EasyDB
         // Now let's run a query with the parameters
         $stmt = $this->pdo->prepare($queryString);
         foreach ($maps as $params) {
+            if (\count($params) !== \count($params, COUNT_RECURSIVE)){
+                throw new \InvalidArgumentException("Invalid params");
+            }
             $exec = $stmt->execute($params);
             if ($exec === false) {
                 throw new Issues\QueryError(json_encode([$queryString, $params, $this->pdo->errorInfo()]));
@@ -309,6 +315,9 @@ class EasyDB
             return false;
         }
         $stmt = $this->pdo->prepare($statement);
+        if (\count($params) !== \count($params,COUNT_RECURSIVE)){
+            throw new \InvalidArgumentException("Invalid params");
+        }
         $exec = $stmt->execute($params);
         if ($exec === false) {
             throw new Issues\QueryError(json_encode([$stmt, $params, $this->pdo->errorInfo()]));
@@ -470,7 +479,7 @@ class EasyDB
      */
     public function query(...$args)
     {
-        return $this->pdo->execute(...$args);
+        return $this->pdo->query(...$args);
     }
     /**
      * Quotes a string for use in a query
