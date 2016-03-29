@@ -88,7 +88,7 @@ class EasyDB
             } elseif ($v === false) {
                 $arr [] = " {$i} = FALSE ";
             } elseif (\is_array($v)) {
-                \InvalidArgumentException("Only one dimensional arrays are allowed");
+                throw new \InvalidArgumentException("Only one dimensional arrays are allowed");
             } else {
                 $arr []= " {$i} = ? ";
                 $params[] = $v;
@@ -179,7 +179,7 @@ class EasyDB
                 } elseif ($v === false) {
                     $phold[] = 'FALSE';
                 } elseif (\is_array($v)) {
-                    \InvalidArgumentException("Only one dimensional arrays are allowed");
+                    throw new \InvalidArgumentException("Only one dimensional arrays are allowed");
                 } else {
                     // When all else fails, use prepared statements:
                     $phold[] = '?';
