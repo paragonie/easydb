@@ -3,6 +3,11 @@ namespace ParagonIE\EasyDB;
 
 use \ParagonIE\EasyDB\Exception as Issues;
 
+/**
+ * Class Factory
+ *
+ * @package ParagonIE\EasyDB
+ */
 abstract class Factory
 {
     /**
@@ -17,6 +22,7 @@ abstract class Factory
      */
     public static function create($dsn, $username = null, $password = null, $options = [])
     {
+        $dbengine = null;
         $post_query = null;
 
         // Let's grab the DB engine
@@ -51,6 +57,6 @@ abstract class Factory
             $pdo->query($post_query);
         }
         
-        return new \ParagonIE\EasyDB\EasyDB($pdo, $dbengine);
+        return new EasyDB($pdo, $dbengine);
     }
 }
