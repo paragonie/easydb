@@ -11,7 +11,7 @@ use \ParagonIE\EasyDB\Exception as Issues;
 abstract class Factory
 {
     /**
-     * Create a new EasyDB objecy based on PDO constructors
+     * Create a new EasyDB object based on PDO constructors
      * 
      * @param string $dsn
      * @param string $username
