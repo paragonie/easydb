@@ -27,5 +27,9 @@ class unit
     {
         $this->assertTrue($db->is1DArray([]));
         $this->assertFalse($db->is1DArray([[]]));
+        $this->assertFalse($db->is1DArray([[],[]]));
+        $this->assertTrue($db->is1DArray([1]));
+        $this->assertFalse($db->is1DArray([[1]]));
+        $this->assertFalse($db->is1DArray([[1],[2]]));
     }
 }

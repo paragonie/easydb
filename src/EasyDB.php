@@ -731,6 +731,9 @@ class EasyDB
      */
     public function is1DArray(array $params)
     {
-        return \count($params) === \count($params, COUNT_RECURSIVE);
+        return (
+            \count($params) === \count($params, COUNT_RECURSIVE) &&
+            \count(\array_filter($params, 'is_array')) < 1
+        );
     }
 }
