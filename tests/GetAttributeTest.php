@@ -22,13 +22,13 @@ class GetAttributeTest
     {
         $ref = new ReflectionClass(PDO::class);
         if (defined('ARRAY_FILTER_USE_KEY')) {
-        $attrs = array_filter(
-            $ref->getConstants(),
-            function ($attrName) {
-                return (strpos($attrName, 'ATTR_') === 0);
-            },
-            ARRAY_FILTER_USE_KEY
-        );
+            $attrs = array_filter(
+                $ref->getConstants(),
+                function ($attrName) {
+                    return (strpos($attrName, 'ATTR_') === 0);
+                },
+                ARRAY_FILTER_USE_KEY
+            );
         } else {
             $constants = $ref->getConstants();
             $attrs = array_reduce(
