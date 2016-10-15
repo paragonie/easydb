@@ -36,5 +36,9 @@
         "psr-4": {
             "ParagonIE\\EasyDB\\Tests\\": "tests"
         }
+    },
+    "require": {
+        "php": "^7.0",
+        "ext-pdo": "^7.0"
     }
 }
