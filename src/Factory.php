@@ -22,7 +22,7 @@ abstract class Factory
      * @return \ParagonIE\EasyDB\EasyDB
      * @throws Issues\ConstructorFailed
      */
-    public static function create($dsn, $username = null, $password = null, $options = [])
+    public static function create(string $dsn, string $username = null, string $password = null, array $options = []) : EasyDB
     {
         $dbengine = null;
         $post_query = null;
