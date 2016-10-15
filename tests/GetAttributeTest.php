@@ -1,4 +1,6 @@
 <?php
+declare (strict_types=1);
+
 namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyDB;
@@ -62,9 +64,7 @@ class GetAttributeTest
     */
     public function testGetDriver(callable $cb, $attr)
     {
-        $db = $cb();
-        $this->assertInstanceOf(EasyDB::class, $db);
-        $this->assertInstanceOf(PDO::class, $db->getPdo());
+        $db = $this->EasyDBExpectedFromCallable($cb);
         try {
             $this->assertEquals(
                 $db->getAttribute($attr),

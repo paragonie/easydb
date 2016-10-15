@@ -1,4 +1,6 @@
 <?php
+declare (strict_types=1);
+
 namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyDB;
@@ -29,7 +31,6 @@ class GetAvailableDriversTest
                 ),
                 0
             );
-            $this->assertInstanceOf(PDO::class, $db->getPdo());
             $this->assertEquals(
                 count(
                     array_diff_assoc(

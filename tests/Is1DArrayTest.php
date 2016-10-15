@@ -1,4 +1,6 @@
 <?php
+declare (strict_types=1);
+
 namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
@@ -16,7 +18,6 @@ class Is1DArrayTest
     public function testIs1DArray($dsn, $username=null, $password=null, $options = array())
     {
         $db = Factory::create($dsn, $username, $password, $options);
-        $this->assertInstanceOf(EasyDB::class, $db);
         $this->assertTrue($db->is1DArray([]));
         $this->assertFalse($db->is1DArray([[]]));
         $this->assertFalse($db->is1DArray([[],[]]));
@@ -32,7 +33,6 @@ class Is1DArrayTest
     public function testColumnThrowsException($dsn, $username=null, $password=null, $options = array())
     {
         $db = Factory::create($dsn, $username, $password, $options);
-        $this->assertInstanceOf(EasyDB::class, $db);
         $this->expectException(InvalidArgumentException::class);
         $db->column('SELECT "column"', [[1]]);
     }
@@ -44,7 +44,6 @@ class Is1DArrayTest
     public function testDeleteThrowsException($dsn, $username=null, $password=null, $options = array())
     {
         $db = Factory::create($dsn, $username, $password, $options);
-        $this->assertInstanceOf(EasyDB::class, $db);
         $this->expectException(InvalidArgumentException::class);
         $db->delete('irrelevant_but_valid_tablename', [[1]]);
     }
@@ -56,7 +55,6 @@ class Is1DArrayTest
     public function testEscapeValueSetThrowsException($dsn, $username=null, $password=null, $options = array())
     {
         $db = Factory::create($dsn, $username, $password, $options);
-        $this->assertInstanceOf(EasyDB::class, $db);
         $this->expectException(InvalidArgumentException::class);
         $db->escapeValueSet([[1]]);
     }
@@ -68,7 +66,6 @@ class Is1DArrayTest
     public function testInsertThrowsException($dsn, $username=null, $password=null, $options = array())
     {
         $db = Factory::create($dsn, $username, $password, $options);
-        $this->assertInstanceOf(EasyDB::class, $db);
         $this->expectException(InvalidArgumentException::class);
         $db->insert('irrelevant_but_valid_tablename', [[1]]);
     }
@@ -80,7 +77,6 @@ class Is1DArrayTest
     public function testInsertManyThrowsException($dsn, $username=null, $password=null, $options = array())
     {
         $db = Factory::create($dsn, $username, $password, $options);
-        $this->assertInstanceOf(EasyDB::class, $db);
         $this->expectException(InvalidArgumentException::class);
         $db->insertMany('irrelevant_but_valid_tablename', [[[2]]]);
     }
@@ -92,7 +88,6 @@ class Is1DArrayTest
     public function testSafeQueryThrowsException($dsn, $username=null, $password=null, $options = array())
     {
         $db = Factory::create($dsn, $username, $password, $options);
-        $this->assertInstanceOf(EasyDB::class, $db);
         $this->expectException(InvalidArgumentException::class);
         $db->safeQuery('SELECT ?', [[1]]);
     }
@@ -104,7 +99,6 @@ class Is1DArrayTest
     public function testSingleThrowsException($dsn, $username=null, $password=null, $options = array())
     {
         $db = Factory::create($dsn, $username, $password, $options);
-        $this->assertInstanceOf(EasyDB::class, $db);
         $this->expectException(InvalidArgumentException::class);
         $db->single('SELECT "column"', [[1]]);
     }
@@ -116,7 +110,6 @@ class Is1DArrayTest
     public function testUpdateArgChangesThrowsException($dsn, $username=null, $password=null, $options = array())
     {
         $db = Factory::create($dsn, $username, $password, $options);
-        $this->assertInstanceOf(EasyDB::class, $db);
         $this->expectException(InvalidArgumentException::class);
         $db->update('irrelevant_but_valid_tablename', [[1]], ['1=1']);
     }
@@ -128,7 +121,6 @@ class Is1DArrayTest
     public function testUpdateArgConditionsThrowsException($dsn, $username=null, $password=null, $options = array())
     {
         $db = Factory::create($dsn, $username, $password, $options);
-        $this->assertInstanceOf(EasyDB::class, $db);
         $this->expectException(InvalidArgumentException::class);
         $db->update('irrelevant_but_valid_tablename', ['1=1'], [[1]]);
     }

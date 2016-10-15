@@ -1,6 +1,9 @@
 <?php
+declare (strict_types=1);
+
 namespace ParagonIE\EasyDB\Tests;
 
+use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Factory;
 use PDO;
 use PHPUnit_Framework_TestCase;
@@ -73,5 +76,15 @@ abstract class EasyDBTest
             },
             $this->GoodFactoryCreateArgumentProvider()
         );
+    }
+
+    /**
+    * Strict-type paranoia for a callable that is expected to return an EasyDB instance
+    * @param callable $cb
+    * @return EasyDB
+    */
+    protected function EasyDBExpectedFromCallable(callable $cb) : EasyDB
+    {
+        return $cb();
     }
 }

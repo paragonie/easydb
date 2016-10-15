@@ -1,4 +1,6 @@
 <?php
+declare (strict_types=1);
+
 namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyDB;
@@ -25,8 +27,7 @@ class RowTest
     */
     public function testMethod(callable $cb, $statement, $offset, $params, $expectedResult)
     {
-        $db = $cb();
-        $this->assertInstanceOf(EasyDB::class, $db);
+        $db = $this->EasyDBExpectedFromCallable($cb);
 
         $result = $this->getResultForMethod($db, $statement, $offset, $params);
 

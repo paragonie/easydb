@@ -1,4 +1,6 @@
 <?php
+declare (strict_types=1);
+
 namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyDB;
@@ -17,8 +19,6 @@ class EmulatePreparesDisabledTest
     public function testEmulatePreparesDisabled($dsn, $username=null, $password=null, $options = array())
     {
         $db = Factory::create($dsn, $username, $password, $options);
-        $this->assertInstanceOf(EasyDB::class, $db);
-        $this->assertInstanceOf(PDO::class, $db->getPDO());
         $recheckWithForcedFalse = false;
         try {
             $this->assertFalse($db->getPDO()->getAttribute(PDO::ATTR_EMULATE_PREPARES));
@@ -32,8 +32,6 @@ class EmulatePreparesDisabledTest
 
         $options[PDO::ATTR_EMULATE_PREPARES] = true;
         $db = Factory::create($dsn, $username, $password, $options);
-        $this->assertInstanceOf(EasyDB::class, $db);
-        $this->assertInstanceOf(PDO::class, $db->getPDO());
         try {
             $this->assertFalse($db->getPDO()->getAttribute(PDO::ATTR_EMULATE_PREPARES));
         } catch (PDOException $e) {
@@ -46,8 +44,6 @@ class EmulatePreparesDisabledTest
         if ($recheckWithForcedFalse) {
             $options[PDO::ATTR_EMULATE_PREPARES] = false;
             $db = Factory::create($dsn, $username, $password, $options);
-            $this->assertInstanceOf(EasyDB::class, $db);
-            $this->assertInstanceOf(PDO::class, $db->getPDO());
             $this->assertFalse($db->getPDO()->getAttribute(PDO::ATTR_EMULATE_PREPARES));
         }
     }

@@ -1,4 +1,6 @@
 <?php
+declare (strict_types=1);
+
 namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
@@ -52,9 +54,7 @@ class EscapeIdentifierTest
     public function GoodFactoryCreateArgument2EasyDBWithBadIdentifierProvider()
     {
         $identifiers = [
-            1,
             '2foo',
-            false,
         ];
         return array_reduce(
             $this->GoodFactoryCreateArgument2EasyDBProvider(),
@@ -80,7 +80,9 @@ class EscapeIdentifierTest
     public function GoodFactoryCreateArgument2EasyDBWithBadIdentifierTypeProvider()
     {
         $identifiers = [
+            1,
             null,
+            false,
             []
         ];
         return array_reduce(
@@ -120,8 +122,7 @@ class EscapeIdentifierTest
     */
     public function testEscapeIdentifier(callable $cb, $identifier)
     {
-        $db = $cb();
-        $this->assertInstanceOf(EasyDB::class, $db);
+        $db = $this->EasyDBExpectedFromCallable($cb);
         $this->assertEquals(
             $db->escapeIdentifier($identifier, true),
             $this->getExpectedEscapedIdentifier($identifier, $db->getDriver(), true)
@@ -138,8 +139,7 @@ class EscapeIdentifierTest
     */
     public function testEscapeIdentifierThrowsException(callable $cb, $identifier)
     {
-        $db = $cb();
-        $this->assertInstanceOf(EasyDB::class, $db);
+        $db = $this->EasyDBExpectedFromCallable($cb);
         $this->expectException(InvalidArgumentException::class);
         $db->escapeIdentifier($identifier);
     }
@@ -150,8 +150,7 @@ class EscapeIdentifierTest
     */
     public function testEscapeIdentifierThrowsTypeError(callable $cb, $identifier)
     {
-        $db = $cb();
-        $this->assertInstanceOf(EasyDB::class, $db);
+        $db = $this->EasyDBExpectedFromCallable($cb);
         $this->expectException(TypeError::class);
         $db->escapeIdentifier($identifier);
     }
