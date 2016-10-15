@@ -61,7 +61,6 @@ class EasyDB
         $exec = $stmt->execute($params);
         if ($exec) {
             return $stmt->fetchAll(
-                \PDO::FETCH_ASSOC,
                 \PDO::FETCH_COLUMN,
                 $offset
             );
