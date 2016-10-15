@@ -9,7 +9,7 @@ class Is1DArrayTest
 {
 
 
-    public function EasyDBProvider() : array
+    public function EasyDBProvider()
     {
         return [
             [
