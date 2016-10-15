@@ -11,15 +11,9 @@ class ColTest
         EasyDBTest
 {
 
-    /**
-    * EasyDB data provider
-    * Returns an array of callables that return instances of EasyDB
-    * @return array
-    * @see EasyDBTest::GoodFactoryCreateArgument2EasyDBProvider()
-    */
-    public function GoodColArgumentsProvider()
+    protected function GoodColArguments()
     {
-        $argsArray = [
+        return [
             [
                 'SELECT 1 AS foo', 0, [], [1]
             ],
@@ -42,6 +36,17 @@ class ColTest
                 'SELECT ? AS foo, ? AS bar UNION SELECT ? AS foo, ? AS bar', 1, [1, 2, 3, 4], [2, 4]
             ]
         ];
+    }
+
+    /**
+    * EasyDB data provider
+    * Returns an array of callables that return instances of EasyDB
+    * @return array
+    * @see EasyDBTest::GoodFactoryCreateArgument2EasyDBProvider()
+    */
+    public function GoodColArgumentsProvider()
+    {
+        $argsArray = $this->GoodColArguments();
         return array_reduce(
             $this->GoodFactoryCreateArgument2EasyDBProvider(),
             function (array $was, callable $cb) use ($argsArray) {
