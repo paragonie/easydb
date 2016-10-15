@@ -3,9 +3,7 @@ namespace ParagonIE\EasyDB;
 
 use PHPUnit_Framework_TestCase;
 
-require_once('../vendor/autoload.php');
-
-class unit
+class Is1DArrayTest
     extends
         PHPUnit_Framework_TestCase
 {
