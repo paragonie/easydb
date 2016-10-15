@@ -21,6 +21,7 @@ class GetAttributeTest
     public function GoodFactoryCreateArgument2EasyDBWithPDOAttributeProvider()
     {
         $ref = new ReflectionClass(PDO::class);
+        if (defined('ARRAY_FILTER_USE_KEY')) {
         $attrs = array_filter(
             $ref->getConstants(),
             function ($attrName) {
@@ -28,6 +29,19 @@ class GetAttributeTest
             },
             ARRAY_FILTER_USE_KEY
         );
+        } else {
+            $constants = $ref->getConstants();
+            $attrs = array_reduce(
+                array_keys($constants),
+                function (array $was, $attrName) use ($constants) {
+                    if (strpos($attrName, 'ATTR_') === 0) {
+                        $was[$attrName] = $constants[$attrName];
+                    }
+                    return $was;
+                },
+                []
+            );
+        }
         return array_reduce(
             $this->GoodFactoryCreateArgument2EasyDBProvider(),
             function (array $was, callable $cb) use ($attrs) {
