@@ -37,7 +37,11 @@ abstract class EasyDBTest
     {
         return [
             [
-                'sqlite::memory:'
+                'sqlite::memory:',
+                null,
+                null,
+                [],
+                'sqlite'
             ],
         ];
     }
