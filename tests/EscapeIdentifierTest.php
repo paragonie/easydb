@@ -3,7 +3,6 @@ declare (strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
-use ParagonIE\EasyDB\EasyDB;
 use Throwable;
 
 class EscapeIdentifierTest
