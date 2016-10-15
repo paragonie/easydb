@@ -58,7 +58,7 @@ class ColTest
     /**
     * @dataProvider colArgumentsProvider
     */
-    public function testCol(callable $cb, $statement, $offset, $params, $expectedResult)
+    public function testMethod(callable $cb, $statement, $offset, $params, $expectedResult)
     {
         $db = $cb();
         $this->assertInstanceOf(EasyDB::class, $db);
