@@ -1,4 +1,6 @@
 <?php
+declare (strict_types=1);
+
 namespace ParagonIE\EasyDB;
 
 use \ParagonIE\EasyDB\Exception as Issues;
@@ -137,8 +139,8 @@ class EasyDB
      */
     public function escapeIdentifier($string, $quote = true)
     {
-        if (!\is_string($string)) {
-            throw new Issues\InvalidIdentifier("Invalid identifier: Must be a string.");
+        if (empty($string)) {
+            throw new Issues\InvalidIdentifier("Invalid identifier: Must be a non-empty string.");
         }
         $str = \preg_replace('/[^0-9a-zA-Z_]/', '', $string);
 

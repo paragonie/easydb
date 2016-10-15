@@ -1,4 +1,6 @@
 <?php
+declare (strict_types=1);
+
 namespace ParagonIE\EasyDB;
 
 use \ParagonIE\EasyDB\Exception as Issues;
