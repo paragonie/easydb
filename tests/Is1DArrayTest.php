@@ -1,22 +1,12 @@
 <?php
-namespace ParagonIE\EasyDB;
+namespace ParagonIE\EasyDB\Tests;
 
-use PHPUnit_Framework_TestCase;
+use ParagonIE\EasyDB\EasyDB;
 
 class Is1DArrayTest
     extends
-        PHPUnit_Framework_TestCase
+        EasyDBTest
 {
-
-
-    public function EasyDBProvider()
-    {
-        return [
-            [
-                Factory::create('sqlite::memory:')
-            ],
-        ];
-    }
 
     /**
     * @dataProvider EasyDBProvider
