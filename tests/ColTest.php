@@ -17,7 +17,7 @@ class ColTest
     * @return array
     * @see EasyDBTest::GoodFactoryCreateArgument2EasyDBProvider()
     */
-    public function colArgumentsProvider()
+    public function GoodColArgumentsProvider()
     {
         $argsArray = [
             [
@@ -55,18 +55,24 @@ class ColTest
         );
     }
 
+
+    protected function getResultForMethod(EasyDB $db, $statement, $offset, $params)
+    {
+        $args = $params;
+        array_unshift($args, $statement, $offset);
+
+        return call_user_func_array([$db, 'col'], $args);
+    }
+
     /**
-    * @dataProvider colArgumentsProvider
+    * @dataProvider GoodColArgumentsProvider
     */
     public function testMethod(callable $cb, $statement, $offset, $params, $expectedResult)
     {
         $db = $cb();
         $this->assertInstanceOf(EasyDB::class, $db);
 
-        $args = $params;
-        array_unshift($args, $statement, $offset);
-
-        $result = call_user_func_array([$db, 'col'], $args);
+        $result = $this->getResultForMethod($db, $statement, $offset, $params);
 
         $this->assertEquals(array_diff_assoc($result, $expectedResult), []);
     }

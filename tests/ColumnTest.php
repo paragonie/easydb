@@ -11,19 +11,9 @@ class ColumnTest
         ColTest
 {
 
-    /**
-    * @dataProvider colArgumentsProvider
-    */
-    public function testMethod(callable $cb, $statement, $offset, $params, $expectedResult)
+
+    protected function getResultForMethod(EasyDB $db, $statement, $offset, $params)
     {
-        $db = $cb();
-        $this->assertInstanceOf(EasyDB::class, $db);
-
-        $args = $params;
-        array_unshift($args, $statement, $offset);
-
-        $result = $db->column($statement, $params, $offset);
-
-        $this->assertEquals(array_diff_assoc($result, $expectedResult), []);
+        return $db->column($statement, $params, $offset);
     }
 }
