@@ -51,11 +51,11 @@ class EscapeIdentifierTest
     public function GoodFactoryCreateArgument2EasyDBWithBadIdentifierProvider()
     {
         $identifiers = [
-            1,
+            (string)1,
             '2foo',
-            false,
-            null,
-            []
+            (string)false,
+            (string)null,
+            (string)[]
         ];
         return array_reduce(
             $this->GoodFactoryCreateArgument2EasyDBProvider(),
