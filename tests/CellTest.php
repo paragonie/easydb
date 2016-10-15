@@ -4,9 +4,6 @@ declare (strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyDB;
-use ParagonIE\EasyDB\Factory;
-use PDO;
-use PDOException;
 
 class CellTest
     extends

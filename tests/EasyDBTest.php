@@ -5,7 +5,6 @@ namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Factory;
-use PDO;
 use PHPUnit_Framework_TestCase;
 
 /**
