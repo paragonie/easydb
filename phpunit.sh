@@ -36,7 +36,12 @@ if [ $? -eq 0 ]; then
     echo
     echo -e "\033[33mBegin Unit Testing\033[0m"
     # Run the testing suite
-    php phpunit.phar
+    if [ "$TRAVIS_PHP_VERSION" = 'hhvm' ]; then
+      echo 'xdebug.enable = On' >> /etc/hhvm/php.ini;
+      hhvm -v Eval.EnableHipHopSyntax=true phpunit.phar
+    else
+      php phpunit.phar
+    fi
     # Cleanup
     if [ "$clean" -eq 1 ]; then
         echo -e "\033[32mCleaning Up!\033[0m"

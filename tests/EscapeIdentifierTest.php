@@ -3,7 +3,10 @@ declare (strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
-use Throwable;
+use ParagonIE\EasyDB\EasyDB;
+use ParagonIE\EasyDB\Exception as Issues;
+use PHPUnit_Framework_Error;
+use TypeError;
 
 class EscapeIdentifierTest
     extends
@@ -110,8 +113,54 @@ class EscapeIdentifierTest
     public function testEscapeIdentifierThrowsSomething(callable $cb, $identifier)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
-        $this->expectException(Throwable::class);
-        $db->escapeIdentifier($identifier);
+        $thrown = false;
+        try {
+            $db->escapeIdentifier($identifier);
+        } catch (Issues\InvalidIdentifier $e) {
+            $this->assertTrue(true);
+            $thrown = true;
+        } catch (TypeError $e) {
+            $this->assertTrue(true);
+            $thrown = true;
+        } catch (PHPUnit_Framework_Error $e) {
+            if (
+                preg_match(
+                    (
+                        '/^' .
+                        preg_quote(
+                            ('Argument 1 passed to ' . EasyDB::class . '::escapeIdentifier()'),
+                            '/'
+                        ) .
+                        ' must be an instance of string, [^ ]+ given$/'
+                    ),
+                    $e->getMessage()
+                )
+            ) {
+                $this->assertTrue(true);
+                $thrown = true;
+            } else {
+                throw $e;
+            }
+        } finally {
+            if (!$thrown) {
+                $this->assertTrue(
+                    false,
+                    (
+                        'Argument 2 of ' .
+                        static::class .
+                        '::' .
+                        __METHOD__ .
+                        '() must cause either ' .
+                        Issues\InvalidIdentifier::class .
+                        ' or ' .
+                        TypeError::class .
+                        ' (' .
+                            var_export($identifier, true) .
+                        ')'
+                    )
+                );
+            }
+        }
     }
 
 
