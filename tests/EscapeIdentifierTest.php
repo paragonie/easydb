@@ -6,6 +6,7 @@ use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Factory;
 use PDO;
 use PDOException;
+use TypeError;
 
 class EscapeIdentifierTest
     extends
@@ -51,11 +52,36 @@ class EscapeIdentifierTest
     public function GoodFactoryCreateArgument2EasyDBWithBadIdentifierProvider()
     {
         $identifiers = [
-            (string)1,
+            1,
             '2foo',
-            (string)false,
-            (string)null,
-            (string)[]
+            false,
+        ];
+        return array_reduce(
+            $this->GoodFactoryCreateArgument2EasyDBProvider(),
+            function (array $was, callable $cb) use ($identifiers) {
+                foreach ($identifiers as $identifier) {
+                    $was[] = [
+                        $cb,
+                        $identifier
+                    ];
+                }
+                return $was;
+            },
+            []
+        );
+    }
+
+    /**
+    * EasyDB data provider
+    * Returns an array of callables that return instances of EasyDB
+    * @return array
+    * @see EasyDBTest::GoodFactoryCreateArgument2EasyDBProvider()
+    */
+    public function GoodFactoryCreateArgument2EasyDBWithBadIdentifierTypeProvider()
+    {
+        $identifiers = [
+            null,
+            []
         ];
         return array_reduce(
             $this->GoodFactoryCreateArgument2EasyDBProvider(),
@@ -115,6 +141,18 @@ class EscapeIdentifierTest
         $db = $cb();
         $this->assertInstanceOf(EasyDB::class, $db);
         $this->expectException(InvalidArgumentException::class);
+        $db->escapeIdentifier($identifier);
+    }
+
+    /**
+    * @dataProvider GoodFactoryCreateArgument2EasyDBWithBadIdentifierTypeProvider
+    * @depends testEscapeIdentifier
+    */
+    public function testEscapeIdentifierThrowsTypeError(callable $cb, $identifier)
+    {
+        $db = $cb();
+        $this->assertInstanceOf(EasyDB::class, $db);
+        $this->expectException(TypeError::class);
         $db->escapeIdentifier($identifier);
     }
 
