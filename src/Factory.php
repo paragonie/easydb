@@ -12,7 +12,7 @@ abstract class Factory
 {
     /**
      * Create a new EasyDB object based on PDO constructors
-     * 
+     *
      * @param string $dsn
      * @param string $username
      * @param string $password
@@ -41,7 +41,7 @@ abstract class Factory
                 $post_query = 'SET NAMES UNICODE';
                 break;
         }
-        
+
         try {
             $pdo = new \PDO($dsn, $username, $password, $options);
         } catch (\PDOException $e) {
@@ -56,7 +56,7 @@ abstract class Factory
         if (!empty($post_query)) {
             $pdo->query($post_query);
         }
-        
+
         return new EasyDB($pdo, $dbengine);
     }
 }

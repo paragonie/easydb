@@ -11,10 +11,10 @@ class EasyDB
 {
     protected $dbengine = null;
     protected $pdo = null;
-    
+
     /**
      * Dependency-Injectable constructor
-     * 
+     *
      * @param \PDO $pdo
      * @param string $dbengine
      */
@@ -43,17 +43,17 @@ class EasyDB
     {
         return $this->column($statement, $params, $offset);
     }
-    
+
     /**
      * Fetch a column
-     * 
+     *
      * @param string $statement SQL query without user data
      * @param array $params Parameters
      * @param int $offset - How many columns from the left are we grabbing from each row?
      * @return mixed
      */
     public function column($statement, $params = [], $offset = 0)
-    {   
+    {
         $stmt = $this->pdo->prepare($statement);
         if (!$this->is1DArray($params)) {
             throw new \InvalidArgumentException("Invalid params");
@@ -67,7 +67,7 @@ class EasyDB
         }
         return false;
     }
-    
+
     /**
      * Variadic version of $this->single()
      *
@@ -79,7 +79,7 @@ class EasyDB
     {
         return $this->single($statement, $params);
     }
-    
+
     /**
      * Delete rows in a database table.
      *
@@ -101,7 +101,7 @@ class EasyDB
             throw new \InvalidArgumentException("Only one-dimensional arrays are allowed");
         }
         $queryString = "DELETE FROM ".$this->escapeIdentifier($table)." WHERE ";
-        
+
         // Simple array for joining the strings together
         $params = [];
         $arr = [];
@@ -124,12 +124,12 @@ class EasyDB
 
         return $this->safeQuery($queryString, $params);
     }
-    
+
     /**
      * Make sure only valid characters make it in column/table names
-     * 
+     *
      * @ref https://stackoverflow.com/questions/10573922/what-does-the-sql-standard-say-about-usage-of-backtick
-     * 
+     *
      * @param string $string - table or column name
      * @param boolean $quote - certain SQLs escape column names (i.e. mysql with `backticks`)
      * @return string
@@ -141,12 +141,12 @@ class EasyDB
             throw new Issues\InvalidIdentifier("Invalid identifier: Must be a string.");
         }
         $str = \preg_replace('/[^0-9a-zA-Z_]/', '', $string);
-        
+
         // The first character cannot be [0-9]:
         if (\preg_match('/^[0-9]/', $str)) {
             throw new Issues\InvalidIdentifier("Invalid identifier: Must begin with a letter or undescore.");
         }
-        
+
         if ($quote) {
             switch ($this->dbengine) {
                 case 'mssql':
@@ -230,20 +230,20 @@ class EasyDB
     {
         return $this->column($statement, $params, 0);
     }
-    
+
     /**
      * Which database driver are we operating on?
-     * 
+     *
      * @return string
      */
     public function getDriver()
     {
         return $this->dbengine;
     }
-    
+
     /**
      * Return the PDO object directly
-     * 
+     *
      * @return \PDO
      */
     public function getPdo()
@@ -362,7 +362,7 @@ class EasyDB
             throw new \Exception("Insert failed");
         }
     }
-    
+
     /**
      * Insert many new rows to a table in a database. using the same prepared statement
      *
@@ -407,7 +407,7 @@ class EasyDB
 
         // Now let's concatenate the ? placeholders
         $queryString .= \implode(
-            ', ', 
+            ', ',
             \array_fill(0, \count($first), '?')
         );
 
@@ -457,7 +457,7 @@ class EasyDB
         }
         return [];
     }
-    
+
     /**
      * PHP 5.6 variadic shorthand for $this->safeQuery()
      *
@@ -502,7 +502,7 @@ class EasyDB
             throw new Issues\QueryError(
                 \json_encode([
                     $stmt,
-                    $params, 
+                    $params,
                     $this->pdo->errorInfo()
                 ])
             );
@@ -534,7 +534,7 @@ class EasyDB
             throw new Issues\QueryError(
                 \json_encode([
                     $stmt,
-                    $params, 
+                    $params,
                     $this->pdo->errorInfo()
                 ])
             );
@@ -565,7 +565,7 @@ class EasyDB
         }
         $queryString = "UPDATE ".$this->escapeIdentifier($table)." SET ";
         $params = [];
-        
+
         // The first set (pre WHERE)
         $pre = [];
         foreach ($changes as $i => $v) {
@@ -586,7 +586,7 @@ class EasyDB
         }
         $queryString .= \implode(', ', $pre);
         $queryString .= " WHERE ";
-        
+
         // The last set (post WHERE)
         $post = [];
         foreach ($conditions as $i => $v) {
@@ -609,7 +609,7 @@ class EasyDB
 
         return $this->safeQuery($queryString, $params);
     }
-    
+
     /**
      ***************************************************************************
      ***************************************************************************
@@ -617,7 +617,7 @@ class EasyDB
      ***************************************************************************
      ***************************************************************************
     **/
-    
+
     /**
      * Initiates a transaction
      */
@@ -641,7 +641,7 @@ class EasyDB
         return $this->pdo->errorCode(...$args);
     }
     /**
-     * Fetch extended error information associated with the last operation on 
+     * Fetch extended error information associated with the last operation on
      * the database handle
      */
     public function errorInfo(...$args)
