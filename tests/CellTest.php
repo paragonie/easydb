@@ -1,0 +1,62 @@
+<?php
+namespace ParagonIE\EasyDB\Tests;
+
+use ParagonIE\EasyDB\EasyDB;
+use ParagonIE\EasyDB\Factory;
+use PDO;
+use PDOException;
+
+class CellTest
+    extends
+        ColTest
+{
+
+    protected function GoodColArguments()
+    {
+        return [
+            [
+                'SELECT 1 AS foo', 0, [], [1]
+            ],
+            [
+                'SELECT 1 AS foo, 2 AS bar', 0, [], [1]
+            ],
+            [
+                'SELECT 1 AS foo, 2 AS bar', 1, [], [1]
+            ],
+            [
+                'SELECT 1 AS foo, 2 AS bar UNION SELECT 3 AS foo, 4 AS bar', 0, [], [1]
+            ],
+            [
+                'SELECT 1 AS foo, 2 AS bar UNION SELECT 3 AS foo, 4 AS bar', 1, [], [1]
+            ],
+            [
+                'SELECT ? AS foo, ? AS bar UNION SELECT ? AS foo, ? AS bar', 0, [1, 2, 3, 4], [1]
+            ],
+            [
+                'SELECT ? AS foo, ? AS bar UNION SELECT ? AS foo, ? AS bar', 1, [1, 2, 3, 4], [1]
+            ]
+        ];
+    }
+
+
+    protected function getResultForMethod(EasyDB $db, $statement, $offset, $params)
+    {
+        $args = $params;
+        array_unshift($args, $statement);
+
+        return call_user_func_array([$db, 'cell'], $args);
+    }
+
+    /**
+    * @dataProvider GoodColArgumentsProvider
+    */
+    public function testMethod(callable $cb, $statement, $offset, $params, $expectedResult)
+    {
+        $db = $cb();
+        $this->assertInstanceOf(EasyDB::class, $db);
+
+        $result = $this->getResultForMethod($db, $statement, $offset, $params);
+
+        $this->assertEquals(array_diff_assoc([$result], [$expectedResult[0]]), []);
+    }
+}

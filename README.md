@@ -132,3 +132,9 @@ $pdo = $db->getPdo();
 ```php
 $easy = new \ParagonIE\EasyDB\EasyDB($pdo, 'mysql');
 ```
+
+### How do I run tests ?
+
+```sh
+composer run tests
+```
