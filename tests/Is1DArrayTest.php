@@ -80,26 +80,4 @@ class Is1DArrayTest
         $this->expectException(InvalidArgumentException::class);
         $db->single('SELECT "column"', [[1]]);
     }
-
-    /**
-    * @dataProvider GoodFactoryCreateArgumentProvider
-    * @depends testIs1DArray
-    */
-    public function testUpdateArgChangesThrowsException($dsn, $username=null, $password=null, $options = array())
-    {
-        $db = Factory::create($dsn, $username, $password, $options);
-        $this->expectException(InvalidArgumentException::class);
-        $db->update('irrelevant_but_valid_tablename', [[1]], ['1=1']);
-    }
-
-    /**
-    * @dataProvider GoodFactoryCreateArgumentProvider
-    * @depends testIs1DArray
-    */
-    public function testUpdateArgConditionsThrowsException($dsn, $username=null, $password=null, $options = array())
-    {
-        $db = Factory::create($dsn, $username, $password, $options);
-        $this->expectException(InvalidArgumentException::class);
-        $db->update('irrelevant_but_valid_tablename', ['1=1'], [[1]]);
-    }
 }
