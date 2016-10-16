@@ -39,6 +39,8 @@ abstract class EasyDBTest
     */
     public function GoodFactoryCreateArgumentProvider()
     {
+        switch (getenv('DB')) {
+            case false:
         return [
             [
                 'sqlite::memory:',
@@ -48,6 +50,13 @@ abstract class EasyDBTest
                 'sqlite'
             ],
         ];
+            break;
+        }
+        $this->markTestIncomplete(
+            'Could not determine appropriate arguments for ' .
+            Factory::class .
+            '::create() from getenv()'
+        );
     }
 
     /**
