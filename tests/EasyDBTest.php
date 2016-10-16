@@ -41,15 +41,15 @@ abstract class EasyDBTest
     {
         switch (getenv('DB')) {
             case false:
-        return [
-            [
-                'sqlite::memory:',
-                null,
-                null,
-                [],
-                'sqlite'
-            ],
-        ];
+                return [
+                    [
+                        'sqlite::memory:',
+                        null,
+                        null,
+                        [],
+                        'sqlite'
+                    ],
+                ];
             break;
         }
         $this->markTestIncomplete(
