@@ -38,9 +38,9 @@ if [ $? -eq 0 ]; then
     # Run the testing suite
     if [ "$TRAVIS_PHP_VERSION" = 'hhvm' ]; then
       echo 'xdebug.enable = On' >> /etc/hhvm/php.ini;
-      hhvm -v Eval.EnableHipHopSyntax=true phpunit.phar
+      hhvm -v Eval.EnableHipHopSyntax=true phpunit.phar --verbose
     else
-      php phpunit.phar
+      php phpunit.phar --verbose
     fi
     # Cleanup
     if [ "$clean" -eq 1 ]; then
