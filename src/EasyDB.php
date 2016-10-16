@@ -416,7 +416,7 @@ class EasyDB
             if (!$this->is1DArray($params)) {
                 throw new \InvalidArgumentException("Only one-dimensional arrays are allowed");
             }
-            $exec = $stmt->execute($params);
+            $exec = $stmt->execute(array_values($params));
             // Someone could turn PDO Exceptions off, so let's check this:
             if ($exec === false) {
                 throw new Issues\QueryError(json_encode([$queryString, $params, $this->pdo->errorInfo()]));
