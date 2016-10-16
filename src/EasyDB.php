@@ -93,7 +93,7 @@ class EasyDB
     public function delete(string $table, array $conditions)
     {
         if (empty($table)) {
-            throw new \InvalidArgumentException("Table name must be a string");
+            throw new \InvalidArgumentException("Table name must be a non-empty string");
         }
         if (empty($conditions)) {
             // Don't allow foot-bullets
