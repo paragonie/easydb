@@ -385,9 +385,6 @@ class EasyDB
             if (\count($map) < 1 || \count($map) !== \count($first)) {
                 throw new \InvalidArgumentException('Every map in the second argument should have the same number of columns');
             }
-            if (!$this->is1DArray($map)) {
-                throw new \InvalidArgumentException('insertMany() only accepts a two-dimensional array; you attempted to pass at least three dimensions');
-            }
         }
 
         // Begin query string
