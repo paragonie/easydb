@@ -41,17 +41,6 @@ class Is1DArrayTest
     * @dataProvider GoodFactoryCreateArgumentProvider
     * @depends testIs1DArray
     */
-    public function testDeleteThrowsException($dsn, $username=null, $password=null, $options = array())
-    {
-        $db = Factory::create($dsn, $username, $password, $options);
-        $this->expectException(InvalidArgumentException::class);
-        $db->delete('irrelevant_but_valid_tablename', [[1]]);
-    }
-
-    /**
-    * @dataProvider GoodFactoryCreateArgumentProvider
-    * @depends testIs1DArray
-    */
     public function testEscapeValueSetThrowsException($dsn, $username=null, $password=null, $options = array())
     {
         $db = Factory::create($dsn, $username, $password, $options);
