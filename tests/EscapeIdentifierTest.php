@@ -30,12 +30,13 @@ class EscapeIdentifierTest
         ];
         return array_reduce(
             $this->GoodFactoryCreateArgument2EasyDBProvider(),
-            function (array $was, callable $cb) use ($identifiers) {
+            function (array $was, array $cbArgs) use ($identifiers) {
                 foreach ($identifiers as $identifier) {
-                    $was[] = [
-                        $cb,
-                        $identifier
-                    ];
+                    $args = [$identifier];
+                    foreach (array_reverse($cbArgs) as $cbArg) {
+                        array_unshift($args, $cbArg);
+                    }
+                    $was[] = $args;
                 }
                 return $was;
             },
@@ -60,12 +61,13 @@ class EscapeIdentifierTest
         ];
         return array_reduce(
             $this->GoodFactoryCreateArgument2EasyDBProvider(),
-            function (array $was, callable $cb) use ($identifiers) {
+            function (array $was, array $cbArgs) use ($identifiers) {
                 foreach ($identifiers as $identifier) {
-                    $was[] = [
-                        $cb,
-                        $identifier
-                    ];
+                    $args = [$identifier];
+                    foreach (array_reverse($cbArgs) as $cbArg) {
+                        array_unshift($args, $cbArg);
+                    }
+                    $was[] = $args;
                 }
                 return $was;
             },
