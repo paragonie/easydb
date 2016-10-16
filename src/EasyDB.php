@@ -135,7 +135,6 @@ class EasyDB
      * @param string $string - table or column name
      * @param boolean $quote - certain SQLs escape column names (i.e. mysql with `backticks`)
      * @return string
-     * @throws \InvalidArgumentException
      */
     public function escapeIdentifier(string $string, $quote = true) : string
     {
