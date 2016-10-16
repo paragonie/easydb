@@ -188,7 +188,7 @@ class EasyDB
             switch ($type) {
                 case 'int':
                     if (!\is_int($v)) {
-                        throw new \InvalidArgumentException($v . ' is not an integer');
+                        throw new \InvalidArgumentException(var_export($v, true) . ' is not an integer');
                     }
                     $join[] = (int) $v + 0;
                     break;
@@ -197,7 +197,7 @@ class EasyDB
                 case 'number':
                 case 'numeric':
                     if (!\is_numeric($v)) {
-                        throw new \InvalidArgumentException($v . ' is not a number');
+                        throw new \InvalidArgumentException(var_export($v, true) . ' is not a number');
                     }
                     $join[] = (float) $v + 0.0;
                     break;
@@ -206,7 +206,7 @@ class EasyDB
                         $v = (string) $v;
                     }
                     if (!\is_string($v)) {
-                        throw new \InvalidArgumentException($v . ' is not a string');
+                        throw new \InvalidArgumentException(var_export($v, true) . ' is not a string');
                     }
                     $join[] = $this->pdo->quote($v, \PDO::PARAM_STR);
                     break;
