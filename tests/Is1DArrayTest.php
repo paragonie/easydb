@@ -4,6 +4,7 @@ declare (strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
+use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Factory;
 
 class Is1DArrayTest
@@ -77,7 +78,15 @@ class Is1DArrayTest
     {
         $db = Factory::create($dsn, $username, $password, $options);
         $this->expectException(InvalidArgumentException::class);
-        $db->insertMany('irrelevant_but_valid_tablename', [[[2]]]);
+        try {
+            $db->run('CREATE TEMPORARY TABLE irrelevant_but_valid_tablename (foo char PRIMARY KEY)');
+        } catch (\Exception $e) {
+            $this->assertTrue(
+                false,
+                'PHP 7 strict typing lets ' . EasyDB::class . '::insertMany() get far enough along that it needs a valid table'
+            );
+        }
+        $db->insertMany('irrelevant_but_valid_tablename', [['foo' => [[2]]]]);
     }
 
     /**
