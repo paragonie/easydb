@@ -75,13 +75,13 @@ abstract class EasyDBTest
                 $options = isset($arguments[3]) ? $arguments[3] : [];
                 return [
                     function() use ($dsn, $username, $password, $options) {
-                    return Factory::create(
-                        $dsn,
-                        $username,
-                        $password,
-                        $options
-                    );
-                }
+                        return Factory::create(
+                            $dsn,
+                            $username,
+                            $password,
+                            $options
+                        );
+                    }
                 ];
             },
             $this->GoodFactoryCreateArgumentProvider()
