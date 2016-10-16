@@ -19,6 +19,6 @@ class InsertManyTest
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
 
-        $this->assertNull($db->insertMany('irrelevant_but_valid_tablename', []));
+        $this->assertFalse($db->insertMany('irrelevant_but_valid_tablename', []));
     }
 }
