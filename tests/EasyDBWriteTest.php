@@ -53,4 +53,38 @@ abstract class EasyDBWriteTest
             $this->GoodFactoryCreateArgumentProvider()
         );
     }
+
+    /**
+    * Remaps EasyDBWriteTest::GoodFactoryCreateArgument2EasyDBProvider()
+    */
+    public function GoodFactoryCreateArgument2EasyDBInsertManyProvider()
+    {
+        $cbArgsSets = $this->GoodFactoryCreateArgument2EasyDBProvider();
+        $args = [
+            [
+                [
+                    ['foo' => '1'],
+                    ['foo' => '2'],
+                    ['foo' => '3'],
+                ],
+            ],
+        ];
+
+        return array_reduce(
+            $args,
+            function (array $was, array $is) use ($cbArgsSets) {
+
+                foreach ($cbArgsSets as $cbArgs) {
+                    $args = array_values($is);
+                    foreach (array_reverse($cbArgs) as $cbArg) {
+                        array_unshift($args, $cbArg);
+                    }
+                    $was[] = $args;
+                }
+
+                return $was;
+            },
+            []
+        );
+    }
 }

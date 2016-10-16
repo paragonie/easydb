@@ -12,41 +12,7 @@ class SingleTestIs1DArrayThenDeleteReadOnlyTestThenDeleteWriteTest
 {
 
     /**
-    *
-    */
-    public function GoodFactoryCreateArgument2EasyDBProvider()
-    {
-        $cbArgsSets = parent::GoodFactoryCreateArgument2EasyDBProvider();
-        $args = [
-            [
-                [
-                    ['foo' => '1'],
-                    ['foo' => '2'],
-                    ['foo' => '3'],
-                ],
-            ],
-        ];
-
-        return array_reduce(
-            $args,
-            function (array $was, array $is) use ($cbArgsSets) {
-
-                foreach ($cbArgsSets as $cbArgs) {
-                    $args = array_values($is);
-                    foreach (array_reverse($cbArgs) as $cbArg) {
-                        array_unshift($args, $cbArg);
-                    }
-                    $was[] = $args;
-                }
-
-                return $was;
-            },
-            []
-        );
-    }
-
-    /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
+    * @dataProvider GoodFactoryCreateArgument2EasyDBInsertManyProvider
     * @depends ParagonIE\EasyDB\Tests\Is1DArrayThenDeleteReadOnlyTest::testDeleteThrowsException
     * @depends ParagonIE\EasyDB\Tests\Is1DArrayThenDeleteReadOnlyTest::testDeleteTableNameEmptyThrowsException
     * @depends ParagonIE\EasyDB\Tests\Is1DArrayThenDeleteReadOnlyTest::testDeleteTableNameInvalidThrowsException

@@ -61,11 +61,11 @@ class GetAttributeTest
     /**
     * @dataProvider GoodFactoryCreateArgument2EasyDBWithPDOAttributeProvider
     */
-    public function testGetDriver(callable $cb, $attr)
+    public function testAttribute(callable $cb, $attr)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
         try {
-            $this->assertEquals(
+            $this->assertSame(
                 $db->getAttribute($attr),
                 $db->getPdo()->getAttribute($attr)
             );

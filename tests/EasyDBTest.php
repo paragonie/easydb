@@ -97,4 +97,43 @@ abstract class EasyDBTest
     {
         return $cb();
     }
+
+    /**
+    * Remaps EasyDBWriteTest::GoodFactoryCreateArgument2EasyDBProvider()
+    */
+    public function GoodFactoryCreateArgument2EasyDBQuoteProvider()
+    {
+        $cbArgsSets = $this->GoodFactoryCreateArgument2EasyDBProvider();
+        $args = [
+            [
+                1,
+                [
+                    "'1'"
+                ]
+            ],
+            [
+                '1foo',
+                [
+                    "'1foo'"
+                ]
+            ]
+        ];
+
+        return array_reduce(
+            $args,
+            function (array $was, array $is) use ($cbArgsSets) {
+
+                foreach ($cbArgsSets as $cbArgs) {
+                    $args = array_values($is);
+                    foreach (array_reverse($cbArgs) as $cbArg) {
+                        array_unshift($args, $cbArg);
+                    }
+                    $was[] = $args;
+                }
+
+                return $was;
+            },
+            []
+        );
+    }
 }
