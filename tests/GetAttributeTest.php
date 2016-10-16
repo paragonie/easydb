@@ -45,8 +45,8 @@ class GetAttributeTest
         return array_reduce(
             $this->GoodFactoryCreateArgument2EasyDBProvider(),
             function (array $was, array $cbArgs) use ($attrs) {
-                foreach ($attrs as $attr) {
-                    $args = [$attr];
+                foreach ($attrs as $attrName => $attr) {
+                    $args = [$attr, $attrName];
                     foreach (array_reverse($cbArgs) as $cbArg) {
                         array_unshift($args, $cbArg);
                     }
@@ -61,7 +61,7 @@ class GetAttributeTest
     /**
     * @dataProvider GoodFactoryCreateArgument2EasyDBWithPDOAttributeProvider
     */
-    public function testAttribute(callable $cb, $attr)
+    public function testAttribute(callable $cb, $attr, string $attrName)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
         try {
@@ -76,6 +76,17 @@ class GetAttributeTest
                     ': Driver does not support this function: driver does not support that attribute'
                 ) !== false
             ) {
+                $this->markTestSkipped(
+                    'Skipping tests for ' .
+                    EasyDB::class .
+                    '::getAttribute(' .
+                        PDO::class .
+                        '::' .
+                        $attrName .
+                    '), as driver "' .
+                    $db->getDriver() .
+                    '" does not support that attribute'
+                );
                 $this->markTestSkipped($e->getMessage());
             } else {
                 throw $e;
