@@ -35,7 +35,7 @@ class QuoteTest
         if (!$matchedOneOfThose) {
             $this->assertTrue(
                 false,
-                'Did not match any of ' . implode('; ', $expectOneOfThese)
+                'Did not match ' . $quoted . ' against any of ' . implode('; ', $expectOneOfThese)
             );
         }
     }
