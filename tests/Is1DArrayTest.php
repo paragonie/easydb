@@ -63,25 +63,6 @@ class Is1DArrayTest
     * @dataProvider GoodFactoryCreateArgumentProvider
     * @depends testIs1DArray
     */
-    public function testInsertManyThrowsException($dsn, $username=null, $password=null, $options = array())
-    {
-        $db = Factory::create($dsn, $username, $password, $options);
-        $this->expectException(InvalidArgumentException::class);
-        try {
-            $db->run('CREATE TEMPORARY TABLE irrelevant_but_valid_tablename (foo char PRIMARY KEY)');
-        } catch (\Exception $e) {
-            $this->assertTrue(
-                false,
-                'PHP 7 strict typing lets ' . EasyDB::class . '::insertMany() get far enough along that it needs a valid table'
-            );
-        }
-        $db->insertMany('irrelevant_but_valid_tablename', [['foo' => [[2]]]]);
-    }
-
-    /**
-    * @dataProvider GoodFactoryCreateArgumentProvider
-    * @depends testIs1DArray
-    */
     public function testSafeQueryThrowsException($dsn, $username=null, $password=null, $options = array())
     {
         $db = Factory::create($dsn, $username, $password, $options);
