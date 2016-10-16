@@ -303,7 +303,7 @@ class EasyDB
         // Necessary to close the open ( above
         $queryString .= ");";
         // Now let's run a query with the parameters
-        return $this->safeQuery($queryString, $params);
+        return $this->safeQuery($queryString, $params, \PDO::FETCH_ASSOC, true);
     }
 
     /**
@@ -471,11 +471,12 @@ class EasyDB
      * @param string $statement
      * @param array $params
      * @param int $fetch_style
+     * @param bool $returnExec
      * @return mixed -- array if SELECT
      * @throws \InvalidArgumentException
      * @throws Issues\QueryError
      */
-    public function safeQuery(string $statement, array $params = [], int $fetch_style = \PDO::FETCH_ASSOC)
+    public function safeQuery(string $statement, array $params = [], int $fetch_style = \PDO::FETCH_ASSOC, bool $returnExec=false)
     {
         if (empty($params)) {
             $stmt = $this->pdo->query($statement);
@@ -498,6 +499,9 @@ class EasyDB
                     $this->pdo->errorInfo()
                 ])
             );
+        }
+        if ($returnExec) {
+            return $returnExec;
         }
         return $stmt->fetchAll($fetch_style);
     }
