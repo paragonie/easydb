@@ -817,15 +817,29 @@ class EasyDB
     {
         return $this->pdo->rollBack();
     }
+
+
     /**
      * Set an attribute
      *
-     * @param mixed ...$args
-     * @return mixed
+     * @param int $attr
+     * @param mixed $value
+     * @return bool
+     * @throws \Exception
      */
-    public function setAttribute(...$args): bool
+    public function setAttribute(int $attr, $value): bool
     {
-        return $this->pdo->setAttribute(...$args);
+        if ($attr === \PDO::ATTR_EMULATE_PREPARES) {
+            throw new \Exception(
+                'EasyDB does not allow the use of emulated prepared statements, which would be a security downgrade.'
+            );
+        }
+        if ($attr === \PDO::ATTR_ERRMODE) {
+            throw new \Exception(
+                'EasyDB only allows the safest-by-default error mode (exceptions).'
+            );
+        }
+        return $this->pdo->setAttribute($attr, $value);
     }
 
     /**
