@@ -22,20 +22,24 @@ abstract class Factory
      * @return \ParagonIE\EasyDB\EasyDB
      * @throws Issues\ConstructorFailed
      */
-    public static function create(string $dsn, string $username = null, string $password = null, array $options = []) : EasyDB
-    {
-        $dbengine = null;
+    public static function create(
+        string $dsn,
+        string $username = null,
+        string $password = null,
+        array $options = []
+    ): EasyDB {
+        $dbEngine = '';
         $post_query = null;
 
         // Let's grab the DB engine
         if (strpos($dsn, ':') !== false) {
-            $dbengine = explode(':', $dsn)[0];
+            $dbEngine = explode(':', $dsn)[0];
         }
 
         // If no charset is specified, default to UTF-8
-        switch ($dbengine) {
+        switch ($dbEngine) {
             case 'mysql':
-                if (strpos($dsn, ';charset=') === false) {
+                if (\strpos($dsn, ';charset=') === false) {
                     $dsn .= ';charset=utf8mb4';
                 }
                 break;
@@ -47,6 +51,8 @@ abstract class Factory
         try {
             $pdo = new \PDO($dsn, $username, $password, $options);
         } catch (\PDOException $e) {
+
+            // Don't leak credentials directly if we can.
             throw new Issues\ConstructorFailed(
                 'Could not create a PDO connection. Please check your username and password.'
             );
@@ -59,6 +65,6 @@ abstract class Factory
             $pdo->query($post_query);
         }
 
-        return new EasyDB($pdo, $dbengine);
+        return new EasyDB($pdo, $dbEngine);
     }
 }
