@@ -65,7 +65,9 @@ class EasyDB
     {
         $stmt = $this->pdo->prepare($statement);
         if (!$this->is1DArray($params)) {
-            throw new \InvalidArgumentException("Invalid params");
+            throw new \InvalidArgumentException(
+                'Only one-dimensional arrays are allowed.'
+            );
         }
         $exec = $stmt->execute($params);
         if ($exec) {
@@ -107,9 +109,11 @@ class EasyDB
             return 0;
         }
         if (!$this->is1DArray($conditions)){
-            throw new \InvalidArgumentException("Only one-dimensional arrays are allowed");
+            throw new \InvalidArgumentException(
+                'Only one-dimensional arrays are allowed.'
+            );
         }
-        $queryString = "DELETE FROM " . $this->escapeIdentifier($table) . " WHERE ";
+        $queryString = 'DELETE FROM ' . $this->escapeIdentifier($table) . ' WHERE ';
 
         // Simple array for joining the strings together
         $params = [];
@@ -189,7 +193,9 @@ class EasyDB
         }
         // No arrays of arrays, please
         if (!$this->is1DArray($values)) {
-            throw new \InvalidArgumentException("Only one-dimensional arrays are allowed");
+            throw new \InvalidArgumentException(
+                'Only one-dimensional arrays are allowed.'
+            );
         }
         // Build our array
         $join = [];
@@ -345,7 +351,7 @@ class EasyDB
         if (!empty($map)) {
             if (!$this->is1DArray($map)){
                 throw new \InvalidArgumentException(
-                    'Only one-dimensional arrays are allowed'
+                    'Only one-dimensional arrays are allowed.'
                 );
             }
         }
@@ -376,11 +382,11 @@ class EasyDB
         // Now let's append a list of our columns.
         $queryString .= \implode(', ', $keys);
         // This is the middle piece.
-        $queryString .= ") VALUES (";
+        $queryString .= ') VALUES (';
         // Now let's concatenate the ? placeholders
         $queryString .= \implode(', ', $phold);
         // Necessary to close the open ( above
-        $queryString .= ");";
+        $queryString .= ');';
 
         return $this->safeQuery($queryString, $params, \PDO::FETCH_BOTH, true);
     }
@@ -397,7 +403,7 @@ class EasyDB
     public function insertGet(string $table, array $map, string $field)
     {
         if ($this->insert($table, $map) < 1) {
-            throw new \Exception("Insert failed");
+            throw new \Exception('Insert failed');
         }
         $post = [];
         $params = [];
@@ -457,7 +463,7 @@ class EasyDB
         foreach ($maps as $map) {
             if (!$this->is1DArray($map)) {
                 throw new \InvalidArgumentException(
-                    'Every map in the second argument should have the same number of columns'
+                    'Every map in the second argument should have the same number of columns.'
                 );
             }
         }
@@ -562,7 +568,9 @@ class EasyDB
             return false;
         }
         if (!$this->is1DArray($params)) {
-            throw new \InvalidArgumentException("Only one-dimensional arrays are allowed");
+            throw new \InvalidArgumentException(
+                'Only one-dimensional arrays are allowed.'
+            );
         }
         $stmt = $this->pdo->prepare($statement);
         $stmt->execute($params);
@@ -585,7 +593,7 @@ class EasyDB
     {
         if (!$this->is1DArray($params)) {
             throw new \InvalidArgumentException(
-                "Only one-dimensional arrays are allowed"
+                'Only one-dimensional arrays are allowed.'
             );
         }
         $stmt = $this->pdo->prepare($statement);
@@ -610,7 +618,7 @@ class EasyDB
         }
         if (!$this->is1DArray($changes) || !$this->is1DArray($conditions)) {
             throw new \InvalidArgumentException(
-                'Only one-dimensional arrays are allowed'
+                'Only one-dimensional arrays are allowed.'
             );
         }
         $queryString = "UPDATE " . $this->escapeIdentifier($table) . " SET ";
