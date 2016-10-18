@@ -40,12 +40,15 @@ class EasyDB
         );
         $this->dbengine = $dbEngine;
     }
+
     /**
      * Variadic version of $this->column()
      *
+     *
      * @param string $statement SQL query without user data
-     * @param int $offset - How many columns from the left are we grabbing from each row?
-     * @param mixed ...$params Parameters
+     * @param int $offset       How many columns from the left are we grabbing
+     *                          from each row?
+     * @param mixed ...$params  Parameters
      * @return mixed
      */
     public function col(string $statement, int $offset = 0, ...$params)
@@ -57,8 +60,9 @@ class EasyDB
      * Fetch a column
      *
      * @param string $statement SQL query without user data
-     * @param array $params Parameters
-     * @param int $offset - How many columns from the left are we grabbing from each row?
+     * @param array $params     Parameters
+     * @param int $offset       How many columns from the left are we grabbing
+     *                          from each row?
      * @return mixed
      */
     public function column(string $statement, array $params = [], int $offset = 0)
@@ -69,14 +73,11 @@ class EasyDB
                 'Only one-dimensional arrays are allowed.'
             );
         }
-        $exec = $stmt->execute($params);
-        if ($exec) {
-            return $stmt->fetchAll(
-                \PDO::FETCH_COLUMN,
-                $offset
-            );
-        }
-        return false;
+        $stmt->execute($params);
+        return $stmt->fetchAll(
+            \PDO::FETCH_COLUMN,
+            $offset
+        );
     }
 
     /**
@@ -102,7 +103,9 @@ class EasyDB
     public function delete(string $table, array $conditions): int
     {
         if (empty($table)) {
-            throw new \InvalidArgumentException("Table name must be a non-empty string");
+            throw new \InvalidArgumentException(
+                'Table name must be a non-empty string.'
+            );
         }
         if (empty($conditions)) {
             // Don't allow foot-bullets
@@ -133,7 +136,12 @@ class EasyDB
         }
         $queryString .= \implode(' AND ', $arr);
 
-        return (int) $this->safeQuery($queryString, $params, \PDO::FETCH_BOTH, true);
+        return (int) $this->safeQuery(
+            $queryString,
+            $params,
+            \PDO::FETCH_BOTH,
+            true
+        );
     }
 
     /**
@@ -205,7 +213,7 @@ class EasyDB
                     if (!\is_int($v)) {
                         throw new \InvalidArgumentException(
                             'Expected a integer at index ' .
-                            $k .
+                                $k .
                             ' of argument 1 passed to ' .
                             static::class .
                             '::' .
@@ -233,7 +241,7 @@ class EasyDB
                     if (!\is_numeric($v)) {
                         throw new \InvalidArgumentException(
                             'Expected a number at index ' .
-                            $k .
+                                $k .
                             ' of argument 1 passed to ' .
                             static::class .
                             '::' .
@@ -261,7 +269,7 @@ class EasyDB
                     if (!\is_string($v)) {
                         throw new \InvalidArgumentException(
                             'Expected a string at index ' .
-                            $k .
+                                $k .
                             ' of argument 1 passed to ' .
                             static::class .
                             '::' .
@@ -388,7 +396,12 @@ class EasyDB
         // Necessary to close the open ( above
         $queryString .= ');';
 
-        return $this->safeQuery($queryString, $params, \PDO::FETCH_BOTH, true);
+        return (int) $this->safeQuery(
+            $queryString,
+            $params,
+            \PDO::FETCH_BOTH,
+            true
+        );
     }
 
     /**
@@ -439,9 +452,9 @@ class EasyDB
                 $limiter = '';
         }
         $query = 'SELECT ' .
-            $this->escapeIdentifier($field).
+                $this->escapeIdentifier($field).
             ' FROM ' .
-            $this->escapeIdentifier($table).
+                $this->escapeIdentifier($table).
             ' WHERE ' .
                 $conditions .
                 $limiter;
@@ -546,26 +559,28 @@ class EasyDB
     /**
      * Perform a Parameterized Query
      *
-     * @param string $statement
-     * @param array $params
-     * @param int $fetch_style
-     * @param bool $returnNumAffected
-     * @return mixed -- array if SELECT
+     * @param string $statement          The query string (hopefully untainted
+     *                                   by user input)
+     * @param array $params              The parameters (used in prepared
+     *                                   statements)
+     * @param int $fetchStyle            PDO::FETCH_STYLE
+     * @param bool $returnNumAffected    Return the number of rows affected?
+     * @return array|int
      * @throws \InvalidArgumentException
      * @throws Issues\QueryError
      */
     public function safeQuery(
         string $statement,
         array $params = [],
-        int $fetch_style = \PDO::FETCH_ASSOC,
+        int $fetchStyle = \PDO::FETCH_ASSOC,
         bool $returnNumAffected = false
     ) {
         if (empty($params)) {
             $stmt = $this->pdo->query($statement);
-            if ($stmt !== false) {
-                return $stmt->fetchAll($fetch_style);
+            if ($returnNumAffected) {
+                return $stmt->rowCount();
             }
-            return false;
+            return $stmt->fetchAll($fetchStyle);
         }
         if (!$this->is1DArray($params)) {
             throw new \InvalidArgumentException(
@@ -577,7 +592,7 @@ class EasyDB
         if ($returnNumAffected) {
             return $stmt->rowCount();
         }
-        return $stmt->fetchAll($fetch_style);
+        return $stmt->fetchAll($fetchStyle);
     }
 
     /**
@@ -604,9 +619,10 @@ class EasyDB
     /**
      * Update a row in a database table.
      *
-     * @param string $table - table name
-     * @param array $changes - associative array of which values should be assigned to each field
-     * @param array $conditions - WHERE clause
+     * @param string $table     Table name
+     * @param array $changes    Associative array of which values should be
+     *                            assigned to each field
+     * @param array $conditions WHERE clause
      * @return int
      * @throws \InvalidArgumentException
      * @throws Issues\QueryError
@@ -621,7 +637,7 @@ class EasyDB
                 'Only one-dimensional arrays are allowed.'
             );
         }
-        $queryString = "UPDATE " . $this->escapeIdentifier($table) . " SET ";
+        $queryString = 'UPDATE ' . $this->escapeIdentifier($table) . ' SET ';
         $params = [];
 
         // The first set (pre WHERE)
@@ -659,7 +675,12 @@ class EasyDB
         }
         $queryString .= \implode(' AND ', $post);
 
-        return (int) $this->safeQuery($queryString, $params, \PDO::FETCH_BOTH, true);
+        return (int) $this->safeQuery(
+            $queryString,
+            $params,
+            \PDO::FETCH_BOTH,
+            true
+        );
     }
 
     /**
