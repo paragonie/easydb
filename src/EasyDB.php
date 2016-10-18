@@ -131,7 +131,7 @@ class EasyDB
         }
         $queryString .= \implode(' AND ', $arr);
 
-        return $this->safeQuery($queryString, $params);
+        return $this->safeQuery($queryString, $params, \PDO::FETCH_BOTH, true);
     }
 
     /**
@@ -334,16 +334,15 @@ class EasyDB
      *
      * @param string $table - table name
      * @param array $map - associative array of which values should be assigned to each field
-     * @return mixed
+     * @return int
      * @throws \InvalidArgumentException
      */
-    public function insert(string $table, array $map)
+    public function insert(string $table, array $map): int
     {
-        if (empty($map)) {
-            return null;
-        }
-        if (!$this->is1DArray($map)){
-            throw new \InvalidArgumentException("Only one-dimensional arrays are allowed");
+        if (!empty($map)) {
+            if (!$this->is1DArray($map)){
+                throw new \InvalidArgumentException("Only one-dimensional arrays are allowed");
+            }
         }
         // Begin query string
         $queryString = "INSERT INTO ".$this->escapeIdentifier($table)." (";
@@ -379,8 +378,8 @@ class EasyDB
         $queryString .= \implode(', ', $phold);
         // Necessary to close the open ( above
         $queryString .= ");";
-        // Now let's run a query with the parameters
-        return $this->safeQuery($queryString, $params, \PDO::FETCH_ASSOC, true);
+
+        return $this->safeQuery($queryString, $params, \PDO::FETCH_BOTH, true);
     }
 
     /**
@@ -394,7 +393,7 @@ class EasyDB
      */
     public function insertGet(string $table, array $map, string $field)
     {
-        if ($this->insert($table, $map)) {
+        if ($this->insert($table, $map) > 0) {
             $post = [];
             $params = [];
             foreach ($map as $i => $v) {
@@ -446,15 +445,12 @@ class EasyDB
      *
      * @param string $table - table name
      * @param array $maps - array of associative array specifying values should be assigned to each field
-     * @return bool
+     * @return int
      * @throws \InvalidArgumentException
      * @throws Issues\QueryError
      */
-    public function insertMany(string $table, array $maps): bool
+    public function insertMany(string $table, array $maps): int
     {
-        if (empty($maps)) {
-            return false;
-        }
         $first = $maps[0];
         foreach ($maps as $map) {
             if (!$this->is1DArray($map)) {
@@ -491,17 +487,17 @@ class EasyDB
         // Now let's run a query with the parameters
         $exec = false;
         $stmt = $this->pdo->prepare($queryString);
+        $count = 0;
         foreach ($maps as $params) {
             if (!$this->is1DArray($params)) {
-                throw new \InvalidArgumentException("Only one-dimensional arrays are allowed");
+                throw new \InvalidArgumentException(
+                    "Only one-dimensional arrays are allowed"
+                );
             }
-            $exec = $stmt->execute(array_values($params));
-            // Someone could turn PDO Exceptions off, so let's check this:
-            if ($exec === false) {
-                throw new Issues\QueryError(json_encode([$queryString, $params, $this->pdo->errorInfo()]));
-            }
+            $stmt->execute(\array_values($params));
+            $count += $stmt->rowCount();
         }
-        return $exec;
+        return $count;
     }
 
     /**
@@ -550,7 +546,7 @@ class EasyDB
      * @param string $statement
      * @param array $params
      * @param int $fetch_style
-     * @param bool $returnExec
+     * @param bool $returnNumAffected
      * @return mixed -- array if SELECT
      * @throws \InvalidArgumentException
      * @throws Issues\QueryError
@@ -559,7 +555,7 @@ class EasyDB
         string $statement,
         array $params = [],
         int $fetch_style = \PDO::FETCH_ASSOC,
-        bool $returnExec = false
+        bool $returnNumAffected = false
     ) {
         if (empty($params)) {
             $stmt = $this->pdo->query($statement);
@@ -572,19 +568,9 @@ class EasyDB
             throw new \InvalidArgumentException("Only one-dimensional arrays are allowed");
         }
         $stmt = $this->pdo->prepare($statement);
-        $exec = $stmt->execute($params);
-        // Someone could turn PDO Exceptions off, so let's check this:
-        if ($exec === false) {
-            throw new Issues\QueryError(
-                \json_encode([
-                    $stmt,
-                    $params,
-                    $this->pdo->errorInfo()
-                ])
-            );
-        }
-        if ($returnExec) {
-            return $returnExec;
+        $stmt->execute($params);
+        if ($returnNumAffected) {
+            return $stmt->rowCount();
         }
         return $stmt->fetchAll($fetch_style);
     }
@@ -601,20 +587,12 @@ class EasyDB
     public function single(string $statement, array $params = [])
     {
         if (!$this->is1DArray($params)) {
-            throw new \InvalidArgumentException("Only one-dimensional arrays are allowed");
-        }
-        $stmt = $this->pdo->prepare($statement);
-        $exec = $stmt->execute($params);
-        // Someone could turn PDO Exceptions off, so let's check this:
-        if ($exec === false) {
-            throw new Issues\QueryError(
-                \json_encode([
-                    $stmt,
-                    $params,
-                    $this->pdo->errorInfo()
-                ])
+            throw new \InvalidArgumentException(
+                "Only one-dimensional arrays are allowed"
             );
         }
+        $stmt = $this->pdo->prepare($statement);
+        $stmt->execute($params);
         return $stmt->fetchColumn(0);
     }
 
@@ -674,7 +652,7 @@ class EasyDB
         }
         $queryString .= \implode(' AND ', $post);
 
-        return $this->safeQuery($queryString, $params);
+        return $this->safeQuery($queryString, $params, \PDO::FETCH_BOTH, true);
     }
 
     /**
