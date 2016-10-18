@@ -1,5 +1,7 @@
 # EasyDB - Simple Database Abstraction Layer
 
+[![Build Status](https://travis-ci.org/paragonie/easydb.svg?branch=master)](https://travis-ci.org/paragonie/easydb)
+
 PDO lacks brevity and simplicity; EasyDB makes separating data from instructions
 easy (and aesthetically pleasing).
 
