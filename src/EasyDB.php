@@ -94,17 +94,17 @@ class EasyDB
      *
      * @param string $table - table name
      * @param array $conditions - WHERE clause
-     * @return mixed
+     * @return int
      * @throws \InvalidArgumentException
      */
-    public function delete(string $table, array $conditions)
+    public function delete(string $table, array $conditions): int
     {
         if (empty($table)) {
             throw new \InvalidArgumentException("Table name must be a non-empty string");
         }
         if (empty($conditions)) {
             // Don't allow foot-bullets
-            return null;
+            return 0;
         }
         if (!$this->is1DArray($conditions)){
             throw new \InvalidArgumentException("Only one-dimensional arrays are allowed");
@@ -122,8 +122,6 @@ class EasyDB
                 $arr [] = " {$i} = TRUE ";
             } elseif ($v === false) {
                 $arr [] = " {$i} = FALSE ";
-            } elseif (\is_array($v)) {
-                throw new \InvalidArgumentException("Only one dimensional arrays are allowed");
             } else {
                 $arr []= " {$i} = ? ";
                 $params[] = $v;
@@ -131,7 +129,7 @@ class EasyDB
         }
         $queryString .= \implode(' AND ', $arr);
 
-        return $this->safeQuery($queryString, $params, \PDO::FETCH_BOTH, true);
+        return (int) $this->safeQuery($queryString, $params, \PDO::FETCH_BOTH, true);
     }
 
     /**
@@ -146,23 +144,27 @@ class EasyDB
     public function escapeIdentifier(string $string, $quote = true): string
     {
         if (empty($string)) {
-            throw new Issues\InvalidIdentifier("Invalid identifier: Must be a non-empty string.");
+            throw new Issues\InvalidIdentifier(
+                'Invalid identifier: Must be a non-empty string.'
+            );
         }
         $str = \preg_replace('/[^0-9a-zA-Z_]/', '', $string);
 
         // The first character cannot be [0-9]:
         if (\preg_match('/^[0-9]/', $str)) {
-            throw new Issues\InvalidIdentifier("Invalid identifier: Must begin with a letter or undescore.");
+            throw new Issues\InvalidIdentifier(
+                'Invalid identifier: Must begin with a letter or underscore.'
+            );
         }
 
         if ($quote) {
             switch ($this->dbengine) {
                 case 'mssql':
-                    return '['.$str.']';
+                    return '[' . $str . ']';
                 case 'mysql':
-                    return '`'.$str.'`';
+                    return '`' . $str . '`';
                 default:
-                    return '"'.$str.'"';
+                    return '"' . $str . '"';
             }
         }
         return $str;
@@ -207,11 +209,11 @@ class EasyDB
                                 (
                                     \is_scalar($v) || \is_array($v)
                                 )
-                                    ? gettype($v)
+                                    ? \gettype($v)
                                     : (
-                                        is_object($v)
-                                            ? ('an instance of ' . get_class($v))
-                                            : var_export($v, true)
+                                        \is_object($v)
+                                            ? ('an instance of ' . \get_class($v))
+                                            : \var_export($v, true)
                                     )
                             )
                         );
@@ -235,11 +237,11 @@ class EasyDB
                                 (
                                     \is_scalar($v) || \is_array($v)
                                 )
-                                    ? gettype($v)
+                                    ? \gettype($v)
                                     : (
-                                        is_object($v)
-                                            ? ('an instance of ' . get_class($v))
-                                            : var_export($v, true)
+                                        \is_object($v)
+                                            ? ('an instance of ' . \get_class($v))
+                                            : \var_export($v, true)
                                     )
                             )
                         );
@@ -263,11 +265,11 @@ class EasyDB
                                 (
                                     \is_scalar($v) || \is_array($v)
                                 )
-                                    ? gettype($v)
+                                    ? \gettype($v)
                                     : (
-                                        is_object($v)
-                                            ? ('an instance of ' . get_class($v))
-                                            : var_export($v, true)
+                                        \is_object($v)
+                                            ? ('an instance of ' . \get_class($v))
+                                            : \var_export($v, true)
                                     )
                             )
                         );
@@ -320,7 +322,8 @@ class EasyDB
     }
 
     /**
-     * Return the PDO object directly
+     * Return a copy of the PDO object (to prevent it from being modified
+     * to disable safety/security features).
      *
      * @return \PDO
      */
@@ -341,11 +344,13 @@ class EasyDB
     {
         if (!empty($map)) {
             if (!$this->is1DArray($map)){
-                throw new \InvalidArgumentException("Only one-dimensional arrays are allowed");
+                throw new \InvalidArgumentException(
+                    'Only one-dimensional arrays are allowed'
+                );
             }
         }
         // Begin query string
-        $queryString = "INSERT INTO ".$this->escapeIdentifier($table)." (";
+        $queryString = 'INSERT INTO ' . $this->escapeIdentifier($table) . ' (';
         $phold = [];
         $_keys = [];
         $params = [];
@@ -356,8 +361,6 @@ class EasyDB
                     $phold[] = 'TRUE';
                 } elseif ($v === false) {
                     $phold[] = 'FALSE';
-                } elseif (\is_array($v)) {
-                    throw new \InvalidArgumentException("Only one dimensional arrays are allowed");
                 } else {
                     // When all else fails, use prepared statements:
                     $phold[] = '?';
@@ -393,51 +396,50 @@ class EasyDB
      */
     public function insertGet(string $table, array $map, string $field)
     {
-        if ($this->insert($table, $map) > 0) {
-            $post = [];
-            $params = [];
-            foreach ($map as $i => $v) {
-                // Escape the identifier to prevent stupidity
-                $i = $this->escapeIdentifier($i);
-                if ($v === null) {
-                    $post []= " {$i} IS NULL ";
-                } elseif ($v === true) {
-                    $post []= " {$i} = TRUE ";
-                } elseif ($v === false) {
-                    $post []= " {$i} = FALSE ";
-                } elseif (\is_array($v)) {
-                    throw new \InvalidArgumentException("Only one-dimensional arrays are allowed");
-                } else {
-                    // We use prepared statements for handling the users' data
-                    $post []= " {$i} = ? ";
-                    $params[] = $v;
-                }
-            }
-            $conditions = \implode(' AND ', $post);
-            // We want the latest value:
-            switch ($this->dbengine) {
-                case 'mysql':
-                    $limiter = ' ORDER BY '.
-                        $this->escapeIdentifier($field).
-                        ' DESC LIMIT 0, 1 ';
-                    break;
-                case 'pgsql':
-                    $limiter = ' ORDER BY '.
-                        $this->escapeIdentifier($field).
-                        ' DESC OFFSET 0 LIMIT 1 ';
-                    break;
-                default:
-                    $limiter = '';
-            }
-            $query = 'SELECT '.
-                $this->escapeIdentifier($field).
-                ' FROM '.
-                $this->escapeIdentifier($table).
-                ' WHERE ' . $conditions . $limiter;
-            return $this->single($query, $params);
-        } else {
+        if ($this->insert($table, $map) < 1) {
             throw new \Exception("Insert failed");
         }
+        $post = [];
+        $params = [];
+        foreach ($map as $i => $v) {
+            // Escape the identifier to prevent stupidity
+            $i = $this->escapeIdentifier($i);
+            if ($v === null) {
+                $post []= " {$i} IS NULL ";
+            } elseif ($v === true) {
+                $post []= " {$i} = TRUE ";
+            } elseif ($v === false) {
+                $post []= " {$i} = FALSE ";
+            } else {
+                // We use prepared statements for handling the users' data
+                $post []= " {$i} = ? ";
+                $params[] = $v;
+            }
+        }
+        $conditions = \implode(' AND ', $post);
+        // We want the latest value:
+        switch ($this->dbengine) {
+            case 'mysql':
+                $limiter = ' ORDER BY '.
+                    $this->escapeIdentifier($field).
+                    ' DESC LIMIT 0, 1 ';
+                break;
+            case 'pgsql':
+                $limiter = ' ORDER BY '.
+                    $this->escapeIdentifier($field).
+                    ' DESC OFFSET 0 LIMIT 1 ';
+                break;
+            default:
+                $limiter = '';
+        }
+        $query = 'SELECT ' .
+            $this->escapeIdentifier($field).
+            ' FROM ' .
+            $this->escapeIdentifier($table).
+            ' WHERE ' .
+                $conditions .
+                $limiter;
+        return $this->single($query, $params);
     }
 
     /**
@@ -461,7 +463,7 @@ class EasyDB
         }
 
         // Begin query string
-        $queryString = "INSERT INTO ".$this->escapeIdentifier($table)." (";
+        $queryString = 'INSERT INTO ' . $this->escapeIdentifier($table) . ' (';
 
         // Let's make sure our keys are escaped.
         $keys = \array_keys($first);
@@ -473,7 +475,7 @@ class EasyDB
         $queryString .= \implode(', ', $keys);
 
         // This is the middle piece.
-        $queryString .= ") VALUES (";
+        $queryString .= ') VALUES (';
 
         // Now let's concatenate the ? placeholders
         $queryString .= \implode(
@@ -482,18 +484,13 @@ class EasyDB
         );
 
         // Necessary to close the open ( above
-        $queryString .= ");";
+        $queryString .= ');';
 
         // Now let's run a query with the parameters
         $exec = false;
         $stmt = $this->pdo->prepare($queryString);
         $count = 0;
         foreach ($maps as $params) {
-            if (!$this->is1DArray($params)) {
-                throw new \InvalidArgumentException(
-                    "Only one-dimensional arrays are allowed"
-                );
-            }
             $stmt->execute(\array_values($params));
             $count += $stmt->rowCount();
         }
@@ -602,19 +599,21 @@ class EasyDB
      * @param string $table - table name
      * @param array $changes - associative array of which values should be assigned to each field
      * @param array $conditions - WHERE clause
-     * @return mixed
+     * @return int
      * @throws \InvalidArgumentException
      * @throws Issues\QueryError
      */
-    public function update(string $table, array $changes, array $conditions)
+    public function update(string $table, array $changes, array $conditions): int
     {
         if (empty($changes) || empty($conditions)) {
-            return null;
+            return 0;
         }
         if (!$this->is1DArray($changes) || !$this->is1DArray($conditions)) {
-            throw new \InvalidArgumentException("Only one-dimensional arrays are allowed");
+            throw new \InvalidArgumentException(
+                'Only one-dimensional arrays are allowed'
+            );
         }
-        $queryString = "UPDATE ".$this->escapeIdentifier($table)." SET ";
+        $queryString = "UPDATE " . $this->escapeIdentifier($table) . " SET ";
         $params = [];
 
         // The first set (pre WHERE)
@@ -652,7 +651,7 @@ class EasyDB
         }
         $queryString .= \implode(' AND ', $post);
 
-        return $this->safeQuery($queryString, $params, \PDO::FETCH_BOTH, true);
+        return (int) $this->safeQuery($queryString, $params, \PDO::FETCH_BOTH, true);
     }
 
     /**
