@@ -1,10 +1,9 @@
 <?php
+declare (strict_types=1);
+
 namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyDB;
-use ParagonIE\EasyDB\Factory;
-use PDO;
-use PDOException;
 
 class ColTest
     extends
@@ -49,9 +48,11 @@ class ColTest
         $argsArray = $this->GoodColArguments();
         return array_reduce(
             $this->GoodFactoryCreateArgument2EasyDBProvider(),
-            function (array $was, callable $cb) use ($argsArray) {
+            function (array $was, array $cbArgs) use ($argsArray) {
                 foreach ($argsArray as $args) {
-                    array_unshift($args, $cb);
+                    foreach (array_reverse($cbArgs) as $cbArg) {
+                        array_unshift($args, $cbArg);
+                    }
                     $was[] = $args;
                 }
                 return $was;
@@ -74,8 +75,7 @@ class ColTest
     */
     public function testMethod(callable $cb, $statement, $offset, $params, $expectedResult)
     {
-        $db = $cb();
-        $this->assertInstanceOf(EasyDB::class, $db);
+        $db = $this->EasyDBExpectedFromCallable($cb);
 
         $result = $this->getResultForMethod($db, $statement, $offset, $params);
 

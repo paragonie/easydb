@@ -1,9 +1,10 @@
 <?php
+declare (strict_types=1);
+
 namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\Exception\ConstructorFailed;
 use ParagonIE\EasyDB\Factory;
-use ParagonIE\EasyDB\Tests\EasyDBTest;
 
 class ConstructorFailedTest
     extends

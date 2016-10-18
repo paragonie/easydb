@@ -1,11 +1,12 @@
 <?php
+declare (strict_types=1);
+
 namespace ParagonIE\EasyDB\Tests;
 
-use InvalidArgumentException;
 use ParagonIE\EasyDB\EasyDB;
-use ParagonIE\EasyDB\Factory;
-use PDO;
-use PDOException;
+use ParagonIE\EasyDB\Exception as Issues;
+use PHPUnit_Framework_Error;
+use TypeError;
 
 class EscapeIdentifierTest
     extends
@@ -29,12 +30,13 @@ class EscapeIdentifierTest
         ];
         return array_reduce(
             $this->GoodFactoryCreateArgument2EasyDBProvider(),
-            function (array $was, callable $cb) use ($identifiers) {
+            function (array $was, array $cbArgs) use ($identifiers) {
                 foreach ($identifiers as $identifier) {
-                    $was[] = [
-                        $cb,
-                        $identifier
-                    ];
+                    $args = [$identifier];
+                    foreach (array_reverse($cbArgs) as $cbArg) {
+                        array_unshift($args, $cbArg);
+                    }
+                    $was[] = $args;
                 }
                 return $was;
             },
@@ -52,19 +54,20 @@ class EscapeIdentifierTest
     {
         $identifiers = [
             1,
-            '2foo',
-            false,
+                '2foo',
             null,
+            false,
             []
         ];
         return array_reduce(
             $this->GoodFactoryCreateArgument2EasyDBProvider(),
-            function (array $was, callable $cb) use ($identifiers) {
+            function (array $was, array $cbArgs) use ($identifiers) {
                 foreach ($identifiers as $identifier) {
-                    $was[] = [
-                        $cb,
-                        $identifier
-                    ];
+                    $args = [$identifier];
+                    foreach (array_reverse($cbArgs) as $cbArg) {
+                        array_unshift($args, $cbArg);
+                    }
+                    $was[] = $args;
                 }
                 return $was;
             },
@@ -94,8 +97,7 @@ class EscapeIdentifierTest
     */
     public function testEscapeIdentifier(callable $cb, $identifier)
     {
-        $db = $cb();
-        $this->assertInstanceOf(EasyDB::class, $db);
+        $db = $this->EasyDBExpectedFromCallable($cb);
         $this->assertEquals(
             $db->escapeIdentifier($identifier, true),
             $this->getExpectedEscapedIdentifier($identifier, $db->getDriver(), true)
@@ -110,12 +112,57 @@ class EscapeIdentifierTest
     * @dataProvider GoodFactoryCreateArgument2EasyDBWithBadIdentifierProvider
     * @depends testEscapeIdentifier
     */
-    public function testEscapeIdentifierThrowsException(callable $cb, $identifier)
+    public function testEscapeIdentifierThrowsSomething(callable $cb, $identifier)
     {
-        $db = $cb();
-        $this->assertInstanceOf(EasyDB::class, $db);
-        $this->expectException(InvalidArgumentException::class);
-        $db->escapeIdentifier($identifier);
+        $db = $this->EasyDBExpectedFromCallable($cb);
+        $thrown = false;
+        try {
+            $db->escapeIdentifier($identifier);
+        } catch (Issues\InvalidIdentifier $e) {
+            $this->assertTrue(true);
+            $thrown = true;
+        } catch (TypeError $e) {
+            $this->assertTrue(true);
+            $thrown = true;
+        } catch (PHPUnit_Framework_Error $e) {
+            if (
+                preg_match(
+                    (
+                        '/^' .
+                        preg_quote(
+                            ('Argument 1 passed to ' . EasyDB::class . '::escapeIdentifier()'),
+                            '/'
+                        ) .
+                        ' must be an instance of string, [^ ]+ given$/'
+                    ),
+                    $e->getMessage()
+                )
+            ) {
+                $this->assertTrue(true);
+                $thrown = true;
+            } else {
+                throw $e;
+            }
+        } finally {
+            if (!$thrown) {
+                $this->assertTrue(
+                    false,
+                    (
+                        'Argument 2 of ' .
+                        static::class .
+                        '::' .
+                        __METHOD__ .
+                        '() must cause either ' .
+                        Issues\InvalidIdentifier::class .
+                        ' or ' .
+                        TypeError::class .
+                        ' (' .
+                            var_export($identifier, true) .
+                        ')'
+                    )
+                );
+            }
+        }
     }
 
 

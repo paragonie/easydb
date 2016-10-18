@@ -3,61 +3,18 @@ declare (strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
+use Exception;
 use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Factory;
-use PHPUnit_Framework_TestCase;
 
 /**
  * Class EasyDBTest
  * @package ParagonIE\EasyDB\Tests
  */
-abstract class EasyDBTest
+abstract class EasyDBWriteTest
     extends
-        PHPUnit_Framework_TestCase
+        EasyDBTest
 {
-
-    /**
-    * Data provider for arguments to be passed to Factory::create
-    * These arguments will not result in a valid EasyDB instance
-    * @return array
-    */
-    public function BadFactoryCreateArgumentProvider()
-    {
-        return [
-            [
-                'this-dsn-will-fail',
-                'username',
-                'putastrongpasswordhere'
-            ],
-        ];
-    }
-
-    /**
-    * Data provider for arguments to be passed to Factory::create
-    * These arguments will result in a valid EasyDB instance
-    * @return array
-    */
-    public function GoodFactoryCreateArgumentProvider()
-    {
-        switch (getenv('DB')) {
-            case false:
-                return [
-                    [
-                        'sqlite::memory:',
-                        null,
-                        null,
-                        [],
-                        'sqlite'
-                    ],
-                ];
-            break;
-        }
-        $this->markTestIncomplete(
-            'Could not determine appropriate arguments for ' .
-            Factory::class .
-            '::create() from getenv()'
-        );
-    }
 
     /**
     * EasyDB data provider
@@ -75,12 +32,21 @@ abstract class EasyDBTest
                 $options = isset($arguments[3]) ? $arguments[3] : [];
                 return [
                     function() use ($dsn, $username, $password, $options) {
-                        return Factory::create(
+                        $factory = Factory::create(
                             $dsn,
                             $username,
                             $password,
                             $options
                         );
+                        try {
+                            $factory->run(
+                                'CREATE TABLE irrelevant_but_valid_tablename (foo char(36) PRIMARY KEY)'
+                            );
+                        } catch (Exception $e) {
+                            $this->markTestSkipped($e->getMessage());
+                            return null;
+                        }
+                        return $factory;
                     }
                 ];
             },
@@ -89,34 +55,19 @@ abstract class EasyDBTest
     }
 
     /**
-    * Strict-type paranoia for a callable that is expected to return an EasyDB instance
-    * @param callable $cb
-    * @return EasyDB
-    */
-    protected function EasyDBExpectedFromCallable(callable $cb) : EasyDB
-    {
-        return $cb();
-    }
-
-    /**
     * Remaps EasyDBWriteTest::GoodFactoryCreateArgument2EasyDBProvider()
     */
-    public function GoodFactoryCreateArgument2EasyDBQuoteProvider()
+    public function GoodFactoryCreateArgument2EasyDBInsertManyProvider()
     {
         $cbArgsSets = $this->GoodFactoryCreateArgument2EasyDBProvider();
         $args = [
             [
-                1,
                 [
-                    "'1'"
-                ]
+                    ['foo' => '1'],
+                    ['foo' => '2'],
+                    ['foo' => '3'],
+                ],
             ],
-            [
-                '1foo',
-                [
-                    "'1foo'"
-                ]
-            ]
         ];
 
         return array_reduce(

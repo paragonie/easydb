@@ -1,4 +1,6 @@
 <?php
+declare (strict_types=1);
+
 namespace ParagonIE\EasyDB;
 
 use \ParagonIE\EasyDB\Exception as Issues;
@@ -12,7 +14,7 @@ abstract class Factory
 {
     /**
      * Create a new EasyDB object based on PDO constructors
-     * 
+     *
      * @param string $dsn
      * @param string $username
      * @param string $password
@@ -20,7 +22,7 @@ abstract class Factory
      * @return \ParagonIE\EasyDB\EasyDB
      * @throws Issues\ConstructorFailed
      */
-    public static function create($dsn, $username = null, $password = null, $options = [])
+    public static function create(string $dsn, string $username = null, string $password = null, array $options = []) : EasyDB
     {
         $dbengine = null;
         $post_query = null;
@@ -41,7 +43,7 @@ abstract class Factory
                 $post_query = 'SET NAMES UNICODE';
                 break;
         }
-        
+
         try {
             $pdo = new \PDO($dsn, $username, $password, $options);
         } catch (\PDOException $e) {
@@ -56,7 +58,7 @@ abstract class Factory
         if (!empty($post_query)) {
             $pdo->query($post_query);
         }
-        
+
         return new EasyDB($pdo, $dbengine);
     }
 }

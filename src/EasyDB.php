@@ -1,4 +1,6 @@
 <?php
+declare (strict_types=1);
+
 namespace ParagonIE\EasyDB;
 
 use \ParagonIE\EasyDB\Exception as Issues;
@@ -11,14 +13,14 @@ class EasyDB
 {
     protected $dbengine = null;
     protected $pdo = null;
-    
+
     /**
      * Dependency-Injectable constructor
-     * 
+     *
      * @param \PDO $pdo
      * @param string $dbengine
      */
-    public function __construct(\PDO $pdo, $dbengine = '')
+    public function __construct(\PDO $pdo, string $dbengine = '')
     {
         $this->pdo = $pdo;
         $this->pdo->setAttribute(
@@ -39,21 +41,21 @@ class EasyDB
      * @param mixed ...$params Parameters
      * @return mixed
      */
-    public function col($statement, $offset = 0, ...$params)
+    public function col(string $statement, int $offset = 0, ...$params)
     {
         return $this->column($statement, $params, $offset);
     }
-    
+
     /**
      * Fetch a column
-     * 
+     *
      * @param string $statement SQL query without user data
      * @param array $params Parameters
      * @param int $offset - How many columns from the left are we grabbing from each row?
      * @return mixed
      */
-    public function column($statement, $params = [], $offset = 0)
-    {   
+    public function column(string $statement, array $params = [], int $offset = 0)
+    {
         $stmt = $this->pdo->prepare($statement);
         if (!$this->is1DArray($params)) {
             throw new \InvalidArgumentException("Invalid params");
@@ -67,7 +69,7 @@ class EasyDB
         }
         return false;
     }
-    
+
     /**
      * Variadic version of $this->single()
      *
@@ -75,11 +77,11 @@ class EasyDB
      * @params mixed ...$params Parameters
      * @return mixed
      */
-    public function cell($statement, ...$params)
+    public function cell(string $statement, ...$params)
     {
         return $this->single($statement, $params);
     }
-    
+
     /**
      * Delete rows in a database table.
      *
@@ -88,10 +90,10 @@ class EasyDB
      * @return mixed
      * @throws \InvalidArgumentException
      */
-    public function delete($table, array $conditions)
+    public function delete(string $table, array $conditions)
     {
-        if (!\is_string($table)) {
-            throw new \InvalidArgumentException("Table name must be a string");
+        if (empty($table)) {
+            throw new \InvalidArgumentException("Table name must be a non-empty string");
         }
         if (empty($conditions)) {
             // Don't allow foot-bullets
@@ -101,7 +103,7 @@ class EasyDB
             throw new \InvalidArgumentException("Only one-dimensional arrays are allowed");
         }
         $queryString = "DELETE FROM ".$this->escapeIdentifier($table)." WHERE ";
-        
+
         // Simple array for joining the strings together
         $params = [];
         $arr = [];
@@ -124,29 +126,28 @@ class EasyDB
 
         return $this->safeQuery($queryString, $params);
     }
-    
+
     /**
      * Make sure only valid characters make it in column/table names
-     * 
+     *
      * @ref https://stackoverflow.com/questions/10573922/what-does-the-sql-standard-say-about-usage-of-backtick
-     * 
+     *
      * @param string $string - table or column name
      * @param boolean $quote - certain SQLs escape column names (i.e. mysql with `backticks`)
      * @return string
-     * @throws \InvalidArgumentException
      */
-    public function escapeIdentifier($string, $quote = true)
+    public function escapeIdentifier(string $string, $quote = true) : string
     {
-        if (!\is_string($string)) {
-            throw new Issues\InvalidIdentifier("Invalid identifier: Must be a string.");
+        if (empty($string)) {
+            throw new Issues\InvalidIdentifier("Invalid identifier: Must be a non-empty string.");
         }
         $str = \preg_replace('/[^0-9a-zA-Z_]/', '', $string);
-        
+
         // The first character cannot be [0-9]:
         if (\preg_match('/^[0-9]/', $str)) {
             throw new Issues\InvalidIdentifier("Invalid identifier: Must begin with a letter or undescore.");
         }
-        
+
         if ($quote) {
             switch ($this->dbengine) {
                 case 'mssql':
@@ -171,7 +172,7 @@ class EasyDB
      * @return string
      * @throws \InvalidArgumentException
      */
-    public function escapeValueSet(array $values, $type = 'string')
+    public function escapeValueSet(array $values, string $type = 'string') : string
     {
         if (empty($values)) {
             // Default value: a subquery that will return an empty set
@@ -183,11 +184,30 @@ class EasyDB
         }
         // Build our array
         $join = [];
-        foreach ($values as $v) {
+        foreach ($values as $k => $v) {
             switch ($type) {
                 case 'int':
                     if (!\is_int($v)) {
-                        throw new \InvalidArgumentException($v . ' is not an integer');
+                        throw new \InvalidArgumentException(
+                            'Expected a integer at index ' .
+                            $k .
+                            ' of argument 1 passed to ' .
+                            static::class .
+                            '::' .
+                            __METHOD__ .
+                            '(), receieved ' .
+                            (
+                                (
+                                    \is_scalar($v) || \is_array($v)
+                                )
+                                    ? gettype($v)
+                                    : (
+                                        is_object($v)
+                                            ? ('an instance of ' . get_class($v))
+                                            : var_export($v, true)
+                                    )
+                            )
+                        );
                     }
                     $join[] = (int) $v + 0;
                     break;
@@ -196,7 +216,26 @@ class EasyDB
                 case 'number':
                 case 'numeric':
                     if (!\is_numeric($v)) {
-                        throw new \InvalidArgumentException($v . ' is not a number');
+                        throw new \InvalidArgumentException(
+                            'Expected a number at index ' .
+                            $k .
+                            ' of argument 1 passed to ' .
+                            static::class .
+                            '::' .
+                            __METHOD__ .
+                            '(), receieved ' .
+                            (
+                                (
+                                    \is_scalar($v) || \is_array($v)
+                                )
+                                    ? gettype($v)
+                                    : (
+                                        is_object($v)
+                                            ? ('an instance of ' . get_class($v))
+                                            : var_export($v, true)
+                                    )
+                            )
+                        );
                     }
                     $join[] = (float) $v + 0.0;
                     break;
@@ -205,7 +244,26 @@ class EasyDB
                         $v = (string) $v;
                     }
                     if (!\is_string($v)) {
-                        throw new \InvalidArgumentException($v . ' is not a string');
+                        throw new \InvalidArgumentException(
+                            'Expected a string at index ' .
+                            $k .
+                            ' of argument 1 passed to ' .
+                            static::class .
+                            '::' .
+                            __METHOD__ .
+                            '(), receieved ' .
+                            (
+                                (
+                                    \is_scalar($v) || \is_array($v)
+                                )
+                                    ? gettype($v)
+                                    : (
+                                        is_object($v)
+                                            ? ('an instance of ' . get_class($v))
+                                            : var_export($v, true)
+                                    )
+                            )
+                        );
                     }
                     $join[] = $this->pdo->quote($v, \PDO::PARAM_STR);
                     break;
@@ -226,27 +284,27 @@ class EasyDB
      * @param array ...$params
      * @return mixed
      */
-    public function first($statement, ...$params)
+    public function first(string $statement, ...$params)
     {
         return $this->column($statement, $params, 0);
     }
-    
+
     /**
      * Which database driver are we operating on?
-     * 
+     *
      * @return string
      */
-    public function getDriver()
+    public function getDriver() : string
     {
         return $this->dbengine;
     }
-    
+
     /**
      * Return the PDO object directly
-     * 
+     *
      * @return \PDO
      */
-    public function getPdo()
+    public function getPdo() : \PDO
     {
         return $this->pdo;
     }
@@ -259,7 +317,7 @@ class EasyDB
      * @return mixed
      * @throws \InvalidArgumentException
      */
-    public function insert($table, array $map)
+    public function insert(string $table, array $map)
     {
         if (empty($map)) {
             return null;
@@ -302,7 +360,7 @@ class EasyDB
         // Necessary to close the open ( above
         $queryString .= ");";
         // Now let's run a query with the parameters
-        return $this->safeQuery($queryString, $params);
+        return $this->safeQuery($queryString, $params, \PDO::FETCH_ASSOC, true);
     }
 
     /**
@@ -314,7 +372,7 @@ class EasyDB
      * @return mixed
      * @throws \Exception
      */
-    public function insertGet($table, array $map, $field)
+    public function insertGet(string $table, array $map, string $field)
     {
         if ($this->insert($table, $map)) {
             $post = [];
@@ -362,7 +420,7 @@ class EasyDB
             throw new \Exception("Insert failed");
         }
     }
-    
+
     /**
      * Insert many new rows to a table in a database. using the same prepared statement
      *
@@ -372,13 +430,10 @@ class EasyDB
      * @throws \InvalidArgumentException
      * @throws Issues\QueryError
      */
-    public function insertMany($table, array $maps)
+    public function insertMany(string $table, array $maps) : bool
     {
-        if (!\is_string($table)) {
-            throw new \InvalidArgumentException("Table name must be a string");
-        }
         if (empty($maps)) {
-            return null;
+            return false;
         }
         $first = $maps[0];
         foreach ($maps as $map) {
@@ -393,9 +448,6 @@ class EasyDB
         // Let's make sure our keys are escaped.
         $keys = \array_keys($first);
         foreach ($keys as $i => $v) {
-            if (!\is_string($v)) {
-                throw new \InvalidArgumentException("Column name must be a string");
-            }
             $keys[$i] = $this->escapeIdentifier($v);
         }
 
@@ -407,7 +459,7 @@ class EasyDB
 
         // Now let's concatenate the ? placeholders
         $queryString .= \implode(
-            ', ', 
+            ', ',
             \array_fill(0, \count($first), '?')
         );
 
@@ -421,7 +473,7 @@ class EasyDB
             if (!$this->is1DArray($params)) {
                 throw new \InvalidArgumentException("Only one-dimensional arrays are allowed");
             }
-            $exec = $stmt->execute($params);
+            $exec = $stmt->execute(array_values($params));
             // Someone could turn PDO Exceptions off, so let's check this:
             if ($exec === false) {
                 throw new Issues\QueryError(json_encode([$queryString, $params, $this->pdo->errorInfo()]));
@@ -437,7 +489,7 @@ class EasyDB
      * @param mixed ...$params Parameters
      * @return mixed
      */
-    public function q($statement, ...$params)
+    public function q(string $statement, ...$params)
     {
         return $this->safeQuery($statement, $params);
     }
@@ -449,7 +501,7 @@ class EasyDB
      * @param mixed ...$params Parameters
      * @return mixed
      */
-    public function row($statement, ...$params)
+    public function row(string $statement, ...$params)
     {
         $result = $this->safeQuery($statement, $params);
         if (\is_array($result)) {
@@ -457,7 +509,7 @@ class EasyDB
         }
         return [];
     }
-    
+
     /**
      * PHP 5.6 variadic shorthand for $this->safeQuery()
      *
@@ -465,7 +517,7 @@ class EasyDB
      * @params mixed ...$params Parameters
      * @return mixed - If successful, a 2D array
      */
-    public function run($statement, ...$params)
+    public function run(string $statement, ...$params)
     {
         return $this->safeQuery($statement, $params);
     }
@@ -476,15 +528,13 @@ class EasyDB
      * @param string $statement
      * @param array $params
      * @param int $fetch_style
+     * @param bool $returnExec
      * @return mixed -- array if SELECT
      * @throws \InvalidArgumentException
      * @throws Issues\QueryError
      */
-    public function safeQuery($statement, $params = [], $fetch_style = \PDO::FETCH_ASSOC)
+    public function safeQuery(string $statement, array $params = [], int $fetch_style = \PDO::FETCH_ASSOC, bool $returnExec=false)
     {
-        if (!\is_string($statement)) {
-            throw new \InvalidArgumentException("Statement must be a string");
-        }
         if (empty($params)) {
             $stmt = $this->pdo->query($statement);
             if ($stmt !== false) {
@@ -502,10 +552,13 @@ class EasyDB
             throw new Issues\QueryError(
                 \json_encode([
                     $stmt,
-                    $params, 
+                    $params,
                     $this->pdo->errorInfo()
                 ])
             );
+        }
+        if ($returnExec) {
+            return $returnExec;
         }
         return $stmt->fetchAll($fetch_style);
     }
@@ -519,11 +572,8 @@ class EasyDB
      * @throws \InvalidArgumentException
      * @throws Issues\QueryError
      */
-    public function single($statement, $params = [])
+    public function single(string $statement, array $params = [])
     {
-        if (!\is_string($statement)) {
-            throw new \InvalidArgumentException("Statement must be a string");
-        }
         if (!$this->is1DArray($params)) {
             throw new \InvalidArgumentException("Only one-dimensional arrays are allowed");
         }
@@ -534,7 +584,7 @@ class EasyDB
             throw new Issues\QueryError(
                 \json_encode([
                     $stmt,
-                    $params, 
+                    $params,
                     $this->pdo->errorInfo()
                 ])
             );
@@ -552,11 +602,8 @@ class EasyDB
      * @throws \InvalidArgumentException
      * @throws Issues\QueryError
      */
-    public function update($table, array $changes, array $conditions)
+    public function update(string $table, array $changes, array $conditions)
     {
-        if (!\is_string($table)) {
-            throw new \InvalidArgumentException("Table name must be a string");
-        }
         if (empty($changes) || empty($conditions)) {
             return null;
         }
@@ -565,13 +612,10 @@ class EasyDB
         }
         $queryString = "UPDATE ".$this->escapeIdentifier($table)." SET ";
         $params = [];
-        
+
         // The first set (pre WHERE)
         $pre = [];
         foreach ($changes as $i => $v) {
-            if (!\is_string($i)) {
-                throw new \InvalidArgumentException("Column name must be a string");
-            }
             $i = $this->escapeIdentifier($i);
             if ($v === null) {
                 $pre []= " {$i} = NULL";
@@ -586,13 +630,10 @@ class EasyDB
         }
         $queryString .= \implode(', ', $pre);
         $queryString .= " WHERE ";
-        
+
         // The last set (post WHERE)
         $post = [];
         foreach ($conditions as $i => $v) {
-            if (!\is_string($i)) {
-                throw new \InvalidArgumentException("Column name must be a string");
-            }
             $i = $this->escapeIdentifier($i);
             if ($v === null) {
                 $post []= " {$i} IS NULL";
@@ -609,7 +650,7 @@ class EasyDB
 
         return $this->safeQuery($queryString, $params);
     }
-    
+
     /**
      ***************************************************************************
      ***************************************************************************
@@ -617,18 +658,18 @@ class EasyDB
      ***************************************************************************
      ***************************************************************************
     **/
-    
+
     /**
      * Initiates a transaction
      */
-    public function beginTransaction(...$args)
+    public function beginTransaction(...$args) : bool
     {
         return $this->pdo->beginTransaction(...$args);
     }
     /**
      * Commits a transaction
      */
-    public function commit(...$args)
+    public function commit(...$args) : bool
     {
         return $this->pdo->commit(...$args);
     }
@@ -641,17 +682,17 @@ class EasyDB
         return $this->pdo->errorCode(...$args);
     }
     /**
-     * Fetch extended error information associated with the last operation on 
+     * Fetch extended error information associated with the last operation on
      * the database handle
      */
-    public function errorInfo(...$args)
+    public function errorInfo(...$args) : array
     {
         return $this->pdo->errorInfo(...$args);
     }
     /**
      * Execute an SQL statement and return the number of affected rows
      */
-    public function exec(...$args)
+    public function exec(...$args) : int
     {
         return $this->pdo->exec(...$args);
     }
@@ -665,56 +706,56 @@ class EasyDB
     /**
      * Return an array of available PDO drivers
      */
-    public function getAvailableDrivers(...$args)
+    public function getAvailableDrivers(...$args) : array
     {
         return $this->pdo->getAvailableDrivers(...$args);
     }
     /**
      * Checks if inside a transaction
      */
-    public function inTransaction(...$args)
+    public function inTransaction(...$args) : bool
     {
         return $this->pdo->inTransaction(...$args);
     }
     /**
      * Returns the ID of the last inserted row or sequence value
      */
-    public function lastInsertId(...$args)
+    public function lastInsertId(...$args) : string
     {
         return $this->pdo->lastInsertId(...$args);
     }
     /**
      * Prepares a statement for execution and returns a statement object
      */
-    public function prepare(...$args)
+    public function prepare(...$args) : \PDOStatement
     {
         return $this->pdo->prepare(...$args);
     }
     /**
      * Executes an SQL statement, returning a result set as a PDOStatement object
      */
-    public function query(...$args)
+    public function query(...$args) : \PDOStatement
     {
         return $this->pdo->query(...$args);
     }
     /**
      * Quotes a string for use in a query
      */
-    public function quote(...$args)
+    public function quote(...$args) : string
     {
         return $this->pdo->quote(...$args);
     }
     /**
      * Rolls back a transaction
      */
-    public function rollBack(...$args)
+    public function rollBack(...$args) : bool
     {
         return $this->pdo->rollBack(...$args);
     }
     /**
      * Set an attribute
      */
-    public function setAttribute(...$args)
+    public function setAttribute(...$args) : bool
     {
         return $this->pdo->setAttribute(...$args);
     }
@@ -725,7 +766,7 @@ class EasyDB
      * @param array $params
      * @return bool
      */
-    public function is1DArray(array $params)
+    public function is1DArray(array $params) : bool
     {
         return (
             \count($params) === \count($params, COUNT_RECURSIVE) &&

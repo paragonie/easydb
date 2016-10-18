@@ -1,8 +1,8 @@
 <?php
+declare (strict_types=1);
+
 namespace ParagonIE\EasyDB\Tests;
 
-use ParagonIE\EasyDB\EasyDB;
-use ParagonIE\EasyDB\Factory;
 use PDO;
 use PDOException;
 use ReflectionClass;
@@ -44,12 +44,13 @@ class GetAttributeTest
         }
         return array_reduce(
             $this->GoodFactoryCreateArgument2EasyDBProvider(),
-            function (array $was, callable $cb) use ($attrs) {
-                foreach ($attrs as $attr) {
-                    $was[] = [
-                        $cb,
-                        $attr
-                    ];
+            function (array $was, array $cbArgs) use ($attrs) {
+                foreach ($attrs as $attrName => $attr) {
+                    $args = [$attr, $attrName];
+                    foreach (array_reverse($cbArgs) as $cbArg) {
+                        array_unshift($args, $cbArg);
+                    }
+                    $was[] = $args;
                 }
                 return $was;
             },
@@ -60,13 +61,11 @@ class GetAttributeTest
     /**
     * @dataProvider GoodFactoryCreateArgument2EasyDBWithPDOAttributeProvider
     */
-    public function testGetDriver(callable $cb, $attr)
+    public function testAttribute(callable $cb, $attr, string $attrName)
     {
-        $db = $cb();
-        $this->assertInstanceOf(EasyDB::class, $db);
-        $this->assertInstanceOf(PDO::class, $db->getPdo());
+        $db = $this->EasyDBExpectedFromCallable($cb);
         try {
-            $this->assertEquals(
+            $this->assertSame(
                 $db->getAttribute($attr),
                 $db->getPdo()->getAttribute($attr)
             );
@@ -77,6 +76,17 @@ class GetAttributeTest
                     ': Driver does not support this function: driver does not support that attribute'
                 ) !== false
             ) {
+                $this->markTestSkipped(
+                    'Skipping tests for ' .
+                    EasyDB::class .
+                    '::getAttribute(' .
+                        PDO::class .
+                        '::' .
+                        $attrName .
+                    '), as driver "' .
+                    $db->getDriver() .
+                    '" does not support that attribute'
+                );
                 $this->markTestSkipped($e->getMessage());
             } else {
                 throw $e;
