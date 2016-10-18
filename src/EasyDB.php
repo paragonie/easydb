@@ -184,11 +184,30 @@ class EasyDB
         }
         // Build our array
         $join = [];
-        foreach ($values as $v) {
+        foreach ($values as $k => $v) {
             switch ($type) {
                 case 'int':
                     if (!\is_int($v)) {
-                        throw new \InvalidArgumentException(var_export($v, true) . ' is not an integer');
+                        throw new \InvalidArgumentException(
+                            'Expected a integer at index ' .
+                            $k .
+                            ' of argument 1 passed to ' .
+                            static::class .
+                            '::' .
+                            __METHOD__ .
+                            '(), receieved ' .
+                            (
+                                (
+                                    \is_scalar($v) || \is_array($v)
+                                )
+                                    ? gettype($v)
+                                    : (
+                                        is_object($v)
+                                            ? ('an instance of ' . get_class($v))
+                                            : var_export($v, true)
+                                    )
+                            )
+                        );
                     }
                     $join[] = (int) $v + 0;
                     break;
@@ -197,7 +216,26 @@ class EasyDB
                 case 'number':
                 case 'numeric':
                     if (!\is_numeric($v)) {
-                        throw new \InvalidArgumentException(var_export($v, true) . ' is not a number');
+                        throw new \InvalidArgumentException(
+                            'Expected a number at index ' .
+                            $k .
+                            ' of argument 1 passed to ' .
+                            static::class .
+                            '::' .
+                            __METHOD__ .
+                            '(), receieved ' .
+                            (
+                                (
+                                    \is_scalar($v) || \is_array($v)
+                                )
+                                    ? gettype($v)
+                                    : (
+                                        is_object($v)
+                                            ? ('an instance of ' . get_class($v))
+                                            : var_export($v, true)
+                                    )
+                            )
+                        );
                     }
                     $join[] = (float) $v + 0.0;
                     break;
@@ -206,7 +244,26 @@ class EasyDB
                         $v = (string) $v;
                     }
                     if (!\is_string($v)) {
-                        throw new \InvalidArgumentException(var_export($v, true) . ' is not a string');
+                        throw new \InvalidArgumentException(
+                            'Expected a string at index ' .
+                            $k .
+                            ' of argument 1 passed to ' .
+                            static::class .
+                            '::' .
+                            __METHOD__ .
+                            '(), receieved ' .
+                            (
+                                (
+                                    \is_scalar($v) || \is_array($v)
+                                )
+                                    ? gettype($v)
+                                    : (
+                                        is_object($v)
+                                            ? ('an instance of ' . get_class($v))
+                                            : var_export($v, true)
+                                    )
+                            )
+                        );
                     }
                     $join[] = $this->pdo->quote($v, \PDO::PARAM_STR);
                     break;
