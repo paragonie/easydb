@@ -36,7 +36,7 @@ abstract class Factory
         switch ($dbengine) {
             case 'mysql':
                 if (strpos($dsn, ';charset=') === false) {
-                    $dsn .= ';charset=utf8';
+                    $dsn .= ';charset=utf8mb4';
                 }
                 break;
             case 'pgsql':
