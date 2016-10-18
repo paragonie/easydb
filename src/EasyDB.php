@@ -11,18 +11,25 @@ use \ParagonIE\EasyDB\Exception as Issues;
  */
 class EasyDB
 {
+    /**
+     * @var string
+     */
     protected $dbengine = null;
+
+    /**
+     * @var \PDO
+     */
     protected $pdo = null;
 
     /**
      * Dependency-Injectable constructor
      *
      * @param \PDO $pdo
-     * @param string $dbengine
+     * @param string $dbEngine
      */
-    public function __construct(\PDO $pdo, string $dbengine = '')
+    public function __construct(\PDO $pdo, string $dbEngine = '')
     {
-        $this->pdo = $pdo;
+        $this->pdo = clone $pdo;
         $this->pdo->setAttribute(
             \PDO::ATTR_EMULATE_PREPARES,
             false
@@ -31,7 +38,7 @@ class EasyDB
             \PDO::ATTR_ERRMODE,
             \PDO::ERRMODE_EXCEPTION
         );
-        $this->dbengine = $dbengine;
+        $this->dbengine = $dbEngine;
     }
     /**
      * Variadic version of $this->column()
@@ -102,7 +109,7 @@ class EasyDB
         if (!$this->is1DArray($conditions)){
             throw new \InvalidArgumentException("Only one-dimensional arrays are allowed");
         }
-        $queryString = "DELETE FROM ".$this->escapeIdentifier($table)." WHERE ";
+        $queryString = "DELETE FROM " . $this->escapeIdentifier($table) . " WHERE ";
 
         // Simple array for joining the strings together
         $params = [];
@@ -136,7 +143,7 @@ class EasyDB
      * @param boolean $quote - certain SQLs escape column names (i.e. mysql with `backticks`)
      * @return string
      */
-    public function escapeIdentifier(string $string, $quote = true) : string
+    public function escapeIdentifier(string $string, $quote = true): string
     {
         if (empty($string)) {
             throw new Issues\InvalidIdentifier("Invalid identifier: Must be a non-empty string.");
@@ -172,7 +179,7 @@ class EasyDB
      * @return string
      * @throws \InvalidArgumentException
      */
-    public function escapeValueSet(array $values, string $type = 'string') : string
+    public function escapeValueSet(array $values, string $type = 'string'): string
     {
         if (empty($values)) {
             // Default value: a subquery that will return an empty set
@@ -278,6 +285,19 @@ class EasyDB
     }
 
     /**
+     * Use with SELECT COUNT queries to determine if a record exists.
+     *
+     * @param string $statement
+     * @param array ...$params
+     * @return bool
+     */
+    public function exists(string $statement, ...$params): bool
+    {
+        $result = $this->single($statement, $params);
+        return !empty($result);
+    }
+
+    /**
      * Get the first column of each row
      *
      * @param $statement
@@ -294,7 +314,7 @@ class EasyDB
      *
      * @return string
      */
-    public function getDriver() : string
+    public function getDriver(): string
     {
         return $this->dbengine;
     }
@@ -304,9 +324,9 @@ class EasyDB
      *
      * @return \PDO
      */
-    public function getPdo() : \PDO
+    public function getPdo(): \PDO
     {
-        return $this->pdo;
+        return (clone $this->pdo);
     }
 
     /**
@@ -430,15 +450,17 @@ class EasyDB
      * @throws \InvalidArgumentException
      * @throws Issues\QueryError
      */
-    public function insertMany(string $table, array $maps) : bool
+    public function insertMany(string $table, array $maps): bool
     {
         if (empty($maps)) {
             return false;
         }
         $first = $maps[0];
         foreach ($maps as $map) {
-            if (\count($map) < 1 || \count($map) !== \count($first)) {
-                throw new \InvalidArgumentException('Every map in the second argument should have the same number of columns');
+            if (!$this->is1DArray($map)) {
+                throw new \InvalidArgumentException(
+                    'Every map in the second argument should have the same number of columns'
+                );
             }
         }
 
@@ -483,7 +505,7 @@ class EasyDB
     }
 
     /**
-     * PHP 5.6 variadic shorthand for $this->safeQuery()
+     * Variadic shorthand for $this->safeQuery()
      *
      * @param string $statement SQL query without user data
      * @param mixed ...$params Parameters
@@ -511,7 +533,7 @@ class EasyDB
     }
 
     /**
-     * PHP 5.6 variadic shorthand for $this->safeQuery()
+     * Variadic shorthand for $this->safeQuery()
      *
      * @param string $statement SQL query without user data
      * @params mixed ...$params Parameters
@@ -533,8 +555,12 @@ class EasyDB
      * @throws \InvalidArgumentException
      * @throws Issues\QueryError
      */
-    public function safeQuery(string $statement, array $params = [], int $fetch_style = \PDO::FETCH_ASSOC, bool $returnExec=false)
-    {
+    public function safeQuery(
+        string $statement,
+        array $params = [],
+        int $fetch_style = \PDO::FETCH_ASSOC,
+        bool $returnExec = false
+    ) {
         if (empty($params)) {
             $stmt = $this->pdo->query($statement);
             if ($stmt !== false) {
@@ -661,101 +687,137 @@ class EasyDB
 
     /**
      * Initiates a transaction
+     *
+     * @return bool
      */
-    public function beginTransaction(...$args) : bool
+    public function beginTransaction(): bool
     {
-        return $this->pdo->beginTransaction(...$args);
+        return $this->pdo->beginTransaction();
     }
+
     /**
      * Commits a transaction
+     *
+     * @return bool
      */
-    public function commit(...$args) : bool
+    public function commit(): bool
     {
-        return $this->pdo->commit(...$args);
+        return $this->pdo->commit();
     }
+
     /**
      * Fetch the SQLSTATE associated with the last operation on the database
      * handle
+     *
+     * @return mixed
      */
-    public function errorCode(...$args)
+    public function errorCode()
     {
-        return $this->pdo->errorCode(...$args);
+        return $this->pdo->errorCode();
     }
     /**
      * Fetch extended error information associated with the last operation on
      * the database handle
+     *
+     * @return array
      */
-    public function errorInfo(...$args) : array
+    public function errorInfo(): array
     {
-        return $this->pdo->errorInfo(...$args);
+        return $this->pdo->errorInfo();
     }
     /**
      * Execute an SQL statement and return the number of affected rows
      */
-    public function exec(...$args) : int
+    public function exec(...$args): int
     {
         return $this->pdo->exec(...$args);
     }
     /**
      * Retrieve a database connection attribute
+     *
+     * @param mixed ...$args
+     * @return mixed
      */
     public function getAttribute(...$args)
     {
         return $this->pdo->getAttribute(...$args);
     }
+
     /**
      * Return an array of available PDO drivers
+     *
+     * @return array
      */
-    public function getAvailableDrivers(...$args) : array
+    public function getAvailableDrivers(): array
     {
-        return $this->pdo->getAvailableDrivers(...$args);
+        return $this->pdo->getAvailableDrivers();
     }
     /**
      * Checks if inside a transaction
+     *
+     * @return bool
      */
-    public function inTransaction(...$args) : bool
+    public function inTransaction(): bool
     {
-        return $this->pdo->inTransaction(...$args);
+        return $this->pdo->inTransaction();
     }
     /**
      * Returns the ID of the last inserted row or sequence value
+     *
+     * @param mixed ...$args
+     * @return string
      */
-    public function lastInsertId(...$args) : string
+    public function lastInsertId(...$args): string
     {
         return $this->pdo->lastInsertId(...$args);
     }
     /**
      * Prepares a statement for execution and returns a statement object
+     *
+     * @param mixed ...$args
+     * @return \PDOStatement
      */
-    public function prepare(...$args) : \PDOStatement
+    public function prepare(...$args): \PDOStatement
     {
         return $this->pdo->prepare(...$args);
     }
     /**
      * Executes an SQL statement, returning a result set as a PDOStatement object
+     *
+     * @param mixed ...$args
+     * @return \PDOStatement
      */
-    public function query(...$args) : \PDOStatement
+    public function query(...$args): \PDOStatement
     {
         return $this->pdo->query(...$args);
     }
     /**
      * Quotes a string for use in a query
+     *
+     * @param mixed ...$args
+     * @return string
      */
-    public function quote(...$args) : string
+    public function quote(...$args): string
     {
         return $this->pdo->quote(...$args);
     }
+
     /**
      * Rolls back a transaction
+     *
+     * @return bool
      */
-    public function rollBack(...$args) : bool
+    public function rollBack(): bool
     {
-        return $this->pdo->rollBack(...$args);
+        return $this->pdo->rollBack();
     }
     /**
      * Set an attribute
+     *
+     * @param mixed ...$args
+     * @return mixed
      */
-    public function setAttribute(...$args) : bool
+    public function setAttribute(...$args): bool
     {
         return $this->pdo->setAttribute(...$args);
     }
@@ -766,7 +828,7 @@ class EasyDB
      * @param array $params
      * @return bool
      */
-    public function is1DArray(array $params) : bool
+    public function is1DArray(array $params): bool
     {
         return (
             \count($params) === \count($params, COUNT_RECURSIVE) &&
