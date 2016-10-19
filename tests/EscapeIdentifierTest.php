@@ -25,8 +25,6 @@ class EscapeIdentifierTest
             'foo',
             'foo1',
             'foo_2',
-            'foo 3',
-            'foo-4',
         ];
         return array_reduce(
             $this->GoodFactoryCreateArgument2EasyDBProvider(),
@@ -55,6 +53,8 @@ class EscapeIdentifierTest
         $identifiers = [
             1,
                 '2foo',
+            'foo 3',
+            'foo-4',
             null,
             false,
             []
