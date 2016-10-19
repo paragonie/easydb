@@ -15,20 +15,20 @@ class InsertManyTest
     /**
     * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
     */
-    public function testInsertManyReturnsNull(callable $cb)
+    public function testInsertManyNoFieldsThrowsException(callable $cb)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
-
+        $this->expectException(InvalidArgumentException::class);
         $this->assertFalse($db->insertMany('irrelevant_but_valid_tablename', []));
     }
 
     /**
     * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
     */
-    public function testInsertManyThrowsException(callable $cb)
+    public function testInsertManyNoFieldsThrowsPdoException(callable $cb)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(PDOException::class);
         $db->insertMany('irrelevant_but_valid_tablename', [[], [1]]);
     }
 

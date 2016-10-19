@@ -1,5 +1,14 @@
 #!/bin/bash
 clean=1 # Clean up?
+function cleanupPhpUnit
+{
+  # Cleanup
+  if [ "$clean" -eq 1 ]; then
+      echo -e "\033[32mCleaning Up!\033[0m"
+      rm -f phpunit.phar
+      rm -f phpunit.phar.asc
+  fi
+}
 gpg --fingerprint D8406D0D82947747293778314AA394086372C20A
 if [ $? -ne 0 ]; then
     echo -e "\033[33mDownloading PGP Public Key...\033[0m"
@@ -38,15 +47,18 @@ if [ $? -eq 0 ]; then
     # Run the testing suite
     if [ "$TRAVIS_PHP_VERSION" = 'hhvm' ]; then
       echo 'xdebug.enable = On' >> /etc/hhvm/php.ini;
-      hhvm -v Eval.EnableHipHopSyntax=true phpunit.phar --verbose
+      if hhvm -v Eval.EnableHipHopSyntax=true phpunit.phar --verbose; then
+        cleanupPhpUnit;
+      else
+        echo "build fa" 1>&2
+        exit 1
+      fi
     else
-      php phpunit.phar --verbose
-    fi
-    # Cleanup
-    if [ "$clean" -eq 1 ]; then
-        echo -e "\033[32mCleaning Up!\033[0m"
-        rm -f phpunit.phar
-        rm -f phpunit.phar.asc
+      if php phpunit.phar --verbose; then
+        cleanupPhpUnit;
+      else
+        exit 1
+      fi
     fi
 else
     echo
