@@ -34,7 +34,7 @@ class EasyDB
      */
     public function __construct(\PDO $pdo, string $dbEngine = '')
     {
-        $this->pdo = clone $pdo;
+        $this->pdo = $pdo;
         $this->pdo->setAttribute(
             \PDO::ATTR_EMULATE_PREPARES,
             false
@@ -369,7 +369,7 @@ class EasyDB
      */
     public function getPdo(): \PDO
     {
-        return (clone $this->pdo);
+        return $this->pdo;
     }
 
     /**
