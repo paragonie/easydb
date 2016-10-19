@@ -7,7 +7,7 @@ The lion's share of the version 2.0.0 release was contributed by
 * PHP 7 support
 * Added an optional argument to `safeQuery()`, which allows INSERT/UPDATE
   queries to return success/failure instead of an empty array.
-* 
+* Added optional support for separators in `escapeIdentifier()`.
 
 # Version 1.0.0 - 2016-04-22
 
