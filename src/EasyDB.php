@@ -22,6 +22,11 @@ class EasyDB
     protected $pdo = null;
 
     /**
+     * @var bool
+     */
+    protected $allowSeparators = false;
+
+    /**
      * Dependency-Injectable constructor
      *
      * @param \PDO $pdo
@@ -160,7 +165,28 @@ class EasyDB
                 'Invalid identifier: Must be a non-empty string.'
             );
         }
-        $str = \preg_replace('/[^0-9a-zA-Z_]/', '', $string);
+        if ($this->allowSeparators) {
+            $str = \preg_replace('/[^\.0-9a-zA-Z_]/', '', $string);
+            if (\strpos($str, '.') !== false) {
+                $pieces = \explode('.', $str);
+                foreach ($pieces as $i => $p) {
+                    $pieces[$i] = $this->escapeIdentifier($p, $quote);
+                }
+                return \implode('.', $pieces);
+            }
+        } else {
+            $str = \preg_replace('/[^0-9a-zA-Z_]/', '', $string);
+            if ($str !== \trim($string)) {
+                if ($str === \str_replace('.', '', $string)) {
+                    throw new Issues\InvalidIdentifier(
+                        'Separators (.) are not permitted.'
+                    );
+                }
+                throw new Issues\InvalidIdentifier(
+                    'Invalid identifier: Invalid characters supplied.'
+                );
+            }
+        }
 
         // The first character cannot be [0-9]:
         if (\preg_match('/^[0-9]/', $str)) {
@@ -681,6 +707,16 @@ class EasyDB
             \PDO::FETCH_BOTH,
             true
         );
+    }
+
+    /**
+     * @param bool $value
+     * @return EasyDB
+     */
+    public function setAllowSeprators(bool $value): self
+    {
+        $this->allowSeparators = $value;
+        return $this;
     }
 
     /**
