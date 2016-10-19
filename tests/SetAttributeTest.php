@@ -139,7 +139,7 @@ class SetAttributeTest
                 PDO::ATTR_EMULATE_PREPARES,
                 1,
                 Exception::class,
-                '!EasyDB does not allow the use of emulated prepared statements, which would be a security downgrade.',
+                'EasyDB does not allow the use of emulated prepared statements, which would be a security downgrade.',
             ],
         ];
         return array_reduce(
