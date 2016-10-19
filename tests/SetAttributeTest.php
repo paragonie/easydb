@@ -3,6 +3,7 @@ declare (strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
+use Exception;
 use ParagonIE\EasyDB\EasyDB;
 use PDO;
 use PDOException;
@@ -76,6 +77,30 @@ class SetAttributeTest
                     ' as driver "' .
                     $db->getDriver() .
                     '" does not support that attribute'
+                );
+            } else {
+                throw $e;
+            }
+        } catch (Exception $e) {
+            if (
+                (
+                    $attrName === 'ATTR_ERRMODE' &&
+                    $e->getMessage() === 'EasyDB only allows the safest-by-default error mode (exceptions).'
+                ) ||
+                (
+                    $attrName === 'ATTR_EMULATE_PREPARES' &&
+                    $e->getMessage() === 'EasyDB does not allow the use of emulated prepared statements, which would be a security downgrade.'
+                )
+            ) {
+                $this->markTestSkipped(
+                    'Skipping tests for ' .
+                    EasyDB::class .
+                    '::setAttribute() with ' .
+                    PDO::class .
+                    '::' .
+                    $attrName .
+                    ' as ' .
+                    $e->getMessage()
                 );
             } else {
                 throw $e;
