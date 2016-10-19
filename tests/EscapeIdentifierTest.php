@@ -21,16 +21,36 @@ class EscapeIdentifierTest
     */
     public function GoodFactoryCreateArgument2EasyDBWithIdentifierProvider()
     {
-        $identifiers = [
-            'foo',
-            'foo1',
-            'foo_2',
+        $provider = [
+            [
+                'foo',
+                [true, false],
+            ],
+            [
+                'foo1',
+                [true, false],
+            ],
+            [
+                'foo_2',
+                [true, false],
+            ],
+            [
+                'foo.bar',
+                [true],
+            ],
+            [
+                'foo.bar.baz',
+                [true],
+            ],
+            [
+                'foo.bar.baz.why.would.an.identifier.even.be.this.long.anyway',
+                [true],
+            ],
         ];
         return array_reduce(
             $this->GoodFactoryCreateArgument2EasyDBProvider(),
-            function (array $was, array $cbArgs) use ($identifiers) {
-                foreach ($identifiers as $identifier) {
-                    $args = [$identifier];
+            function (array $was, array $cbArgs) use ($provider) {
+                foreach ($provider as $args) {
                     foreach (array_reverse($cbArgs) as $cbArg) {
                         array_unshift($args, $cbArg);
                     }
@@ -75,9 +95,20 @@ class EscapeIdentifierTest
         );
     }
 
-    private function getExpectedEscapedIdentifier($string, $driver, $quote)
+    private function getExpectedEscapedIdentifier($string, $driver, $quote, bool $allowSeparators)
     {
-        $str = \preg_replace('/[^0-9a-zA-Z_]/', '', $string);
+        if ($allowSeparators) {
+            $str = \preg_replace('/[^\.0-9a-zA-Z_]/', '', $string);
+            if (\strpos($str, '.') !== false) {
+                $pieces = \explode('.', $str);
+                foreach ($pieces as $i => $p) {
+                    $pieces[$i] = $this->getExpectedEscapedIdentifier($p, $driver, $quote, false);
+                }
+                return \implode('.', $pieces);
+            }
+        } else {
+            $str = \preg_replace('/[^0-9a-zA-Z_]/', '', $string);
+        }
 
         if ($quote) {
             switch ($driver) {
@@ -93,19 +124,25 @@ class EscapeIdentifierTest
     }
 
     /**
+    * @param bool[] $withAllowSeparators
     * @dataProvider GoodFactoryCreateArgument2EasyDBWithIdentifierProvider
     */
-    public function testEscapeIdentifier(callable $cb, $identifier)
+    public function testEscapeIdentifier(callable $cb, $identifier, array $withAllowSeparators)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
-        $this->assertEquals(
-            $db->escapeIdentifier($identifier, true),
-            $this->getExpectedEscapedIdentifier($identifier, $db->getDriver(), true)
-        );
-        $this->assertEquals(
-            $db->escapeIdentifier($identifier, false),
-            $this->getExpectedEscapedIdentifier($identifier, $db->getDriver(), false)
-        );
+        $db->setAllowSeprators(false); // resetting to default
+        foreach ($withAllowSeparators as $allowSeparators) {
+            $db->setAllowSeprators($allowSeparators);
+            $this->assertEquals(
+                $db->escapeIdentifier($identifier, true),
+                $this->getExpectedEscapedIdentifier($identifier, $db->getDriver(), true, $allowSeparators)
+            );
+            $this->assertEquals(
+                $db->escapeIdentifier($identifier, false),
+                $this->getExpectedEscapedIdentifier($identifier, $db->getDriver(), false, $allowSeparators)
+            );
+        }
+        $db->setAllowSeprators(false); // resetting to default
     }
 
     /**
