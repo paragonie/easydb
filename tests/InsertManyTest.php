@@ -15,10 +15,10 @@ class InsertManyTest
     /**
     * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
     */
-    public function testInsertManyReturnsNull(callable $cb)
+    public function testInsertManyNoFieldsThrowsException(callable $cb)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
-
+        $this->expectException(PDOException::class);
         $this->assertFalse($db->insertMany('irrelevant_but_valid_tablename', []));
     }
 

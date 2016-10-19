@@ -15,10 +15,10 @@ class InsertTest
     /**
     * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
     */
-    public function testInsertReturnsNull(callable $cb)
+    public function testInsertNoFieldsThrowsException(callable $cb)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
-
+        $this->expectException(PDOException::class);
         $this->assertNull($db->insert('irrelevant_but_valid_tablename', []));
     }
 
