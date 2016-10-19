@@ -18,7 +18,7 @@ class InsertManyTest
     public function testInsertManyNoFieldsThrowsException(callable $cb)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
-        $this->expectException(PDOException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->assertFalse($db->insertMany('irrelevant_but_valid_tablename', []));
     }
 

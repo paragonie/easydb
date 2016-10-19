@@ -498,6 +498,15 @@ class EasyDB
      */
     public function insertMany(string $table, array $maps): int
     {
+        if (count($maps) < 1) {
+            throw new \InvalidArgumentException(
+                'Argument 2 passed to ' .
+                static::class .
+                '::' .
+                __METHOD__ .
+                '() must contain at least one field set!'
+            );
+        }
         $first = $maps[0];
         foreach ($maps as $map) {
             if (!$this->is1DArray($map)) {
