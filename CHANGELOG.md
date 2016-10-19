@@ -1,3 +1,7 @@
+# Version 2.0.1 - 2016-10-18
+
+* Fixed a segfault caused by attempting to clone PDO objects.
+
 # Version 2.0.0 - 2016-10-18
 
 The lion's share of the version 2.0.0 release was contributed by
