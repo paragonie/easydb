@@ -52,7 +52,7 @@ class EscapeIdentifierTest
     {
         $identifiers = [
             1,
-                '2foo',
+            '2foo',
             'foo 3',
             'foo-4',
             null,
