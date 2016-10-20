@@ -33,10 +33,19 @@ fi
 
 # Let's grab the latest release and its signature
 if [ ! -f phpunit.phar ]; then
-    wget https://phar.phpunit.de/phpunit.phar
+    if which wget; then
+      wget https://phar.phpunit.de/phpunit.phar
+    else
+      php -r "stream_copy_to_stream(fopen('https://phar.phpunit.de/phpunit.phar', 'r'), fopen('./phpunit.phar', 'w'));"
+    fi
+
 fi
 if [ ! -f phpunit.phar.asc ]; then
-    wget https://phar.phpunit.de/phpunit.phar.asc
+    if which wget; then
+      wget https://phar.phpunit.de/phpunit.phar.asc
+    else
+      php -r "stream_copy_to_stream(fopen('https://phar.phpunit.de/phpunit.phar.asc', 'r'), fopen('./phpunit.phar.asc', 'w'));"
+    fi
 fi
 
 # Verify before running
