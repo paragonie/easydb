@@ -123,7 +123,7 @@ $exists = $db->single(
 
 ```php
 $statement = EasyStatement::open()
-    ->andWith('last_login IS NOT NULL');
+    ->with('last_login IS NOT NULL');
 
 if (strpos($_POST['search'], '@') !== false) {
     // Perform a username search
@@ -152,7 +152,7 @@ if ($_GET['with_managers']) {
     $roles[] = 2;
 }
 
-$statement = EasyStatement::open()->andIn('role IN (?*)', $roles);
+$statement = EasyStatement::open()->in('role IN (?*)', $roles);
 
 // The ?* placeholder is replaced by the correct number of ? placeholders:
 echo $statement; /* role IN (?, ?) */
@@ -166,14 +166,14 @@ print_r($statement->values()); /* [1, 2] */
 ```php
 // Statements can also be grouped when necessary:
 $statement = EasyStatement::open()
-    ->andGroup()
-        ->andWith('subtotal > ?')
+    ->group()
+        ->with('subtotal > ?')
         ->andWith('taxes > ?')
-    ->endGroup()
+    ->end()
     ->orGroup()
-        ->andWith('cost > ?')
+        ->with('cost > ?')
         ->andWith('cancelled = 1')
-    ->endGroup();
+    ->end();
 
 echo $statement; /* (subtotal > ? AND taxes > ?) OR (cost > ? AND cancelled = 1) */
 ```

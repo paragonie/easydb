@@ -17,6 +17,19 @@ class EasyStatement
     }
 
     /**
+     * Alias for andWith().
+     *
+     * @param string $condition
+     * @param mixed $values, ...
+     *
+     * @return self
+     */
+    public function with($condition, ...$values)
+    {
+        return $this->andWith($condition, ...$values);
+    }
+
+    /**
      * Add a condition that will be applied with a logical "AND".
      *
      * @param string $condition
@@ -55,6 +68,19 @@ class EasyStatement
     }
 
     /**
+     * Alias for andIn().
+     *
+     * @param string $condition
+     * @param array $values
+     *
+     * @return self
+     */
+    public function in($condition, array $values)
+    {
+        return $this->andIn($condition, $values);
+    }
+
+    /**
      * Add an IN condition that will be applied with a logical "AND".
      *
      * Instead of using ? to denote the placeholder, ?* must be used!
@@ -82,6 +108,16 @@ class EasyStatement
     public function orIn($condition, array $values)
     {
         return $this->orWith($this->unpackCondition($condition, \count($values)), ...$values);
+    }
+
+    /**
+     * Alias for andGroup().
+     *
+     * @return static
+     */
+    public function group()
+    {
+        return $this->andGroup();
     }
 
     /**
@@ -120,6 +156,16 @@ class EasyStatement
         ];
 
         return $group;
+    }
+
+    /**
+     * Alias for endGroup().
+     *
+     * @return static
+     */
+    public function end()
+    {
+        return $this->endGroup();
     }
 
     /**

@@ -14,7 +14,7 @@ class EasyStatementTest extends TestCase
     public function testBasicAndOr()
     {
         $statement = EasyStatement::open()
-            ->andWith('id = ?', 1)
+            ->with('id = ?', 1)
             ->andWith('last_login > ?', 'today')
             ->orWith('last_login IS NULL');
 
@@ -25,7 +25,7 @@ class EasyStatementTest extends TestCase
     public function testLogicalIn()
     {
         $statement = EasyStatement::open()
-            ->andIn('role_id IN (?*)', [1, 2, 3])
+            ->in('role_id IN (?*)', [1, 2, 3])
             ->orIn('user_id IN (?*)', [100]);
 
         $this->assertSql($statement, 'role_id IN (?, ?, ?) OR user_id IN (?)');
@@ -41,10 +41,10 @@ class EasyStatementTest extends TestCase
     public function testGroupingWithAnd()
     {
         $statement = EasyStatement::open()
-            ->andWith('id = ?', 1);
+            ->with('id = ?', 1);
 
-        $group = $statement->andGroup()
-            ->andWith('last_login > ?', 'today')
+        $group = $statement->group()
+            ->with('last_login > ?', 'today')
             ->orWith('last_login IS NULL');
 
         $this->assertSame($statement, $group->endGroup());
@@ -59,12 +59,12 @@ class EasyStatementTest extends TestCase
     {
         $statement = EasyStatement::open()
             ->orGroup()
-                ->andWith('failed_logins > ?', 5)
+                ->with('failed_logins > ?', 5)
                 ->andWith('last_login IS NULL')
-            ->endGroup()
+            ->end()
             ->orGroup()
-                ->andWith('role = ?', 'banned')
-            ->endGroup();
+                ->with('role = ?', 'banned')
+            ->end();
 
         $this->assertSql($statement, '(failed_logins > ? AND last_login IS NULL) OR (role = ?)');
         $this->assertValues($statement, [5, 'banned']);
