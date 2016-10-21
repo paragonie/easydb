@@ -121,13 +121,72 @@ $exists = $db->single(
 );
 ```
 
-### What if I need PDO for something specific?
+### Generate dynamic query conditions
+
+```php
+$statement = EasyStatement::open()
+    ->with('last_login IS NOT NULL');
+
+if (strpos($_POST['search'], '@') !== false) {
+    // Perform a username search
+    $statement->orWith('username LIKE ?', '%' . $_POST['search'] . '%');
+} else {
+    // Perform an email search
+    $statement->orWith('email = ?', $_POST['search']);
+}
+
+// The statement can compile itself to a string with placeholders:
+echo $statement; /* last_login IS NOT NULL OR username LIKE ? */
+
+// All the values passed to the statement are captured and can be used for querying:
+$user = $db->single("SELECT * FROM users WHERE $statement", $statement->values());
+```
+
+_**Note**: Passing values with conditions is entirely optional but recommended._
+
+#### Variable number of "IN" arguments
+
+```php
+// Statements also handle translation for IN conditions with variable arguments,
+// using a special ?* placeholder:
+$roles = [1];
+if ($_GET['with_managers']) {
+    $roles[] = 2;
+}
+
+$statement = EasyStatement::open()->in('role IN (?*)', $roles);
+
+// The ?* placeholder is replaced by the correct number of ? placeholders:
+echo $statement; /* role IN (?, ?) */
+
+// And the values will be unpacked accordingly:
+print_r($statement->values()); /* [1, 2] */
+```
+
+#### Grouping of conditions
+
+```php
+// Statements can also be grouped when necessary:
+$statement = EasyStatement::open()
+    ->group()
+        ->with('subtotal > ?')
+        ->andWith('taxes > ?')
+    ->end()
+    ->orGroup()
+        ->with('cost > ?')
+        ->andWith('cancelled = 1')
+    ->end();
+
+echo $statement; /* (subtotal > ? AND taxes > ?) OR (cost > ? AND cancelled = 1) */
+```
+
+## What if I need PDO for something specific?
 
 ```php
 $pdo = $db->getPdo();
 ```
 
-### Can I create an EasyDB wrapper for an existing PDO instance?
+## Can I create an EasyDB wrapper for an existing PDO instance?
 
 **Yes!** It's as simple as doing this:
 
@@ -135,7 +194,7 @@ $pdo = $db->getPdo();
 $easy = new \ParagonIE\EasyDB\EasyDB($pdo, 'mysql');
 ```
 
-### How do I run tests ?
+## How do I run tests ?
 
 ```sh
 ./phpunit.sh

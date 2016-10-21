@@ -15,6 +15,11 @@
             "email":    "scott@paragonie.com",
             "homepage": "https://paragonie.com",
             "role":     "Developer"
+        },
+        {
+            "name":     "Woody Gilk",
+            "homepage": "https://github.com/shadowhand",
+            "role":     "Contributor"
         }
     ],
     "support": {
@@ -33,6 +38,7 @@
         }
     },
     "require": {
+        "php": "^7.0",
         "ext-pdo": "*"
     }
 }
