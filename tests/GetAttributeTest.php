@@ -3,6 +3,7 @@ declare (strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
+use ParagonIE\EasyDB\EasyDB;
 use PDO;
 use PDOException;
 use ReflectionClass;
@@ -59,8 +60,11 @@ class GetAttributeTest
     }
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBWithPDOAttributeProvider
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBWithPDOAttributeProvider
+     * @param callable $cb
+     * @param $attr
+     * @param string $attrName
+     */
     public function testAttribute(callable $cb, $attr, string $attrName)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);

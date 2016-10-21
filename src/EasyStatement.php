@@ -4,14 +4,29 @@ namespace ParagonIE\EasyDB;
 
 use RuntimeException;
 
+/**
+ * Class EasyStatement
+ * @package ParagonIE\EasyDB
+ */
 class EasyStatement
 {
+
+    /**
+     * @var array
+     */
+    private $parts = [];
+
+    /**
+     * @var EasyStatement
+     */
+    private $parent;
+
     /**
      * Open a new statement.
      *
-     * @return static
+     * @return self
      */
-    public static function open(): EasyStatement
+    public static function open(): self
     {
         return new static();
     }
@@ -24,7 +39,7 @@ class EasyStatement
      *
      * @return self
      */
-    public function with(string $condition, ...$values): EasyStatement
+    public function with(string $condition, ...$values): self
     {
         return $this->andWith($condition, ...$values);
     }
@@ -33,11 +48,11 @@ class EasyStatement
      * Add a condition that will be applied with a logical "AND".
      *
      * @param string $condition
-     * @param ... $values
+     * @param mixed ...$values
      *
      * @return self
      */
-    public function andWith(string $condition, ...$values): EasyStatement
+    public function andWith(string $condition, ...$values): self
     {
         $this->parts[] = [
             'type' => 'AND',
@@ -52,11 +67,11 @@ class EasyStatement
      * Add a condition that will be applied with a logical "OR".
      *
      * @param string $condition
-     * @param ... $values
+     * @param mixed ...$values
      *
      * @return self
      */
-    public function orWith(string $condition, ...$values): EasyStatement
+    public function orWith(string $condition, ...$values): self
     {
         $this->parts[] = [
             'type' => 'OR',
@@ -75,7 +90,7 @@ class EasyStatement
      *
      * @return self
      */
-    public function in(string $condition, array $values): EasyStatement
+    public function in(string $condition, array $values): self
     {
         return $this->andIn($condition, $values);
     }
@@ -90,7 +105,7 @@ class EasyStatement
      *
      * @return self
      */
-    public function andIn(string $condition, array $values): EasyStatement
+    public function andIn(string $condition, array $values): self
     {
         return $this->andWith($this->unpackCondition($condition, \count($values)), ...$values);
     }
@@ -105,7 +120,7 @@ class EasyStatement
      *
      * @return self
      */
-    public function orIn(string $condition, array $values): EasyStatement
+    public function orIn(string $condition, array $values): self
     {
         return $this->orWith($this->unpackCondition($condition, \count($values)), ...$values);
     }
@@ -113,9 +128,9 @@ class EasyStatement
     /**
      * Alias for andGroup().
      *
-     * @return static
+     * @return self
      */
-    public function group(): EasyStatement
+    public function group(): self
     {
         return $this->andGroup();
     }
@@ -125,9 +140,9 @@ class EasyStatement
      *
      * Exit the group with endGroup().
      *
-     * @return static
+     * @return self
      */
-    public function andGroup(): EasyStatement
+    public function andGroup(): self
     {
         $group = new self($this);
 
@@ -144,9 +159,9 @@ class EasyStatement
      *
      * Exit the group with endGroup().
      *
-     * @return static
+     * @return self
      */
-    public function orGroup(): EasyStatement
+    public function orGroup(): self
     {
         $group = new self($this);
 
@@ -161,9 +176,9 @@ class EasyStatement
     /**
      * Alias for endGroup().
      *
-     * @return static
+     * @return self
      */
-    public function end(): EasyStatement
+    public function end(): self
     {
         return $this->endGroup();
     }
@@ -171,12 +186,12 @@ class EasyStatement
     /**
      * Exit the current grouping and return the parent statement.
      *
-     * @return static
+     * @return self
      *
      * @throws RuntimeException
      *  If the current statement has no parent context.
      */
-    public function endGroup(): EasyStatement
+    public function endGroup(): self
     {
         if (empty($this->parent)) {
             throw new RuntimeException('Already at the top of the statement');
@@ -192,22 +207,34 @@ class EasyStatement
      */
     public function sql(): string
     {
-        return \array_reduce($this->parts, function (string $sql, array $part) {
-            if ($this->isGroup($part['condition'])) {
-                // (...)
-                $statement = '(' . $part['condition']->sql() . ')';
-            } else {
-                // foo = ?
-                $statement = $part['condition'];
-            }
+        return \array_reduce(
+            $this->parts,
+            function (string $sql, array $part): string {
+                if ($this->isGroup($part['condition'])) {
+                    // (...)
+                    $statement = '(' . $part['condition']->sql() . ')';
+                } else {
+                    // foo = ?
+                    $statement = $part['condition'];
+                }
 
-            if ($sql) {
-                // AND|OR ...
-                $statement = $part['type'] . ' ' . $statement;
-            }
+                if ($sql) {
+                    switch ($part['type']) {
+                        case 'AND':
+                        case 'OR':
+                            $statement = $part['type'] . ' ' . $statement;
+                            break;
+                        default:
+                            throw new RuntimeException(
+                                \sprintf('Invalid joiner %s', $part['type'])
+                            );
+                    }
+                }
 
-            return \trim($sql . ' ' . $statement);
-        }, '');
+                return \trim($sql . ' ' . $statement);
+            },
+            ''
+        );
     }
 
     /**
@@ -217,13 +244,19 @@ class EasyStatement
      */
     public function values(): array
     {
-        return array_reduce($this->parts, function (array $values, array $part) {
-            if ($this->isGroup($part['condition'])) {
-                return \array_merge($values, $part['condition']->values());
-            }
-
-            return \array_merge($values, $part['values']);
-        }, []);
+        return \array_reduce(
+            $this->parts,
+            function (array $values, array $part): array {
+                if ($this->isGroup($part['condition'])) {
+                    return \array_merge(
+                        $values,
+                        $part['condition']->values()
+                    );
+                }
+                return \array_merge($values, $part['values']);
+            },
+            []
+        );
     }
 
     /**
@@ -237,15 +270,11 @@ class EasyStatement
     }
 
     /**
-     * @var array
+     * Don't instantiate directly. Instead, use open() (static method).
+     *
+     * EasyStatement constructor.
+     * @param EasyStatement|null $parent
      */
-    private $parts = [];
-
-    /**
-     * @var EasyStatement
-     */
-    private $parent;
-
     protected function __construct(EasyStatement $parent = null)
     {
         $this->parent = $parent;
@@ -260,7 +289,7 @@ class EasyStatement
      */
     protected function isGroup($condition): bool
     {
-        if (false === \is_object($condition)) {
+        if (!\is_object($condition)) {
             return false;
         }
 

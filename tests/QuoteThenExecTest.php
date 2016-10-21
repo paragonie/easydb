@@ -13,11 +13,13 @@ class QuoteThenExecTest
 {
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBInsertManyProvider
-    * @depends ParagonIE\EasyDB\Tests\QuoteTest::testQuote
-    * @depends ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifier
-    * @depends ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifierThrowsSomething
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBInsertManyProvider
+     * @depends      ParagonIE\EasyDB\Tests\QuoteTest::testQuote
+     * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifier
+     * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifierThrowsSomething
+     * @param callable $cb
+     * @param array $maps
+     */
     public function testExec(callable $cb, array $maps)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);

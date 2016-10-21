@@ -13,10 +13,13 @@ class QuoteTest
 {
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBQuoteProvider
-    * @depends ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifier
-    * @depends ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifierThrowsSomething
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBQuoteProvider
+     * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifier
+     * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifierThrowsSomething
+     * @param callable $cb
+     * @param $quoteThis
+     * @param array $expectOneOfThese
+     */
     public function testQuote(callable $cb, $quoteThis, array $expectOneOfThese)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);

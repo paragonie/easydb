@@ -4,7 +4,6 @@ declare (strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
-use ParagonIE\EasyDB\EasyDB;
 
 class Is1DArrayThenDeleteReadOnlyTest
     extends
@@ -12,9 +11,10 @@ class Is1DArrayThenDeleteReadOnlyTest
 {
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
-    * @depends ParagonIE\EasyDB\Tests\Is1DArrayTest::testIs1DArray
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
+     * @depends      ParagonIE\EasyDB\Tests\Is1DArrayTest::testIs1DArray
+     * @param callable $cb
+     */
     public function testDeleteThrowsException(callable $cb)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
@@ -23,8 +23,9 @@ class Is1DArrayThenDeleteReadOnlyTest
     }
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
+     * @param callable $cb
+     */
     public function testDeleteTableNameEmptyThrowsException(callable $cb)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
@@ -33,8 +34,9 @@ class Is1DArrayThenDeleteReadOnlyTest
     }
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
+     * @param callable $cb
+     */
     public function testDeleteTableNameInvalidThrowsException(callable $cb)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
@@ -43,8 +45,9 @@ class Is1DArrayThenDeleteReadOnlyTest
     }
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
+     * @param callable $cb
+     */
     public function testDeleteConditionsReturnsNull(callable $cb)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);

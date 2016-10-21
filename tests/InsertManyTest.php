@@ -4,7 +4,6 @@ declare (strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
-use ParagonIE\EasyDB\EasyDB;
 use PDOException;
 
 class InsertManyTest
@@ -13,8 +12,9 @@ class InsertManyTest
 {
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
+     * @param callable $cb
+     */
     public function testInsertManyNoFieldsThrowsException(callable $cb)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
@@ -23,8 +23,9 @@ class InsertManyTest
     }
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
+     * @param callable $cb
+     */
     public function testInsertManyNoFieldsThrowsPdoException(callable $cb)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
@@ -33,8 +34,9 @@ class InsertManyTest
     }
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
+     * @param callable $cb
+     */
     public function testInsertManyArgTableThrowsException(callable $cb)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
@@ -43,8 +45,9 @@ class InsertManyTest
     }
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
+     * @param callable $cb
+     */
     public function testInsertManyArgMapKeysThrowsException(callable $cb)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
@@ -53,8 +56,9 @@ class InsertManyTest
     }
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
+     * @param callable $cb
+     */
     public function testInsertManyArgMapIs1DArrayThrowsException(callable $cb)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
@@ -63,8 +67,9 @@ class InsertManyTest
     }
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
+     * @param callable $cb
+     */
     public function testInsertMany(callable $cb)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);

@@ -14,9 +14,13 @@ class SetAttributeTest
 {
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBWithPDOAttributeProvider
-    * @depends ParagonIE\EasyDB\Tests\GetAttributeTest::testAttribute
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBWithPDOAttributeProvider
+     * @depends      ParagonIE\EasyDB\Tests\GetAttributeTest::testAttribute
+     * @param callable $cb
+     * @param $attr
+     * @param string $attrName
+     * @throws Exception
+     */
     public function testAttribute(callable $cb, $attr, string $attrName)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
@@ -163,10 +167,15 @@ class SetAttributeTest
     }
 
     /**
-    * Test which attributes will always throw an exception when set
-    * @dataProvider GoodFactoryCreateArgument2EasyDBForSetPDOAttributeThrowsExceptionProvider
-    * @depends testAttribute
-    */
+     * Test which attributes will always throw an exception when set
+     * @dataProvider GoodFactoryCreateArgument2EasyDBForSetPDOAttributeThrowsExceptionProvider
+     * @depends      testAttribute
+     * @param callable $cb
+     * @param int $attribute
+     * @param $value
+     * @param string $exceptionClassName
+     * @param string $exceptionMessage
+     */
     public function testSetAttributeThrowsException(
         callable $cb,
         int $attribute,

@@ -15,10 +15,12 @@ class PrepareTest
 {
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBInsertManyProvider
-    * @depends ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifier
-    * @depends ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifierThrowsSomething
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBInsertManyProvider
+     * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifier
+     * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifierThrowsSomething
+     * @param callable $cb
+     * @param array $maps
+     */
     public function testQuery(callable $cb, array $maps)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
@@ -32,7 +34,8 @@ class PrepareTest
             $keys[$i] = $db->escapeIdentifier($v);
         }
 
-        foreach ($maps as $params) {
+        $count = \count($maps);
+        for ($i = 0; $i < $count; ++$i) {
             $queryString = "INSERT INTO ".$db->escapeIdentifier($table)." (";
 
             // Now let's append a list of our columns.
@@ -50,7 +53,7 @@ class PrepareTest
             // Necessary to close the open ( above
             $queryString .= ");";
 
-            $this->assertInstanceof(PDOStatement::class, $db->prepare($queryString));
+            $this->assertInstanceOf(PDOStatement::class, $db->prepare($queryString));
         }
     }
 }

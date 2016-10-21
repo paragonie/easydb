@@ -40,7 +40,7 @@ class ColTest
     /**
     * EasyDB data provider
     * Returns an array of callables that return instances of EasyDB
-    * @return array
+    * @return callable[]
     * @see EasyDBTest::GoodFactoryCreateArgument2EasyDBProvider()
     */
     public function GoodColArgumentsProvider()
@@ -61,7 +61,13 @@ class ColTest
         );
     }
 
-
+    /**
+     * @param EasyDB $db
+     * @param $statement
+     * @param $offset
+     * @param $params
+     * @return mixed
+     */
     protected function getResultForMethod(EasyDB $db, $statement, $offset, $params)
     {
         $args = $params;
@@ -71,8 +77,14 @@ class ColTest
     }
 
     /**
-    * @dataProvider GoodColArgumentsProvider
-    */
+     * @param callable $cb
+     * @param string $statement
+     * @param int $offset
+     * @param array $params
+     * @param array $expectedResult
+     *
+     * @dataProvider GoodColArgumentsProvider
+     */
     public function testMethod(callable $cb, $statement, $offset, $params, $expectedResult)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);

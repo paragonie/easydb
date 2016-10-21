@@ -12,8 +12,12 @@ class ConstructorFailedTest
 {
 
     /**
-    * @dataProvider BadFactoryCreateArgumentProvider
-    */
+     * @dataProvider BadFactoryCreateArgumentProvider
+     * @param $dsn
+     * @param null $username
+     * @param null $password
+     * @param array $options
+     */
     public function testConstructorFailed($dsn, $username=null, $password=null, $options = array())
     {
         $this->expectException(ConstructorFailed::class);

@@ -14,7 +14,7 @@ class EasyDB
     /**
      * @var string
      */
-    protected $dbengine = null;
+    protected $dbEngine = null;
 
     /**
      * @var \PDO
@@ -43,7 +43,7 @@ class EasyDB
             \PDO::ATTR_ERRMODE,
             \PDO::ERRMODE_EXCEPTION
         );
-        $this->dbengine = $dbEngine;
+        $this->dbEngine = $dbEngine;
     }
 
     /**
@@ -89,7 +89,7 @@ class EasyDB
      * Variadic version of $this->single()
      *
      * @param string $statement SQL query without user data
-     * @params mixed ...$params Parameters
+     * @param mixed[] ...$params Parameters
      * @return mixed
      */
     public function cell(string $statement, ...$params)
@@ -196,7 +196,7 @@ class EasyDB
         }
 
         if ($quote) {
-            switch ($this->dbengine) {
+            switch ($this->dbEngine) {
                 case 'mssql':
                     return '[' . $str . ']';
                 case 'mysql':
@@ -222,7 +222,7 @@ class EasyDB
     public function escapeValueSet(array $values, string $type = 'string'): string
     {
         if (empty($values)) {
-            // Default value: a subquery that will return an empty set
+            // Default value: a sub-query that will return an empty set
             return '(SELECT 1 WHERE FALSE)';
         }
         // No arrays of arrays, please
@@ -244,7 +244,7 @@ class EasyDB
                             static::class .
                             '::' .
                             __METHOD__ .
-                            '(), receieved ' .
+                            '(), received ' .
                             (
                                 (
                                     \is_scalar($v) || \is_array($v)
@@ -272,7 +272,7 @@ class EasyDB
                             static::class .
                             '::' .
                             __METHOD__ .
-                            '(), receieved ' .
+                            '(), received ' .
                             (
                                 (
                                     \is_scalar($v) || \is_array($v)
@@ -300,7 +300,7 @@ class EasyDB
                             static::class .
                             '::' .
                             __METHOD__ .
-                            '(), receieved ' .
+                            '(), received ' .
                             (
                                 (
                                     \is_scalar($v) || \is_array($v)
@@ -358,7 +358,7 @@ class EasyDB
      */
     public function getDriver(): string
     {
-        return $this->dbengine;
+        return $this->dbEngine;
     }
 
     /**
@@ -391,19 +391,19 @@ class EasyDB
         }
         // Begin query string
         $queryString = 'INSERT INTO ' . $this->escapeIdentifier($table) . ' (';
-        $phold = [];
+        $pHold = [];
         $_keys = [];
         $params = [];
         foreach ($map as $k => $v) {
             if ($v !== null) {
                 $_keys[] = $k;
                 if ($v === true) {
-                    $phold[] = 'TRUE';
+                    $pHold[] = 'TRUE';
                 } elseif ($v === false) {
-                    $phold[] = 'FALSE';
+                    $pHold[] = 'FALSE';
                 } else {
                     // When all else fails, use prepared statements:
-                    $phold[] = '?';
+                    $pHold[] = '?';
                     $params[] = $v;
                 }
             }
@@ -418,7 +418,7 @@ class EasyDB
         // This is the middle piece.
         $queryString .= ') VALUES (';
         // Now let's concatenate the ? placeholders
-        $queryString .= \implode(', ', $phold);
+        $queryString .= \implode(', ', $pHold);
         // Necessary to close the open ( above
         $queryString .= ');';
 
@@ -463,7 +463,7 @@ class EasyDB
         }
         $conditions = \implode(' AND ', $post);
         // We want the latest value:
-        switch ($this->dbengine) {
+        switch ($this->dbEngine) {
             case 'mysql':
                 $limiter = ' ORDER BY '.
                     $this->escapeIdentifier($field).
@@ -541,7 +541,6 @@ class EasyDB
         $queryString .= ');';
 
         // Now let's run a query with the parameters
-        $exec = false;
         $stmt = $this->pdo->prepare($queryString);
         $count = 0;
         foreach ($maps as $params) {
@@ -583,7 +582,7 @@ class EasyDB
      * Variadic shorthand for $this->safeQuery()
      *
      * @param string $statement SQL query without user data
-     * @params mixed ...$params Parameters
+     * @param mixed[] ...$params Parameters
      * @return mixed - If successful, a 2D array
      */
     public function run(string $statement, ...$params)
@@ -592,7 +591,7 @@ class EasyDB
     }
 
     /**
-     * Perform a Parameterized Query
+     * Perform a Parametrized Query
      *
      * @param string $statement          The query string (hopefully untainted
      *                                   by user input)
@@ -722,7 +721,7 @@ class EasyDB
      * @param bool $value
      * @return EasyDB
      */
-    public function setAllowSeprators(bool $value): self
+    public function setAllowSeparators(bool $value): self
     {
         $this->allowSeparators = $value;
         return $this;
@@ -778,6 +777,9 @@ class EasyDB
     }
     /**
      * Execute an SQL statement and return the number of affected rows
+     *
+     * @param mixed[] ...$args
+     * @return int
      */
     public function exec(...$args): int
     {

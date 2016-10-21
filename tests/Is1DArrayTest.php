@@ -4,7 +4,6 @@ declare (strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
-use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Factory;
 
 class Is1DArrayTest
@@ -13,8 +12,12 @@ class Is1DArrayTest
 {
 
     /**
-    * @dataProvider GoodFactoryCreateArgumentProvider
-    */
+     * @dataProvider GoodFactoryCreateArgumentProvider
+     * @param $dsn
+     * @param null $username
+     * @param null $password
+     * @param array $options
+     */
     public function testIs1DArray($dsn, $username=null, $password=null, $options = array())
     {
         $db = Factory::create($dsn, $username, $password, $options);
@@ -27,9 +30,13 @@ class Is1DArrayTest
     }
 
     /**
-    * @dataProvider GoodFactoryCreateArgumentProvider
-    * @depends testIs1DArray
-    */
+     * @dataProvider GoodFactoryCreateArgumentProvider
+     * @depends      testIs1DArray
+     * @param $dsn
+     * @param null $username
+     * @param null $password
+     * @param array $options
+     */
     public function testColumnThrowsException($dsn, $username=null, $password=null, $options = array())
     {
         $db = Factory::create($dsn, $username, $password, $options);
@@ -38,9 +45,13 @@ class Is1DArrayTest
     }
 
     /**
-    * @dataProvider GoodFactoryCreateArgumentProvider
-    * @depends testIs1DArray
-    */
+     * @dataProvider GoodFactoryCreateArgumentProvider
+     * @depends      testIs1DArray
+     * @param $dsn
+     * @param null $username
+     * @param null $password
+     * @param array $options
+     */
     public function testSafeQueryThrowsException($dsn, $username=null, $password=null, $options = array())
     {
         $db = Factory::create($dsn, $username, $password, $options);
@@ -49,9 +60,13 @@ class Is1DArrayTest
     }
 
     /**
-    * @dataProvider GoodFactoryCreateArgumentProvider
-    * @depends testIs1DArray
-    */
+     * @dataProvider GoodFactoryCreateArgumentProvider
+     * @depends      testIs1DArray
+     * @param $dsn
+     * @param null $username
+     * @param null $password
+     * @param array $options
+     */
     public function testSingleThrowsException($dsn, $username=null, $password=null, $options = array())
     {
         $db = Factory::create($dsn, $username, $password, $options);

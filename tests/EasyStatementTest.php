@@ -74,7 +74,7 @@ class EasyStatementTest extends TestCase
     {
         $this->expectException(RuntimeException::class);
 
-        $statement = EasyStatement::open()->endGroup();
+        EasyStatement::open()->endGroup();
     }
 
     private function assertSql(EasyStatement $statement, $expected)

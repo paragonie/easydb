@@ -8,9 +8,7 @@ use ParagonIE\EasyDB\Exception as Issues;
 use PHPUnit_Framework_Error;
 use TypeError;
 
-class EscapeIdentifierTest
-    extends
-        EasyDBTest
+class EscapeIdentifierTest extends EasyDBTest
 {
 
     /**
@@ -124,15 +122,17 @@ class EscapeIdentifierTest
     }
 
     /**
-    * @param bool[] $withAllowSeparators
-    * @dataProvider GoodFactoryCreateArgument2EasyDBWithIdentifierProvider
-    */
+     * @param callable $cb
+     * @param $identifier
+     * @param bool[] $withAllowSeparators
+     * @dataProvider GoodFactoryCreateArgument2EasyDBWithIdentifierProvider
+     */
     public function testEscapeIdentifier(callable $cb, $identifier, array $withAllowSeparators)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
-        $db->setAllowSeprators(false); // resetting to default
+        $db->setAllowSeparators(false); // resetting to default
         foreach ($withAllowSeparators as $allowSeparators) {
-            $db->setAllowSeprators($allowSeparators);
+            $db->setAllowSeparators($allowSeparators);
             $this->assertEquals(
                 $db->escapeIdentifier($identifier, true),
                 $this->getExpectedEscapedIdentifier($identifier, $db->getDriver(), true, $allowSeparators)
@@ -142,13 +142,15 @@ class EscapeIdentifierTest
                 $this->getExpectedEscapedIdentifier($identifier, $db->getDriver(), false, $allowSeparators)
             );
         }
-        $db->setAllowSeprators(false); // resetting to default
+        $db->setAllowSeparators(false); // resetting to default
     }
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBWithBadIdentifierProvider
-    * @depends testEscapeIdentifier
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBWithBadIdentifierProvider
+     * @depends      testEscapeIdentifier
+     * @param callable $cb
+     * @param $identifier
+     */
     public function testEscapeIdentifierThrowsSomething(callable $cb, $identifier)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);

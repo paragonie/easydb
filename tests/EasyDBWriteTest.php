@@ -4,7 +4,6 @@ declare (strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use Exception;
-use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Factory;
 
 /**
@@ -70,10 +69,9 @@ abstract class EasyDBWriteTest
             ],
         ];
 
-        return array_reduce(
+        return \array_reduce(
             $args,
             function (array $was, array $is) use ($cbArgsSets) {
-
                 foreach ($cbArgsSets as $cbArgs) {
                     $args = array_values($is);
                     foreach (array_reverse($cbArgs) as $cbArg) {

@@ -11,9 +11,7 @@ use PHPUnit_Framework_TestCase;
  * Class EasyDBTest
  * @package ParagonIE\EasyDB\Tests
  */
-abstract class EasyDBTest
-    extends
-        PHPUnit_Framework_TestCase
+abstract class EasyDBTest extends PHPUnit_Framework_TestCase
 {
 
     /**
@@ -57,6 +55,7 @@ abstract class EasyDBTest
             Factory::class .
             '::create() from getenv()'
         );
+        return [];
     }
 
     /**

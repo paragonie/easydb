@@ -4,8 +4,6 @@ declare (strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
-use ParagonIE\EasyDB\EasyDB;
-use PDOException;
 
 class UpdateTest
     extends
@@ -13,8 +11,9 @@ class UpdateTest
 {
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
+     * @param callable $cb
+     */
     public function testUpdateArgChangesReturnsNull(callable $cb)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
@@ -25,8 +24,9 @@ class UpdateTest
     }
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
+     * @param callable $cb
+     */
     public function testUpdateArgConditionsReturnsNull(callable $cb)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
@@ -37,8 +37,9 @@ class UpdateTest
     }
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
+     * @param callable $cb
+     */
     public function testUpdateArgChangesThrowsException(callable $cb)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
@@ -47,8 +48,9 @@ class UpdateTest
     }
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
+     * @param callable $cb
+     */
     public function testUpdateArgConditionsThrowsException(callable $cb)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
@@ -57,8 +59,9 @@ class UpdateTest
     }
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
+     * @param callable $cb
+     */
     public function testUpdateTableNameThrowsException(callable $cb)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
@@ -67,8 +70,9 @@ class UpdateTest
     }
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
+     * @param callable $cb
+     */
     public function testUpdateArgChangesKeyThrowsException(callable $cb)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
@@ -77,8 +81,9 @@ class UpdateTest
     }
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
+     * @param callable $cb
+     */
     public function testUpdateArgConditionsKeyThrowsException(callable $cb)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
@@ -87,9 +92,10 @@ class UpdateTest
     }
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
-    * @depends ParagonIE\EasyDB\Tests\InsertManyTest::testInsertMany
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
+     * @depends      ParagonIE\EasyDB\Tests\InsertManyTest::testInsertMany
+     * @param callable $cb
+     */
     public function testUpdate(callable $cb)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);

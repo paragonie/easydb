@@ -4,8 +4,6 @@ declare (strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
-use ParagonIE\EasyDB\EasyDB;
-use PDOException;
 
 class InsertGetTest
     extends
@@ -13,8 +11,9 @@ class InsertGetTest
 {
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
+     * @param callable $cb
+     */
     public function testInsertGetTableNameThrowsException(callable $cb)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
@@ -23,8 +22,9 @@ class InsertGetTest
     }
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
+     * @param callable $cb
+     */
     public function testInsertGetMapArgThrowsException(callable $cb)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
@@ -33,8 +33,9 @@ class InsertGetTest
     }
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
+     * @param callable $cb
+     */
     public function testInsertGetMapArgKeysThrowsException(callable $cb)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
@@ -43,8 +44,9 @@ class InsertGetTest
     }
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
+     * @param callable $cb
+     */
     public function testInsertGet(callable $cb)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);

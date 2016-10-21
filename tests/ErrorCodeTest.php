@@ -7,14 +7,13 @@ namespace ParagonIE\EasyDB\Tests;
  * Class EasyDBTest
  * @package ParagonIE\EasyDB\Tests
  */
-class ErrorCodeTest
-    extends
-        EasyDBTest
+class ErrorCodeTest extends EasyDBTest
 {
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
-    */
+     * @param callable $cb
+     * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
+     */
     public function testNoError(callable $cb)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);

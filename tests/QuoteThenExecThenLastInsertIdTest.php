@@ -13,12 +13,14 @@ class QuoteThenExecThenLastInsertIdTest
 {
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBInsertManyProvider
-    * @depends ParagonIE\EasyDB\Tests\QuoteTest::testQuote
-    * @depends ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifier
-    * @depends ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifierThrowsSomething
-    * @depends ParagonIE\EasyDB\Tests\QuoteThenExecTest::testExec
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBInsertManyProvider
+     * @depends      ParagonIE\EasyDB\Tests\QuoteTest::testQuote
+     * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifier
+     * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifierThrowsSomething
+     * @depends      ParagonIE\EasyDB\Tests\QuoteThenExecTest::testExec
+     * @param callable $cb
+     * @param array $maps
+     */
     public function testLastInsertId(callable $cb, array $maps)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);

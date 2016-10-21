@@ -222,9 +222,10 @@ class EscapeValueSetTest
     }
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
-    * @depends ParagonIE\EasyDB\Tests\Is1DArrayTest::testIs1DArray
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
+     * @depends      ParagonIE\EasyDB\Tests\Is1DArrayTest::testIs1DArray
+     * @param callable $cb
+     */
     public function testEscapeValueSetFailsIs1DArray(callable $cb)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
@@ -233,10 +234,13 @@ class EscapeValueSetTest
     }
 
     /**
-    * @dataProvider BadFactoryCreateArgument2EasyDBEscapeValueSetProvider
-    * @depends ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifier
-    * @depends ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifierThrowsSomething
-    */
+     * @dataProvider BadFactoryCreateArgument2EasyDBEscapeValueSetProvider
+     * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifier
+     * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifierThrowsSomething
+     * @param callable $cb
+     * @param array $escapeThis
+     * @param string $escapeThatAsType
+     */
     public function testEscapeValueSetThrowsException(callable $cb, array $escapeThis, string $escapeThatAsType)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
@@ -245,11 +249,15 @@ class EscapeValueSetTest
     }
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBEscapeValueSetProvider
-    * @depends testEscapeValueSetThrowsException
-    * @depends ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifier
-    * @depends ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifierThrowsSomething
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBEscapeValueSetProvider
+     * @depends      testEscapeValueSetThrowsException
+     * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifier
+     * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifierThrowsSomething
+     * @param callable $cb
+     * @param array $escapeThis
+     * @param string $escapeThatAsType
+     * @param array $expectOneOfThese
+     */
     public function testEscapeValueSet(callable $cb, array $escapeThis, string $escapeThatAsType, array $expectOneOfThese)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);

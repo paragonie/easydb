@@ -15,11 +15,13 @@ class QuoteThenQueryTest
 {
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBInsertManyProvider
-    * @depends ParagonIE\EasyDB\Tests\QuoteTest::testQuote
-    * @depends ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifier
-    * @depends ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifierThrowsSomething
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBInsertManyProvider
+     * @depends      ParagonIE\EasyDB\Tests\QuoteTest::testQuote
+     * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifier
+     * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifierThrowsSomething
+     * @param callable $cb
+     * @param array $maps
+     */
     public function testQuery(callable $cb, array $maps)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
@@ -56,7 +58,7 @@ class QuoteThenQueryTest
             // Necessary to close the open ( above
             $queryString .= ");";
 
-            $this->assertInstanceof(PDOStatement::class, $db->query($queryString));
+            $this->assertInstanceOf(PDOStatement::class, $db->query($queryString));
         }
     }
 }

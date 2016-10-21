@@ -47,8 +47,14 @@ class CellTest
     }
 
     /**
-    * @dataProvider GoodColArgumentsProvider
-    */
+     * @param callable $cb
+     * @param string $statement
+     * @param int $offset
+     * @param array $params
+     * @param array $expectedResult
+     *
+     * @dataProvider GoodColArgumentsProvider
+     */
     public function testMethod(callable $cb, $statement, $offset, $params, $expectedResult)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);

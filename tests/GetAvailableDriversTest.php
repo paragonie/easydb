@@ -12,10 +12,18 @@ class GetAvailableDriversTest
 {
 
     /**
-    * @dataProvider GoodFactoryCreateArgumentProvider
-    */
-    public function testGetAvailableDrivers($dsn, $username=null, $password=null, $options = array(), $expectedDriver)
-    {
+     * @param $dsn
+     * @param null $username
+     * @param null $password
+     * @param array $options
+     * @dataProvider GoodFactoryCreateArgumentProvider
+     */
+    public function testGetAvailableDrivers(
+        $dsn,
+        $username = null,
+        $password = null,
+        array $options = []
+    ) {
         if (count(PDO::getAvailableDrivers()) < 1) {
             $this->markTestSkipped('No drivers available!');
         } else {

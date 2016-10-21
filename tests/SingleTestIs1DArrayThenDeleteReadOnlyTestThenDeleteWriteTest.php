@@ -3,23 +3,22 @@ declare (strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
-use InvalidArgumentException;
-use ParagonIE\EasyDB\EasyDB;
-
 class SingleTestIs1DArrayThenDeleteReadOnlyTestThenDeleteWriteTest
     extends
         EasyDBWriteTest
 {
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBInsertManyProvider
-    * @depends ParagonIE\EasyDB\Tests\Is1DArrayThenDeleteReadOnlyTest::testDeleteThrowsException
-    * @depends ParagonIE\EasyDB\Tests\Is1DArrayThenDeleteReadOnlyTest::testDeleteTableNameEmptyThrowsException
-    * @depends ParagonIE\EasyDB\Tests\Is1DArrayThenDeleteReadOnlyTest::testDeleteTableNameInvalidThrowsException
-    * @depends ParagonIE\EasyDB\Tests\Is1DArrayThenDeleteReadOnlyTest::testDeleteConditionsReturnsNull
-    * @depends ParagonIE\EasyDB\Tests\InsertManyTest::testInsertMany
-    * @depends ParagonIE\EasyDB\Tests\SingleTest::testMethod
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBInsertManyProvider
+     * @depends      ParagonIE\EasyDB\Tests\Is1DArrayThenDeleteReadOnlyTest::testDeleteThrowsException
+     * @depends      ParagonIE\EasyDB\Tests\Is1DArrayThenDeleteReadOnlyTest::testDeleteTableNameEmptyThrowsException
+     * @depends      ParagonIE\EasyDB\Tests\Is1DArrayThenDeleteReadOnlyTest::testDeleteTableNameInvalidThrowsException
+     * @depends      ParagonIE\EasyDB\Tests\Is1DArrayThenDeleteReadOnlyTest::testDeleteConditionsReturnsNull
+     * @depends      ParagonIE\EasyDB\Tests\InsertManyTest::testInsertMany
+     * @depends      ParagonIE\EasyDB\Tests\SingleTest::testMethod
+     * @param callable $cb
+     * @param array $insertMany
+     */
     public function testDelete(callable $cb, array $insertMany)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);

@@ -13,8 +13,9 @@ class ErrorInfoTest
 {
 
     /**
-    * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
-    */
+     * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
+     * @param callable $cb
+     */
     public function testNoError(callable $cb)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);

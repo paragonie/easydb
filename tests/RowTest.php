@@ -20,8 +20,13 @@ class RowTest
     }
 
     /**
-    * @dataProvider GoodColArgumentsProvider
-    */
+     * @dataProvider GoodColArgumentsProvider
+     * @param callable $cb
+     * @param string $statement
+     * @param int $offset
+     * @param array $params
+     * @param array $expectedResult
+     */
     public function testMethod(callable $cb, $statement, $offset, $params, $expectedResult)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
