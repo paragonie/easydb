@@ -34,5 +34,16 @@
     },
     "require": {
         "ext-pdo": "*"
+    },
+    "require-dev": {
+        "spatie/7to5": "^1.0"
+    },
+    "scripts": {
+        "php5ize": [
+            "php7to5 convert --overwrite --copy-all -- src/ src-php5/",
+            "php7to5 convert --overwrite --copy-all -- tests/ tests-php5/",
+            "rm -rf src && mv src-php5 src",
+            "rm -rf tests && mv tests-php5 tests"
+        ]
     }
 }
