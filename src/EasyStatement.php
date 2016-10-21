@@ -11,7 +11,7 @@ class EasyStatement
      *
      * @return static
      */
-    public static function open()
+    public static function open(): EasyStatement
     {
         return new static();
     }
@@ -24,7 +24,7 @@ class EasyStatement
      *
      * @return self
      */
-    public function with($condition, ...$values)
+    public function with(string $condition, ...$values): EasyStatement
     {
         return $this->andWith($condition, ...$values);
     }
@@ -37,7 +37,7 @@ class EasyStatement
      *
      * @return self
      */
-    public function andWith($condition, ...$values)
+    public function andWith(string $condition, ...$values): EasyStatement
     {
         $this->parts[] = [
             'type' => 'AND',
@@ -56,7 +56,7 @@ class EasyStatement
      *
      * @return self
      */
-    public function orWith($condition, ...$values)
+    public function orWith(string $condition, ...$values): EasyStatement
     {
         $this->parts[] = [
             'type' => 'OR',
@@ -75,7 +75,7 @@ class EasyStatement
      *
      * @return self
      */
-    public function in($condition, array $values)
+    public function in(string $condition, array $values): EasyStatement
     {
         return $this->andIn($condition, $values);
     }
@@ -90,7 +90,7 @@ class EasyStatement
      *
      * @return self
      */
-    public function andIn($condition, array $values)
+    public function andIn(string $condition, array $values): EasyStatement
     {
         return $this->andWith($this->unpackCondition($condition, \count($values)), ...$values);
     }
@@ -105,7 +105,7 @@ class EasyStatement
      *
      * @return self
      */
-    public function orIn($condition, array $values)
+    public function orIn(string $condition, array $values): EasyStatement
     {
         return $this->orWith($this->unpackCondition($condition, \count($values)), ...$values);
     }
@@ -115,7 +115,7 @@ class EasyStatement
      *
      * @return static
      */
-    public function group()
+    public function group(): EasyStatement
     {
         return $this->andGroup();
     }
@@ -127,7 +127,7 @@ class EasyStatement
      *
      * @return static
      */
-    public function andGroup()
+    public function andGroup(): EasyStatement
     {
         $group = new self($this);
 
@@ -146,7 +146,7 @@ class EasyStatement
      *
      * @return static
      */
-    public function orGroup()
+    public function orGroup(): EasyStatement
     {
         $group = new self($this);
 
@@ -163,7 +163,7 @@ class EasyStatement
      *
      * @return static
      */
-    public function end()
+    public function end(): EasyStatement
     {
         return $this->endGroup();
     }
@@ -176,7 +176,7 @@ class EasyStatement
      * @throws RuntimeException
      *  If the current statement has no parent context.
      */
-    public function endGroup()
+    public function endGroup(): EasyStatement
     {
         if (empty($this->parent)) {
             throw new RuntimeException('Already at the top of the statement');
@@ -190,9 +190,9 @@ class EasyStatement
      *
      * @return string
      */
-    public function sql()
+    public function sql(): string
     {
-        return \array_reduce($this->parts, function ($sql, $part) {
+        return \array_reduce($this->parts, function (string $sql, array $part) {
             if ($this->isGroup($part['condition'])) {
                 // (...)
                 $statement = '(' . $part['condition']->sql() . ')';
@@ -215,9 +215,9 @@ class EasyStatement
      *
      * @return array
      */
-    public function values()
+    public function values(): array
     {
-        return array_reduce($this->parts, function ($values, $part) {
+        return array_reduce($this->parts, function (array $values, array $part) {
             if ($this->isGroup($part['condition'])) {
                 return \array_merge($values, $part['condition']->values());
             }
@@ -231,7 +231,7 @@ class EasyStatement
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->sql();
     }
@@ -258,7 +258,7 @@ class EasyStatement
      *
      * @return bool
      */
-    protected function isGroup($condition)
+    protected function isGroup($condition): bool
     {
         if (false === \is_object($condition)) {
             return false;
@@ -277,7 +277,7 @@ class EasyStatement
      *
      * @return string
      */
-    private function unpackCondition($condition, $count)
+    private function unpackCondition(string $condition, int $count): string
     {
         // Replace a grouped placeholder with an matching count of placeholders.
         $params = '?' . \str_repeat(', ?', $count - 1);
