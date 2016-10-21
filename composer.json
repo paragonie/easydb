@@ -22,11 +22,6 @@
         "email":    "info@paragonie.com",
         "source":   "https://github.com/paragonie/easydb"
     },
-    "scripts": {
-        "tests": [
-            "./phpunit.sh"
-        ]
-    },
     "autoload": {
         "psr-4": {
             "ParagonIE\\EasyDB\\": "src"
