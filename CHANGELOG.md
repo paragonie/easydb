@@ -1,3 +1,7 @@
+# Version 2.1.0
+
+* Import `EasyStatement` from 1.x version
+
 # Version 2.0.1 - 2016-10-18
 
 * Fixed a segfault caused by attempting to clone PDO objects.
@@ -12,6 +16,10 @@ The lion's share of the version 2.0.0 release was contributed by
 * Added an optional argument to `safeQuery()`, which allows INSERT/UPDATE
   queries to return success/failure instead of an empty array.
 * Added optional support for separators in `escapeIdentifier()`.
+
+# Version 1.1.0
+
+* Add `EasySatement` condition builder, thanks [@shadowhand](https://github.com/shadowhand)
 
 # Version 1.0.0 - 2016-04-22
 
