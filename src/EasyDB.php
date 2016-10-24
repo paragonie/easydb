@@ -43,6 +43,11 @@ class EasyDB
             \PDO::ATTR_ERRMODE,
             \PDO::ERRMODE_EXCEPTION
         );
+
+        if (empty($dbEngine)) {
+            $dbEngine = $this->pdo->getAttribute(\PDO::ATTR_DRIVER_NAME);
+        }
+
         $this->dbEngine = $dbEngine;
     }
 
