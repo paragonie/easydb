@@ -1,5 +1,5 @@
 <?php
-declare (strict_types=1);
+declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
@@ -7,8 +7,7 @@ namespace ParagonIE\EasyDB\Tests;
  * Class ExecTest
  * @package ParagonIE\EasyDB\Tests
  */
-class QuoteThenExecTest
-    extends
+class QuoteThenExecTest extends
         EasyDBWriteTest
 {
 
@@ -36,7 +35,7 @@ class QuoteThenExecTest
         $total = 0;
 
         foreach ($maps as $params) {
-            $queryString = "INSERT INTO ".$db->escapeIdentifier($table)." (";
+            $queryString = "INSERT INTO " . $db->escapeIdentifier($table) . " (";
 
             // Now let's append a list of our columns.
             $queryString .= \implode(', ', $keys);
@@ -48,7 +47,7 @@ class QuoteThenExecTest
             $queryString .= \implode(
                 ', ',
                 \array_map(
-                    function ($val) use($db) {
+                    function ($val) use ($db) {
                         return $db->quote($val);
                     },
                     $params

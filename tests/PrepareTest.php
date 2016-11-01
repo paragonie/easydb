@@ -1,5 +1,5 @@
 <?php
-declare (strict_types=1);
+declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
@@ -9,8 +9,7 @@ use PDOStatement;
  * Class ExecTest
  * @package ParagonIE\EasyDB\Tests
  */
-class PrepareTest
-    extends
+class PrepareTest extends
         EasyDBWriteTest
 {
 
@@ -36,7 +35,7 @@ class PrepareTest
 
         $count = \count($maps);
         for ($i = 0; $i < $count; ++$i) {
-            $queryString = "INSERT INTO ".$db->escapeIdentifier($table)." (";
+            $queryString = "INSERT INTO " . $db->escapeIdentifier($table) . " (";
 
             // Now let's append a list of our columns.
             $queryString .= \implode(', ', $keys);

@@ -1,13 +1,12 @@
 <?php
-declare (strict_types=1);
+declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\Exception\ConstructorFailed;
 use ParagonIE\EasyDB\Factory;
 
-class ConstructorFailedTest
-    extends
+class ConstructorFailedTest extends
         EasyDBTest
 {
 
@@ -18,7 +17,7 @@ class ConstructorFailedTest
      * @param null $password
      * @param array $options
      */
-    public function testConstructorFailed($dsn, $username=null, $password=null, $options = array())
+    public function testConstructorFailed($dsn, $username=null, $password=null, $options = [])
     {
         $this->expectException(ConstructorFailed::class);
         Factory::create($dsn, $username, $password, $options);

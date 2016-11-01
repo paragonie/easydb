@@ -1,5 +1,5 @@
 <?php
-declare (strict_types=1);
+declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
@@ -7,8 +7,7 @@ use ParagonIE\EasyDB\Factory;
 use PDO;
 use PDOException;
 
-class EmulatePreparesDisabledTest
-    extends
+class EmulatePreparesDisabledTest extends
         EasyDBTest
 {
 
@@ -19,7 +18,7 @@ class EmulatePreparesDisabledTest
      * @param null $password
      * @param array $options
      */
-    public function testEmulatePreparesDisabled($dsn, $username=null, $password=null, $options = array())
+    public function testEmulatePreparesDisabled($dsn, $username=null, $password=null, $options = [])
     {
         $db = Factory::create($dsn, $username, $password, $options);
         $recheckWithForcedFalse = false;

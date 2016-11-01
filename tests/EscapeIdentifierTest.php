@@ -1,5 +1,5 @@
 <?php
-declare (strict_types=1);
+declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
@@ -111,11 +111,11 @@ class EscapeIdentifierTest extends EasyDBTest
         if ($quote) {
             switch ($driver) {
                 case 'mssql':
-                    return '['.$str.']';
+                    return '[' . $str . ']';
                 case 'mysql':
-                    return '`'.$str.'`';
+                    return '`' . $str . '`';
                 default:
-                    return '"'.$str.'"';
+                    return '"' . $str . '"';
             }
         }
         return $str;
@@ -203,6 +203,4 @@ class EscapeIdentifierTest extends EasyDBTest
             }
         }
     }
-
-
 }

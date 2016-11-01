@@ -1,12 +1,11 @@
 <?php
-declare (strict_types=1);
+declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
 
-class Is1DArrayThenDeleteReadOnlyTest
-    extends
+class Is1DArrayThenDeleteReadOnlyTest extends
         EasyDBTest
 {
 

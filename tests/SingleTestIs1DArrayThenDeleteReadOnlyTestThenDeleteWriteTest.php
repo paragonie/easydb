@@ -1,10 +1,9 @@
 <?php
-declare (strict_types=1);
+declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
-class SingleTestIs1DArrayThenDeleteReadOnlyTestThenDeleteWriteTest
-    extends
+class SingleTestIs1DArrayThenDeleteReadOnlyTestThenDeleteWriteTest extends
         EasyDBWriteTest
 {
 

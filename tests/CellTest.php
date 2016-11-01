@@ -1,15 +1,13 @@
 <?php
-declare (strict_types=1);
+declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyDB;
 
-class CellTest
-    extends
+class CellTest extends
         ColTest
 {
-
     protected function GoodColArguments()
     {
         return [

@@ -1,5 +1,5 @@
 <?php
-declare (strict_types=1);
+declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
@@ -73,7 +73,7 @@ abstract class EasyDBTest extends PHPUnit_Framework_TestCase
                 $password = isset($arguments[2]) ? $arguments[2] : null;
                 $options = isset($arguments[3]) ? $arguments[3] : [];
                 return [
-                    function() use ($dsn, $username, $password, $options) {
+                    function () use ($dsn, $username, $password, $options) {
                         return Factory::create(
                             $dsn,
                             $username,
@@ -121,7 +121,6 @@ abstract class EasyDBTest extends PHPUnit_Framework_TestCase
         return array_reduce(
             $args,
             function (array $was, array $is) use ($cbArgsSets) {
-
                 foreach ($cbArgsSets as $cbArgs) {
                     $args = array_values($is);
                     foreach (array_reverse($cbArgs) as $cbArg) {

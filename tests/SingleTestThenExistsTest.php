@@ -1,16 +1,13 @@
 <?php
-declare (strict_types=1);
+declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyDB;
 
-class SingleTestThenExistsTest
-    extends
+class SingleTestThenExistsTest extends
         EasyDBWriteTest
 {
-
-
     protected function getResultForMethod(EasyDB $db, $statement, $params)
     {
         $args = $params;
