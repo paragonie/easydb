@@ -1,6 +1,14 @@
+# Version 2.2.0
+
+* Added `EasyDB::escapeLikeValue()` for escaping wildcards in `LIKE` condition values.
+
+# Version 2.1.1
+
+* Fix PHP version requirement to work with HHVM.
+
 # Version 2.1.0
 
-* Import `EasyStatement` from 1.x version
+* Import `EasyStatement` from 1.x version.
 
 # Version 2.0.1 - 2016-10-18
 
