@@ -332,6 +332,32 @@ class EasyDB
     }
 
     /**
+     * Escape a value that will be used as a LIKE condition.
+     *
+     * Input: ("string_not%escaped")
+     * Output: "string\_not\%escaped"
+     *
+     * WARNING: This function always escapes wildcards using backslash!
+     *
+     * @param string $value
+     * @return string
+     */
+    public function escapeLikeValue(string $value): string
+    {
+        // Standard wildcards are underscore and percent sign.
+        $value = str_replace('%', '\\%', $value);
+        $value = str_replace('_', '\\_', $value);
+
+        if ($this->dbEngine === 'mssql') {
+            // MSSQL also includes character ranges.
+            $value = str_replace('[', '\\[', $value);
+            $value = str_replace(']', '\\]', $value);
+        }
+
+        return $value;
+    }
+
+    /**
      * Use with SELECT COUNT queries to determine if a record exists.
      *
      * @param string $statement

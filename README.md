@@ -129,7 +129,7 @@ $statement = EasyStatement::open()
 
 if (strpos($_POST['search'], '@') !== false) {
     // Perform a username search
-    $statement->orWith('username LIKE ?', '%' . $_POST['search'] . '%');
+    $statement->orWith('username LIKE ?', '%' . $db->escapeLikeValue($_POST['search']) . '%');
 } else {
     // Perform an email search
     $statement->orWith('email = ?', $_POST['search']);
