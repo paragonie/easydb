@@ -1,13 +1,9 @@
 <?php
-declare (strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
-class SingleTestIs1DArrayThenDeleteReadOnlyTestThenDeleteWriteTest
-    extends
-        EasyDBWriteTest
+class SingleTestIs1DArrayThenDeleteReadOnlyTestThenDeleteWriteTest extends EasyDBWriteTest
 {
-
     /**
      * @dataProvider GoodFactoryCreateArgument2EasyDBInsertManyProvider
      * @depends      ParagonIE\EasyDB\Tests\Is1DArrayThenDeleteReadOnlyTest::testDeleteThrowsException
@@ -24,25 +20,13 @@ class SingleTestIs1DArrayThenDeleteReadOnlyTestThenDeleteWriteTest
         $db = $this->EasyDBExpectedFromCallable($cb);
         $db->insertMany('irrelevant_but_valid_tablename', $insertMany);
         $insertManyTotal = count($insertMany);
-        $this->assertEquals(
-            $db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename'),
-            $insertManyTotal
-        );
+        $this->assertEquals($db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename'), $insertManyTotal);
         foreach ($insertMany as $insertVal) {
-            $this->assertEquals(
-                $db->single(
-                    'SELECT COUNT(*) FROM irrelevant_but_valid_tablename WHERE foo = ?',
-                    array_values($insertVal)
-                ),
-                1
-            );
+            $this->assertEquals($db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename WHERE foo = ?', array_values($insertVal)), 1);
         }
-        for ($i=0;$i<$insertManyTotal;++$i) {
+        for ($i = 0; $i < $insertManyTotal; ++$i) {
             $db->delete('irrelevant_but_valid_tablename', $insertMany[$i]);
-            $this->assertEquals(
-                $db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename'),
-                ($insertManyTotal - ($i + 1))
-            );
+            $this->assertEquals($db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename'), $insertManyTotal - ($i + 1));
         }
     }
 }

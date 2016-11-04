@@ -1,5 +1,4 @@
 <?php
-declare (strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
@@ -9,7 +8,6 @@ namespace ParagonIE\EasyDB\Tests;
  */
 class ErrorCodeTest extends EasyDBTest
 {
-
     /**
      * @param callable $cb
      * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
@@ -17,7 +15,6 @@ class ErrorCodeTest extends EasyDBTest
     public function testNoError(callable $cb)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
-
         $this->assertSame($db->errorCode(), '00000');
     }
 }
