@@ -32,15 +32,11 @@ $db = new \PDO(
     'putastrongpasswordhere'
 );
 
-$statement = $db->prepare(
-    'SELECT * FROM comments WHERE blogpostid = ? ORDER BY created ASC'
-);
+$statement = $db->prepare('SELECT * FROM comments WHERE blogpostid = ? ORDER BY created ASC');
 $exec = $statement->execute([$_GET['blogpostid']]);
-if ($exec !== false) {
-    $rows = $exec->fetchAll(\PDO::FETCH_ASSOC);
-    foreach ($rows as $row) {
-        $template_engine->render('comment', $row);
-    }
+$rows = $exec->fetchAll(\PDO::FETCH_ASSOC);
+foreach ($rows as $row) {
+    $template_engine->render('comment', $row);
 }
 ```
 
