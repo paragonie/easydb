@@ -1,3 +1,7 @@
+# Version 2.2.1
+
+* Adopt strict PSR-2 code style and add `phpcs` check.
+
 # Version 2.2.0
 
 * Added `EasyDB::escapeLikeValue()` for escaping wildcards in `LIKE` condition values.
