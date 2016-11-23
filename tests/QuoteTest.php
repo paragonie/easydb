@@ -1,5 +1,5 @@
 <?php
-declare (strict_types=1);
+declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
@@ -7,8 +7,7 @@ namespace ParagonIE\EasyDB\Tests;
  * Class ExecTest
  * @package ParagonIE\EasyDB\Tests
  */
-class QuoteTest
-    extends
+class QuoteTest extends
         EasyDBTest
 {
 

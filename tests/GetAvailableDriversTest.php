@@ -1,13 +1,12 @@
 <?php
-declare (strict_types=1);
+declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\Factory;
 use PDO;
 
-class GetAvailableDriversTest
-    extends
+class GetAvailableDriversTest extends
         EasyDBTest
 {
 

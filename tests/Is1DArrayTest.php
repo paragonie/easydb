@@ -1,13 +1,12 @@
 <?php
-declare (strict_types=1);
+declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
 use ParagonIE\EasyDB\Factory;
 
-class Is1DArrayTest
-    extends
+class Is1DArrayTest extends
         EasyDBTest
 {
 
@@ -18,15 +17,15 @@ class Is1DArrayTest
      * @param null $password
      * @param array $options
      */
-    public function testIs1DArray($dsn, $username=null, $password=null, $options = array())
+    public function testIs1DArray($dsn, $username=null, $password=null, $options = [])
     {
         $db = Factory::create($dsn, $username, $password, $options);
         $this->assertTrue($db->is1DArray([]));
         $this->assertFalse($db->is1DArray([[]]));
-        $this->assertFalse($db->is1DArray([[],[]]));
+        $this->assertFalse($db->is1DArray([[], []]));
         $this->assertTrue($db->is1DArray([1]));
         $this->assertFalse($db->is1DArray([[1]]));
-        $this->assertFalse($db->is1DArray([[1],[2]]));
+        $this->assertFalse($db->is1DArray([[1], [2]]));
     }
 
     /**
@@ -37,7 +36,7 @@ class Is1DArrayTest
      * @param null $password
      * @param array $options
      */
-    public function testColumnThrowsException($dsn, $username=null, $password=null, $options = array())
+    public function testColumnThrowsException($dsn, $username=null, $password=null, $options = [])
     {
         $db = Factory::create($dsn, $username, $password, $options);
         $this->expectException(InvalidArgumentException::class);
@@ -52,7 +51,7 @@ class Is1DArrayTest
      * @param null $password
      * @param array $options
      */
-    public function testSafeQueryThrowsException($dsn, $username=null, $password=null, $options = array())
+    public function testSafeQueryThrowsException($dsn, $username=null, $password=null, $options = [])
     {
         $db = Factory::create($dsn, $username, $password, $options);
         $this->expectException(InvalidArgumentException::class);
@@ -67,7 +66,7 @@ class Is1DArrayTest
      * @param null $password
      * @param array $options
      */
-    public function testSingleThrowsException($dsn, $username=null, $password=null, $options = array())
+    public function testSingleThrowsException($dsn, $username=null, $password=null, $options = [])
     {
         $db = Factory::create($dsn, $username, $password, $options);
         $this->expectException(InvalidArgumentException::class);

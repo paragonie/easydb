@@ -1,5 +1,5 @@
 <?php
-declare (strict_types=1);
+declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
@@ -9,8 +9,7 @@ use InvalidArgumentException;
  * Class EasyDBTest
  * @package ParagonIE\EasyDB\Tests
  */
-class EscapeValueSetTest
-    extends
+class EscapeValueSetTest extends
         EasyDBTest
 {
 
@@ -117,7 +116,6 @@ class EscapeValueSetTest
         return array_reduce(
             $args,
             function (array $was, array $is) use ($cbArgsSets) {
-
                 foreach ($cbArgsSets as $cbArgs) {
                     $args = array_values($is);
                     foreach (array_reverse($cbArgs) as $cbArg) {
@@ -206,7 +204,6 @@ class EscapeValueSetTest
         return array_reduce(
             $args,
             function (array $was, array $is) use ($cbArgsSets) {
-
                 foreach ($cbArgsSets as $cbArgs) {
                     $args = array_values($is);
                     foreach (array_reverse($cbArgs) as $cbArg) {

@@ -1,5 +1,5 @@
 <?php
-declare (strict_types=1);
+declare(strict_types=1);
 
 namespace ParagonIE\EasyDB;
 
@@ -121,7 +121,7 @@ class EasyDB
             // Don't allow foot-bullets
             return 0;
         }
-        if (!$this->is1DArray($conditions)){
+        if (!$this->is1DArray($conditions)) {
             throw new \InvalidArgumentException(
                 'Only one-dimensional arrays are allowed.'
             );
@@ -414,7 +414,7 @@ class EasyDB
     public function insert(string $table, array $map): int
     {
         if (!empty($map)) {
-            if (!$this->is1DArray($map)){
+            if (!$this->is1DArray($map)) {
                 throw new \InvalidArgumentException(
                     'Only one-dimensional arrays are allowed.'
                 );
@@ -496,22 +496,22 @@ class EasyDB
         // We want the latest value:
         switch ($this->dbEngine) {
             case 'mysql':
-                $limiter = ' ORDER BY '.
-                    $this->escapeIdentifier($field).
+                $limiter = ' ORDER BY ' .
+                    $this->escapeIdentifier($field) .
                     ' DESC LIMIT 0, 1 ';
                 break;
             case 'pgsql':
-                $limiter = ' ORDER BY '.
-                    $this->escapeIdentifier($field).
+                $limiter = ' ORDER BY ' .
+                    $this->escapeIdentifier($field) .
                     ' DESC OFFSET 0 LIMIT 1 ';
                 break;
             default:
                 $limiter = '';
         }
         $query = 'SELECT ' .
-                $this->escapeIdentifier($field).
+                $this->escapeIdentifier($field) .
             ' FROM ' .
-                $this->escapeIdentifier($table).
+                $this->escapeIdentifier($table) .
             ' WHERE ' .
                 $conditions .
                 $limiter;

@@ -1,5 +1,5 @@
 <?php
-declare (strict_types=1);
+declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
@@ -10,8 +10,7 @@ use ParagonIE\EasyDB\Factory;
  * Class EasyDBTest
  * @package ParagonIE\EasyDB\Tests
  */
-abstract class EasyDBWriteTest
-    extends
+abstract class EasyDBWriteTest extends
         EasyDBTest
 {
 
@@ -30,7 +29,7 @@ abstract class EasyDBWriteTest
                 $password = isset($arguments[2]) ? $arguments[2] : null;
                 $options = isset($arguments[3]) ? $arguments[3] : [];
                 return [
-                    function() use ($dsn, $username, $password, $options) {
+                    function () use ($dsn, $username, $password, $options) {
                         $factory = Factory::create(
                             $dsn,
                             $username,

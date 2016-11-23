@@ -1,5 +1,5 @@
 <?php
-declare (strict_types=1);
+declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
@@ -8,8 +8,7 @@ use PDO;
 use PDOException;
 use ReflectionClass;
 
-class GetAttributeTest
-    extends
+class GetAttributeTest extends
         EasyDBTest
 {
 

@@ -1,13 +1,12 @@
 <?php
-declare (strict_types=1);
+declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
 use PDOException;
 
-class InsertTest
-    extends
+class InsertTest extends
         EasyDBWriteTest
 {
 
