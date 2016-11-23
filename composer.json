@@ -42,7 +42,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^5",
-        "spatie/7to5": "^1.0"
+        "spatie/7to5": "^1.0",
+        "squizlabs/php_codesniffer": "^2.7"
     },
     "scripts": {
         "php5ize": [
@@ -50,6 +51,8 @@
             "php7to5 convert --overwrite --copy-all -- tests/ tests-php5/",
             "rm -rf src && mv src-php5 src",
             "rm -rf tests && mv tests-php5 tests"
-        ]
+        ],
+        "check-style": "phpcs -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src tests",
+        "fix-style": "phpcbf -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src tests"
     }
 }
