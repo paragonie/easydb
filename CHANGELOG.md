@@ -1,3 +1,7 @@
+# Version 2.3.0
+
+* Added `EasyDB::buildInsertQuery` for building `INSERT` statements without executing.
+
 # Version 2.2.1
 
 * Adopt strict PSR-2 code style and add `phpcs` check.

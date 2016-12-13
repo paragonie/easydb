@@ -54,7 +54,6 @@ class EasyDB
     /**
      * Variadic version of $this->column()
      *
-     *
      * @param string $statement SQL query without user data
      * @param int $offset       How many columns from the left are we grabbing
      *                          from each row?
@@ -420,42 +419,15 @@ class EasyDB
                 );
             }
         }
-        // Begin query string
-        $queryString = 'INSERT INTO ' . $this->escapeIdentifier($table) . ' (';
-        $pHold = [];
-        $_keys = [];
-        $params = [];
-        foreach ($map as $k => $v) {
-            if ($v !== null) {
-                $_keys[] = $k;
-                if ($v === true) {
-                    $pHold[] = 'TRUE';
-                } elseif ($v === false) {
-                    $pHold[] = 'FALSE';
-                } else {
-                    // When all else fails, use prepared statements:
-                    $pHold[] = '?';
-                    $params[] = $v;
-                }
-            }
-        }
-        // Let's make sure our keys are escaped.
-        $keys = [];
-        foreach ($_keys as $i => $v) {
-            $keys[] = $this->escapeIdentifier($v);
-        }
-        // Now let's append a list of our columns.
-        $queryString .= \implode(', ', $keys);
-        // This is the middle piece.
-        $queryString .= ') VALUES (';
-        // Now let's concatenate the ? placeholders
-        $queryString .= \implode(', ', $pHold);
-        // Necessary to close the open ( above
-        $queryString .= ');';
+
+        $columns = \array_keys($map);
+        $values = \array_values($map);
+
+        $queryString = $this->buildInsertQuery($table, $columns);
 
         return (int) $this->safeQuery(
             $queryString,
-            $params,
+            $values,
             \PDO::FETCH_BOTH,
             true
         );
@@ -547,29 +519,7 @@ class EasyDB
             }
         }
 
-        // Begin query string
-        $queryString = 'INSERT INTO ' . $this->escapeIdentifier($table) . ' (';
-
-        // Let's make sure our keys are escaped.
-        $keys = \array_keys($first);
-        foreach ($keys as $i => $v) {
-            $keys[$i] = $this->escapeIdentifier($v);
-        }
-
-        // Now let's append a list of our columns.
-        $queryString .= \implode(', ', $keys);
-
-        // This is the middle piece.
-        $queryString .= ') VALUES (';
-
-        // Now let's concatenate the ? placeholders
-        $queryString .= \implode(
-            ', ',
-            \array_fill(0, \count($first), '?')
-        );
-
-        // Necessary to close the open ( above
-        $queryString .= ');';
+        $queryString = $this->buildInsertQuery($table, \array_keys($first));
 
         // Now let's run a query with the parameters
         $stmt = $this->pdo->prepare($queryString);
@@ -579,6 +529,40 @@ class EasyDB
             $count += $stmt->rowCount();
         }
         return $count;
+    }
+
+    /**
+     * Get an query string for an INSERT statement.
+     *
+     * @param string $table
+     * @param array $columns list of columns that will be inserted
+     *
+     * @return string
+     *
+     * @throws \InvalidArgumentException
+     *   If $columns is not a one-dimensional array.
+     */
+    public function buildInsertQuery(string $table, array $columns): string
+    {
+        if (!empty($columns)) {
+            if (!$this->is1DArray($columns)) {
+                throw new \InvalidArgumentException(
+                    'Only one-dimensional arrays are allowed.'
+                );
+            }
+        }
+
+        $query = 'INSERT INTO %s (%s) VALUES (%s)';
+
+        $columns = \array_map([$this, 'escapeIdentifier'], $columns);
+        $placeholders = \array_fill(0, \count($columns), '?');
+
+        return \sprintf(
+            'INSERT INTO %s (%s) VALUES (%s)',
+            $this->escapeIdentifier($table),
+            \implode(', ', $columns),
+            \implode(', ', $placeholders)
+        );
     }
 
     /**
