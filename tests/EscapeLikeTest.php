@@ -17,7 +17,7 @@ class EscapeLikeTest extends EasyDBTest
             ['%double%', '\\%double\\%'],
             ['_under_score_', '\\_under\\_score\\_'],
             ['%mix_ed', '\\%mix\\_ed'],
-            ['\\%escaped?', '\\\\%escaped?'],
+            ['\\%escaped?', '\\\\\\%escaped?'],
         ];
     }
 

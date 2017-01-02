@@ -344,6 +344,8 @@ class EasyDB
      */
     public function escapeLikeValue(string $value): string
     {
+        // Backslash is used to escape wildcards.
+        $value = str_replace('\\', '\\\\', $value);
         // Standard wildcards are underscore and percent sign.
         $value = str_replace('%', '\\%', $value);
         $value = str_replace('_', '\\_', $value);
