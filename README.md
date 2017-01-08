@@ -27,7 +27,7 @@ while($row = mysql_fetch_assoc($query)) {
 
 ```php
 $db = new \PDO(
-    'mysql;host=localhost;dbname=something',
+    'mysql:host=localhost;dbname=something',
     'username',
     'putastrongpasswordhere'
 );
@@ -47,7 +47,7 @@ we end up repeating ourselves a lot.
 
 ```php
 $db = \ParagonIE\EasyDB\Factory::create(
-    'mysql;host=localhost;dbname=something',
+    'mysql:host=localhost;dbname=something',
     'username',
     'putastrongpasswordhere'
 );
