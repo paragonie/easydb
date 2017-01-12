@@ -1,6 +1,7 @@
 # Version 2.3.0
 
 * Added `EasyDB::buildInsertQuery` for building `INSERT` statements without executing.
+* Fixed escaping of backslashes in `LIKE` statements
 
 # Version 2.2.1
 
