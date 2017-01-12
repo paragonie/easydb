@@ -51,7 +51,6 @@ abstract class Factory
         try {
             $pdo = new \PDO($dsn, $username, $password, $options);
         } catch (\PDOException $e) {
-
             // Don't leak credentials directly if we can.
             throw new Issues\ConstructorFailed(
                 'Could not create a PDO connection. Please check your username and password.'
