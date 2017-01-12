@@ -73,6 +73,25 @@ $db->insert('comments', [
 ]);
 ```
 
+#### Build an insert without executing
+
+```php
+$sql = $db->buildInsertQuery('comments', [
+    'blogpostid',
+    'userid',
+    'comment'
+]);
+
+// INSERT INTO comments (blogpostid, userid, comment) VALUES (?, ?, ?)
+
+$result = $db->q(
+    $sql,
+    $values,
+    \PDO::FETCH_BOTH,
+    true
+);
+```
+
 ### Update a row from a database table
 
 ```php

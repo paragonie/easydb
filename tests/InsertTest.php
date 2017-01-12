@@ -78,4 +78,16 @@ class InsertTest extends
             '1'
         );
     }
+
+    /**
+     * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
+     * @param callable $cb
+     */
+    public function testBuildeInsertSql(callable $cb)
+    {
+        $db = $this->EasyDBExpectedFromCallable($cb);
+        $statement = $db->buildInsertQuery('test_table', ['id', 'col1', 'col2']);
+        $expected = '/insert into .test_table. \(.id., .col1., .col2.\) VALUES \(\?, \?, \?\)/i';
+        $this->assertRegExp($expected, $statement);
+    }
 }
