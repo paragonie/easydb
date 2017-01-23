@@ -1,7 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
+use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\EasyStatement;
 use PHPUnit_Framework_TestCase as TestCase;
 use RuntimeException;
@@ -77,14 +79,41 @@ class EasyStatementTest extends TestCase
         EasyStatement::open()->endGroup();
     }
 
+    public function testEscapeIdentifiers()
+    {
+        $s = EasyStatement::open()
+            ->with('u.id = o.id')
+            ->with('u.role = 3')
+            ->with('u.name LIKE ?', 'test');
+
+        $this->assertEscapedSql($s, 'mysql', '`u`.`id` = `o`.`id` AND `u`.`role` = 3 AND `u`.`name` LIKE ?');
+        $this->assertEscapedSql($s, 'mssql', '[u].[id] = [o].[id] AND [u].[role] = 3 AND [u].[name] LIKE ?');
+        $this->assertEscapedSql($s, 'pgsql', '"u"."id" = "o"."id" AND "u"."role" = 3 AND "u"."name" LIKE ?');
+        $this->assertEscapedSql($s, 'sqlite', '"u"."id" = "o"."id" AND "u"."role" = 3 AND "u"."name" LIKE ?');
+    }
+
     private function assertSql(EasyStatement $statement, $expected)
     {
         $this->assertSame($expected, $statement->sql());
         $this->assertSame($expected, (string) $statement);
     }
 
+    private function assertEscapedSql(EasyStatement $statement, $engine, $expected)
+    {
+        $db = $this->getEasyDB($engine);
+        $this->assertSame($expected, $statement->sql($db), "Escaped with $engine");
+    }
+
     private function assertValues(EasyStatement $statement, array $values)
     {
         $this->assertSame($values, $statement->values());
+    }
+
+    private function getEasyDB($engine)
+    {
+        $pdo = $this->createMock(\PDO::class);
+        $db = new EasyDB($pdo, $engine);
+        $db->setAllowSeparators(true);
+        return $db;
     }
 }

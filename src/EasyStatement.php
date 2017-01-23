@@ -10,7 +10,6 @@ use RuntimeException;
  */
 class EasyStatement
 {
-
     /**
      * @var array
      */
@@ -203,19 +202,28 @@ class EasyStatement
     /**
      * Compile the current statement into PDO-ready SQL.
      *
+     * If an EasyDB instance is provided, any fully qualified identifier
+     * (`table.col`) will be escaped. Note that this functionality does not
+     * work when magic casting the statement to string!
+     *
+     * @param EasyDB $db
+     *
      * @return string
      */
-    public function sql(): string
+    public function sql(EasyDB $db = null): string
     {
         return \array_reduce(
             $this->parts,
-            function (string $sql, array $part): string {
+            function (string $sql, array $part) use ($db): string {
                 if ($this->isGroup($part['condition'])) {
                     // (...)
-                    $statement = '(' . $part['condition']->sql() . ')';
+                    $statement = '(' . $part['condition']->sql($db) . ')';
                 } else {
                     // foo = ?
                     $statement = $part['condition'];
+                    if ($db) {
+                        $statement = $this->escapeIdentifiersInCondition($statement, $db);
+                    }
                 }
 
                 if ($sql) {
@@ -311,5 +319,27 @@ class EasyStatement
         // Replace a grouped placeholder with an matching count of placeholders.
         $params = '?' . \str_repeat(', ?', $count - 1);
         return \str_replace('?*', $params, $condition);
+    }
+
+    /**
+     * Escape fully qualified identifiers.
+     *
+     * @param string $condition
+     * @param EasyDB $db
+     *
+     * @return string
+     */
+    private function escapeIdentifiersInCondition(string $condition, EasyDB $db): string
+    {
+        if (\preg_match_all('/([a-z_]+\.[a-z_]+)/i', $condition, $matches, \PREG_SET_ORDER) == false) {
+            return $condition;
+        }
+
+        $replace = [];
+        foreach ($matches as $match) {
+            $replace[$match[0]] = $db->escapeIdentifier($match[1]);
+        }
+
+        return \strtr($condition, $replace);
     }
 }
