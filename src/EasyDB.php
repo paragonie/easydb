@@ -213,6 +213,21 @@ class EasyDB
     }
 
     /**
+     * Create an escaped identifier alias
+     *
+     * @param string $identifier - table or column name
+     * @param string $alias - alias for table or column name
+     * @param boolean $quote - apply escaping to identifiers
+     * @return string
+     */
+    public function escapeAlias(string $identifier, string $alias, bool $quote = true): string
+    {
+        return $this->escapeIdentifier($identifier, $quote)
+            . ' AS '
+            . $this->escapeIdentifier($alias, $quote);
+    }
+
+    /**
      * Create a parenthetical statement e.g. for NOT IN queries.
      *
      * Input: ([1, 2, 3, 5], int)
