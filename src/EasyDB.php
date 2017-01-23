@@ -162,7 +162,7 @@ class EasyDB
      * @param boolean $quote - certain SQLs escape column names (i.e. mysql with `backticks`)
      * @return string
      */
-    public function escapeIdentifier(string $string, $quote = true): string
+    public function escapeIdentifier(string $string, bool $quote = true): string
     {
         if (empty($string)) {
             throw new Issues\InvalidIdentifier(
