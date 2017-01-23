@@ -1,3 +1,9 @@
+# Version 2.4.0
+
+* Added `EasyDB::escapeAlias` for creating `identifier AS alias` statements
+* Added `EasyDB::escapeColumns` for escaping lists of columns
+* Added identifier (`table.column`) escaping support to `EasyStatement::sql()`
+
 # Version 2.3.0
 
 * Added `EasyDB::buildInsertQuery` for building `INSERT` statements without executing.
