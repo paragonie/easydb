@@ -219,12 +219,43 @@ class EasyDB
      * @param string $alias - alias for table or column name
      * @param boolean $quote - apply escaping to identifiers
      * @return string
+     * @see escapeIdentifier
+     * @see setAllowSeparators
      */
     public function escapeAlias(string $identifier, string $alias, bool $quote = true): string
     {
         return $this->escapeIdentifier($identifier, $quote)
             . ' AS '
             . $this->escapeIdentifier($alias, $quote);
+    }
+
+    /**
+     * Escape an array of columns
+     *
+     * If the row is defined only as a value, an escaped identifier will be defined.
+     * If the row is defined with a string key, an escaped alias will be defined.
+     *
+     * @param array $columns - associative array of column names
+     * @param boolean $quote - apply escaping to identifiers
+     * @return array
+     * @see escapeIdentifier
+     * @see setAllowSeparators
+     */
+    public function escapeColumns(array $columns, bool $quote = true): array
+    {
+        $escaped = [];
+
+        foreach ($columns as $identifier => $alias) {
+            if (\is_int($identifier) || $identifier === $alias) {
+                // column
+                $escaped[] = $this->escapeIdentifier($alias, $quote);
+            } else {
+                // column AS alias
+                $escaped[] = $this->escapeAlias($identifier, $alias, $quote);
+            }
+        }
+
+        return $escaped;
     }
 
     /**
