@@ -30,7 +30,10 @@
     "autoload": {
         "psr-4": {
             "ParagonIE\\EasyDB\\": "src"
-        }
+        },
+        "files": [
+            "src/escapes.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
