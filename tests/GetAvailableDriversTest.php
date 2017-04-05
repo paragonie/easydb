@@ -17,6 +17,7 @@ class GetAvailableDriversTest extends EasyDBTest
      * @dataProvider goodFactoryCreateArgumentProvider
      */
     public function testGetAvailableDrivers(
+        $expectedDriver,
         $dsn,
         $username = null,
         $password = null,

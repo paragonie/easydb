@@ -17,11 +17,11 @@ class GetDriverTest extends EasyDBTest
      * @dataProvider goodFactoryCreateArgumentProvider
      */
     public function testGetDriver(
+        $expectedDriver,
         $dsn,
         $username = null,
         $password = null,
-        $options = [],
-        $expectedDriver
+        $options = []
     ) {
         $db = Factory::create($dsn, $username, $password, $options);
         $this->assertEquals($db->getDriver(), $expectedDriver);

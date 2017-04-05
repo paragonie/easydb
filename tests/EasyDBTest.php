@@ -41,11 +41,11 @@ abstract class EasyDBTest extends PHPUnit_Framework_TestCase
             case false:
                 return [
                     [
+                        'sqlite',
                         'sqlite::memory:',
                         null,
                         null,
                         [],
-                        'sqlite'
                     ],
                 ];
             break;
@@ -68,10 +68,10 @@ abstract class EasyDBTest extends PHPUnit_Framework_TestCase
     {
         return array_map(
             function (array $arguments) {
-                $dsn = $arguments[0];
-                $username = isset($arguments[1]) ? $arguments[1] : null;
-                $password = isset($arguments[2]) ? $arguments[2] : null;
-                $options = isset($arguments[3]) ? $arguments[3] : [];
+                $dsn = $arguments[1];
+                $username = isset($arguments[2]) ? $arguments[2] : null;
+                $password = isset($arguments[3]) ? $arguments[3] : null;
+                $options = isset($arguments[4]) ? $arguments[4] : [];
                 return [
                     function () use ($dsn, $username, $password, $options) {
                         return Factory::create(
