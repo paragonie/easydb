@@ -89,7 +89,10 @@ class SetAttributeTest extends GetAttributeTest
                 ) ||
                 (
                     $attrName === 'ATTR_EMULATE_PREPARES' &&
-                    $e->getMessage() === 'EasyDB does not allow the use of emulated prepared statements, which would be a security downgrade.'
+                    $e->getMessage() === (
+                        'EasyDB does not allow the use of emulated prepared statements' .
+                        ', which would be a security downgrade.'
+                    )
                 )
             ) {
                 $this->markTestSkipped(

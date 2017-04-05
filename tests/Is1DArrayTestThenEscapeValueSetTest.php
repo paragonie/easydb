@@ -254,8 +254,12 @@ class EscapeValueSetTest extends EasyDBTest
      * @param string $escapeThatAsType
      * @param array $expectOneOfThese
      */
-    public function testEscapeValueSet(callable $cb, array $escapeThis, string $escapeThatAsType, array $expectOneOfThese)
-    {
+    public function testEscapeValueSet(
+        callable $cb,
+        array $escapeThis,
+        string $escapeThatAsType,
+        array $expectOneOfThese
+    ) {
         $db = $this->easyDBExpectedFromCallable($cb);
 
         $this->assertTrue(count($expectOneOfThese) > 0);

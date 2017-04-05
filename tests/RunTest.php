@@ -17,10 +17,16 @@ class RunTest extends ColTest
                 'SELECT 1 AS foo, 2 AS bar', 0, [], [['foo' => 1, 'bar' => 2]]
             ],
             [
-                'SELECT 1 AS foo, 2 AS bar UNION SELECT 3 AS foo, 4 AS bar', 0, [], [['foo' => 1, 'bar' => 2], ['foo' => 3, 'bar' => 4]]
+                'SELECT 1 AS foo, 2 AS bar UNION SELECT 3 AS foo, 4 AS bar',
+                0,
+                [],
+                [['foo' => 1, 'bar' => 2], ['foo' => 3, 'bar' => 4]],
             ],
             [
-                'SELECT ? AS foo, ? AS bar UNION SELECT ? AS foo, ? AS bar', 0, [1, 2, 3, 4], [['foo' => 1, 'bar' => 2], ['foo' => 3, 'bar' => 4]]
+                'SELECT ? AS foo, ? AS bar UNION SELECT ? AS foo, ? AS bar',
+                0,
+                [1, 2, 3, 4],
+                [['foo' => 1, 'bar' => 2], ['foo' => 3, 'bar' => 4]],
             ],
         ];
     }
