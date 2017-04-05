@@ -93,7 +93,7 @@ class EasyDB
      * Variadic version of $this->single()
      *
      * @param string $statement SQL query without user data
-     * @param mixed[] ...$params Parameters
+     * @param mixed ...$params Parameters
      * @return mixed
      */
     public function cell(string $statement, ...$params)
@@ -599,7 +599,7 @@ class EasyDB
      * Variadic shorthand for $this->safeQuery()
      *
      * @param string $statement SQL query without user data
-     * @param mixed[] ...$params Parameters
+     * @param mixed ...$params Parameters
      * @return mixed - If successful, a 2D array
      */
     public function run(string $statement, ...$params)
@@ -795,7 +795,7 @@ class EasyDB
     /**
      * Execute an SQL statement and return the number of affected rows
      *
-     * @param mixed[] ...$args
+     * @param mixed ...$args
      * @return int
      */
     public function exec(...$args): int
