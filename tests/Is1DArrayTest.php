@@ -50,8 +50,13 @@ class Is1DArrayTest extends EasyDBTest
      * @param null $password
      * @param array $options
      */
-    public function testSafeQueryThrowsException($expectedDriver, $dsn, $username = null, $password = null, $options = [])
-    {
+    public function testSafeQueryThrowsException(
+        $expectedDriver,
+        $dsn,
+        $username = null,
+        $password = null,
+        $options = []
+    ) {
         $db = Factory::create($dsn, $username, $password, $options);
         $this->expectException(InvalidArgumentException::class);
         $db->safeQuery('SELECT ?', [[1]]);
