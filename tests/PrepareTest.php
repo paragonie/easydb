@@ -13,7 +13,7 @@ class PrepareTest extends EasyDBWriteTest
 {
 
     /**
-     * @dataProvider GoodFactoryCreateArgument2EasyDBInsertManyProvider
+     * @dataProvider goodFactoryCreateArgument2EasyDBInsertManyProvider
      * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifier
      * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifierThrowsSomething
      * @param callable $cb
@@ -21,7 +21,7 @@ class PrepareTest extends EasyDBWriteTest
      */
     public function testQuery(callable $cb, array $maps)
     {
-        $db = $this->EasyDBExpectedFromCallable($cb);
+        $db = $this->easyDBExpectedFromCallable($cb);
         $table = 'irrelevant_but_valid_tablename';
 
         $first = $maps[0];

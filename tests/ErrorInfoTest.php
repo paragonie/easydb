@@ -11,12 +11,12 @@ class ErrorInfoTest extends EasyDBTest
 {
 
     /**
-     * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
+     * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
     public function testNoError(callable $cb)
     {
-        $db = $this->EasyDBExpectedFromCallable($cb);
+        $db = $this->easyDBExpectedFromCallable($cb);
 
         $info = $db->errorInfo();
         $this->assertTrue(is_array($info));

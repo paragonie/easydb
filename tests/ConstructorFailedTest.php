@@ -10,7 +10,7 @@ class ConstructorFailedTest extends EasyDBTest
 {
 
     /**
-     * @dataProvider BadFactoryCreateArgumentProvider
+     * @dataProvider badFactoryCreateArgumentProvider
      * @param $dsn
      * @param null $username
      * @param null $password

@@ -7,7 +7,7 @@ use ParagonIE\EasyDB\EasyDB;
 
 class ColTest extends EasyDBTest
 {
-    protected function GoodColArguments()
+    protected function goodColArguments()
     {
         return [
             [
@@ -38,13 +38,13 @@ class ColTest extends EasyDBTest
     * EasyDB data provider
     * Returns an array of callables that return instances of EasyDB
     * @return callable[]
-    * @see EasyDBTest::GoodFactoryCreateArgument2EasyDBProvider()
+    * @see EasyDBTest::goodFactoryCreateArgument2EasyDBProvider()
     */
-    public function GoodColArgumentsProvider()
+    public function goodColArgumentsProvider()
     {
-        $argsArray = $this->GoodColArguments();
+        $argsArray = $this->goodColArguments();
         return array_reduce(
-            $this->GoodFactoryCreateArgument2EasyDBProvider(),
+            $this->goodFactoryCreateArgument2EasyDBProvider(),
             function (array $was, array $cbArgs) use ($argsArray) {
                 foreach ($argsArray as $args) {
                     foreach (array_reverse($cbArgs) as $cbArg) {
@@ -80,11 +80,11 @@ class ColTest extends EasyDBTest
      * @param array $params
      * @param array $expectedResult
      *
-     * @dataProvider GoodColArgumentsProvider
+     * @dataProvider goodColArgumentsProvider
      */
     public function testMethod(callable $cb, $statement, $offset, $params, $expectedResult)
     {
-        $db = $this->EasyDBExpectedFromCallable($cb);
+        $db = $this->easyDBExpectedFromCallable($cb);
 
         $result = $this->getResultForMethod($db, $statement, $offset, $params);
 

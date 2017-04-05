@@ -12,7 +12,7 @@ class SetAttributeTest extends GetAttributeTest
 {
 
     /**
-     * @dataProvider GoodFactoryCreateArgument2EasyDBWithPDOAttributeProvider
+     * @dataProvider goodFactoryCreateArgument2EasyDBWithPDOAttributeProvider
      * @depends      ParagonIE\EasyDB\Tests\GetAttributeTest::testAttribute
      * @param callable $cb
      * @param $attr
@@ -21,7 +21,7 @@ class SetAttributeTest extends GetAttributeTest
      */
     public function testAttribute(callable $cb, $attr, string $attrName)
     {
-        $db = $this->EasyDBExpectedFromCallable($cb);
+        $db = $this->easyDBExpectedFromCallable($cb);
         $skipping = [
             'ATTR_STATEMENT_CLASS'
         ];
@@ -112,9 +112,9 @@ class SetAttributeTest extends GetAttributeTest
     * EasyDB data provider
     * Returns an array of callables that return instances of EasyDB
     * @return array
-    * @see EasyDBTest::GoodFactoryCreateArgument2EasyDBProvider()
+    * @see EasyDBTest::goodFactoryCreateArgument2EasyDBProvider()
     */
-    public function GoodFactoryCreateArgument2EasyDBForSetPDOAttributeThrowsExceptionProvider()
+    public function goodFactoryCreateArgument2EasyDBForSetPDOAttributeThrowsExceptionProvider()
     {
         $exceptionProvider = [
             [
@@ -143,7 +143,7 @@ class SetAttributeTest extends GetAttributeTest
             ],
         ];
         return array_reduce(
-            $this->GoodFactoryCreateArgument2EasyDBProvider(),
+            $this->goodFactoryCreateArgument2EasyDBProvider(),
             function (array $was, array $cbArgs) use ($exceptionProvider) {
                 return array_merge(
                     $was,
@@ -164,7 +164,7 @@ class SetAttributeTest extends GetAttributeTest
 
     /**
      * Test which attributes will always throw an exception when set
-     * @dataProvider GoodFactoryCreateArgument2EasyDBForSetPDOAttributeThrowsExceptionProvider
+     * @dataProvider goodFactoryCreateArgument2EasyDBForSetPDOAttributeThrowsExceptionProvider
      * @depends      testAttribute
      * @param callable $cb
      * @param int $attribute
@@ -179,7 +179,7 @@ class SetAttributeTest extends GetAttributeTest
         string $exceptionClassName,
         string $exceptionMessage
     ) {
-        $db = $this->EasyDBExpectedFromCallable($cb);
+        $db = $this->easyDBExpectedFromCallable($cb);
         $this->expectException($exceptionClassName);
         $this->expectExceptionMessage($exceptionMessage);
 

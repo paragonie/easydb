@@ -7,7 +7,7 @@ use ParagonIE\EasyDB\EasyDB;
 
 class RunTest extends ColTest
 {
-    protected function GoodColArguments()
+    protected function goodColArguments()
     {
         return [
             [
@@ -35,7 +35,7 @@ class RunTest extends ColTest
     }
 
     /**
-     * @dataProvider GoodColArgumentsProvider
+     * @dataProvider goodColArgumentsProvider
      * @param callable $cb
      * @param string $statement
      * @param int $offset
@@ -44,7 +44,7 @@ class RunTest extends ColTest
      */
     public function testMethod(callable $cb, $statement, $offset, $params, $expectedResult)
     {
-        $db = $this->EasyDBExpectedFromCallable($cb);
+        $db = $this->easyDBExpectedFromCallable($cb);
 
         $results = $this->getResultForMethod($db, $statement, $offset, $params);
 

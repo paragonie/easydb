@@ -14,7 +14,7 @@ class GetDriverTest extends EasyDBTest
      * @param array $options
      * @param string $expectedDriver
      *
-     * @dataProvider GoodFactoryCreateArgumentProvider
+     * @dataProvider goodFactoryCreateArgumentProvider
      */
     public function testGetDriver(
         $dsn,

@@ -16,7 +16,7 @@ class RowTest extends SafeQueryTest
     }
 
     /**
-     * @dataProvider GoodColArgumentsProvider
+     * @dataProvider goodColArgumentsProvider
      * @param callable $cb
      * @param string $statement
      * @param int $offset
@@ -25,7 +25,7 @@ class RowTest extends SafeQueryTest
      */
     public function testMethod(callable $cb, $statement, $offset, $params, $expectedResult)
     {
-        $db = $this->EasyDBExpectedFromCallable($cb);
+        $db = $this->easyDBExpectedFromCallable($cb);
 
         $result = $this->getResultForMethod($db, $statement, $offset, $params);
 

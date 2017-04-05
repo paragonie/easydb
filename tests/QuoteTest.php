@@ -11,7 +11,7 @@ class QuoteTest extends EasyDBTest
 {
 
     /**
-     * @dataProvider GoodFactoryCreateArgument2EasyDBQuoteProvider
+     * @dataProvider goodFactoryCreateArgument2EasyDBQuoteProvider
      * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifier
      * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifierThrowsSomething
      * @param callable $cb
@@ -20,7 +20,7 @@ class QuoteTest extends EasyDBTest
      */
     public function testQuote(callable $cb, $quoteThis, array $expectOneOfThese)
     {
-        $db = $this->EasyDBExpectedFromCallable($cb);
+        $db = $this->easyDBExpectedFromCallable($cb);
 
         $this->assertTrue(count($expectOneOfThese) > 0);
 

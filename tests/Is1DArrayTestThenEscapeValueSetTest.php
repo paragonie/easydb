@@ -13,11 +13,11 @@ class EscapeValueSetTest extends EasyDBTest
 {
 
     /**
-    * Remaps EasyDBWriteTest::GoodFactoryCreateArgument2EasyDBProvider()
+    * Remaps EasyDBWriteTest::goodFactoryCreateArgument2EasyDBProvider()
     */
-    public function GoodFactoryCreateArgument2EasyDBEscapeValueSetProvider()
+    public function goodFactoryCreateArgument2EasyDBEscapeValueSetProvider()
     {
-        $cbArgsSets = $this->GoodFactoryCreateArgument2EasyDBProvider();
+        $cbArgsSets = $this->goodFactoryCreateArgument2EasyDBProvider();
         $args = [
             [
                 [],
@@ -130,11 +130,11 @@ class EscapeValueSetTest extends EasyDBTest
     }
 
     /**
-    * Remaps EasyDBWriteTest::GoodFactoryCreateArgument2EasyDBProvider()
+    * Remaps EasyDBWriteTest::goodFactoryCreateArgument2EasyDBProvider()
     */
-    public function BadFactoryCreateArgument2EasyDBEscapeValueSetProvider()
+    public function badFactoryCreateArgument2EasyDBEscapeValueSetProvider()
     {
-        $cbArgsSets = $this->GoodFactoryCreateArgument2EasyDBProvider();
+        $cbArgsSets = $this->goodFactoryCreateArgument2EasyDBProvider();
         $buildArgs = [
             [
                 [
@@ -218,19 +218,19 @@ class EscapeValueSetTest extends EasyDBTest
     }
 
     /**
-     * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
+     * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @depends      ParagonIE\EasyDB\Tests\Is1DArrayTest::testIs1DArray
      * @param callable $cb
      */
     public function testEscapeValueSetFailsIs1DArray(callable $cb)
     {
-        $db = $this->EasyDBExpectedFromCallable($cb);
+        $db = $this->easyDBExpectedFromCallable($cb);
         $this->expectException(InvalidArgumentException::class);
         $db->escapeValueSet([[1]]);
     }
 
     /**
-     * @dataProvider BadFactoryCreateArgument2EasyDBEscapeValueSetProvider
+     * @dataProvider badFactoryCreateArgument2EasyDBEscapeValueSetProvider
      * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifier
      * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifierThrowsSomething
      * @param callable $cb
@@ -239,13 +239,13 @@ class EscapeValueSetTest extends EasyDBTest
      */
     public function testEscapeValueSetThrowsException(callable $cb, array $escapeThis, string $escapeThatAsType)
     {
-        $db = $this->EasyDBExpectedFromCallable($cb);
+        $db = $this->easyDBExpectedFromCallable($cb);
         $this->expectException(InvalidArgumentException::class);
         $db->escapeValueSet($escapeThis, $escapeThatAsType);
     }
 
     /**
-     * @dataProvider GoodFactoryCreateArgument2EasyDBEscapeValueSetProvider
+     * @dataProvider goodFactoryCreateArgument2EasyDBEscapeValueSetProvider
      * @depends      testEscapeValueSetThrowsException
      * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifier
      * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifierThrowsSomething
@@ -256,7 +256,7 @@ class EscapeValueSetTest extends EasyDBTest
      */
     public function testEscapeValueSet(callable $cb, array $escapeThis, string $escapeThatAsType, array $expectOneOfThese)
     {
-        $db = $this->EasyDBExpectedFromCallable($cb);
+        $db = $this->easyDBExpectedFromCallable($cb);
 
         $this->assertTrue(count($expectOneOfThese) > 0);
 

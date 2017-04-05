@@ -11,7 +11,7 @@ class EmulatePreparesDisabledTest extends EasyDBTest
 {
 
     /**
-     * @dataProvider GoodFactoryCreateArgumentProvider
+     * @dataProvider goodFactoryCreateArgumentProvider
      * @param $dsn
      * @param null $username
      * @param null $password

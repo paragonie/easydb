@@ -15,9 +15,9 @@ class EscapeIdentifierTest extends EasyDBTest
     * EasyDB data provider
     * Returns an array of callables that return instances of EasyDB
     * @return array
-    * @see EasyDBTest::GoodFactoryCreateArgument2EasyDBProvider()
+    * @see EasyDBTest::goodFactoryCreateArgument2EasyDBProvider()
     */
-    public function GoodFactoryCreateArgument2EasyDBWithIdentifierProvider()
+    public function goodFactoryCreateArgument2EasyDBWithIdentifierProvider()
     {
         $provider = [
             [
@@ -46,7 +46,7 @@ class EscapeIdentifierTest extends EasyDBTest
             ],
         ];
         return array_reduce(
-            $this->GoodFactoryCreateArgument2EasyDBProvider(),
+            $this->goodFactoryCreateArgument2EasyDBProvider(),
             function (array $was, array $cbArgs) use ($provider) {
                 foreach ($provider as $args) {
                     foreach (array_reverse($cbArgs) as $cbArg) {
@@ -64,9 +64,9 @@ class EscapeIdentifierTest extends EasyDBTest
     * EasyDB data provider
     * Returns an array of callables that return instances of EasyDB
     * @return array
-    * @see EasyDBTest::GoodFactoryCreateArgument2EasyDBProvider()
+    * @see EasyDBTest::goodFactoryCreateArgument2EasyDBProvider()
     */
-    public function GoodFactoryCreateArgument2EasyDBWithBadIdentifierProvider()
+    public function goodFactoryCreateArgument2EasyDBWithBadIdentifierProvider()
     {
         $identifiers = [
             1,
@@ -78,7 +78,7 @@ class EscapeIdentifierTest extends EasyDBTest
             []
         ];
         return array_reduce(
-            $this->GoodFactoryCreateArgument2EasyDBProvider(),
+            $this->goodFactoryCreateArgument2EasyDBProvider(),
             function (array $was, array $cbArgs) use ($identifiers) {
                 foreach ($identifiers as $identifier) {
                     $args = [$identifier];
@@ -125,11 +125,11 @@ class EscapeIdentifierTest extends EasyDBTest
      * @param callable $cb
      * @param $identifier
      * @param bool[] $withAllowSeparators
-     * @dataProvider GoodFactoryCreateArgument2EasyDBWithIdentifierProvider
+     * @dataProvider goodFactoryCreateArgument2EasyDBWithIdentifierProvider
      */
     public function testEscapeIdentifier(callable $cb, $identifier, array $withAllowSeparators)
     {
-        $db = $this->EasyDBExpectedFromCallable($cb);
+        $db = $this->easyDBExpectedFromCallable($cb);
         $db->setAllowSeparators(false); // resetting to default
         foreach ($withAllowSeparators as $allowSeparators) {
             $db->setAllowSeparators($allowSeparators);
@@ -146,14 +146,14 @@ class EscapeIdentifierTest extends EasyDBTest
     }
 
     /**
-     * @dataProvider GoodFactoryCreateArgument2EasyDBWithBadIdentifierProvider
+     * @dataProvider goodFactoryCreateArgument2EasyDBWithBadIdentifierProvider
      * @depends      testEscapeIdentifier
      * @param callable $cb
      * @param $identifier
      */
     public function testEscapeIdentifierThrowsSomething(callable $cb, $identifier)
     {
-        $db = $this->EasyDBExpectedFromCallable($cb);
+        $db = $this->easyDBExpectedFromCallable($cb);
         $thrown = false;
         try {
             $db->escapeIdentifier($identifier);

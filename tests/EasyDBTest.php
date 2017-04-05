@@ -19,7 +19,7 @@ abstract class EasyDBTest extends PHPUnit_Framework_TestCase
     * These arguments will not result in a valid EasyDB instance
     * @return array
     */
-    public function BadFactoryCreateArgumentProvider()
+    public function badFactoryCreateArgumentProvider()
     {
         return [
             [
@@ -35,7 +35,7 @@ abstract class EasyDBTest extends PHPUnit_Framework_TestCase
     * These arguments will result in a valid EasyDB instance
     * @return array
     */
-    public function GoodFactoryCreateArgumentProvider()
+    public function goodFactoryCreateArgumentProvider()
     {
         switch (getenv('DB')) {
             case false:
@@ -62,9 +62,9 @@ abstract class EasyDBTest extends PHPUnit_Framework_TestCase
     * EasyDB data provider
     * Returns an array of callables that return instances of EasyDB
     * @return array
-    * @see EasyDBTest::GoodFactoryCreateArgumentProvider()
+    * @see EasyDBTest::goodFactoryCreateArgumentProvider()
     */
-    public function GoodFactoryCreateArgument2EasyDBProvider()
+    public function goodFactoryCreateArgument2EasyDBProvider()
     {
         return array_map(
             function (array $arguments) {
@@ -83,7 +83,7 @@ abstract class EasyDBTest extends PHPUnit_Framework_TestCase
                     }
                 ];
             },
-            $this->GoodFactoryCreateArgumentProvider()
+            $this->goodFactoryCreateArgumentProvider()
         );
     }
 
@@ -92,17 +92,17 @@ abstract class EasyDBTest extends PHPUnit_Framework_TestCase
     * @param callable $cb
     * @return EasyDB
     */
-    protected function EasyDBExpectedFromCallable(callable $cb) : EasyDB
+    protected function easyDBExpectedFromCallable(callable $cb) : EasyDB
     {
         return $cb();
     }
 
     /**
-    * Remaps EasyDBWriteTest::GoodFactoryCreateArgument2EasyDBProvider()
+    * Remaps EasyDBWriteTest::goodFactoryCreateArgument2EasyDBProvider()
     */
-    public function GoodFactoryCreateArgument2EasyDBQuoteProvider()
+    public function goodFactoryCreateArgument2EasyDBQuoteProvider()
     {
-        $cbArgsSets = $this->GoodFactoryCreateArgument2EasyDBProvider();
+        $cbArgsSets = $this->goodFactoryCreateArgument2EasyDBProvider();
         $args = [
             [
                 1,

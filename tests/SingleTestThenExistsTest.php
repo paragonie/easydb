@@ -15,7 +15,7 @@ class SingleTestThenExistsTest extends EasyDBWriteTest
     }
 
     /**
-     * @dataProvider GoodFactoryCreateArgument2EasyDBInsertManyProvider
+     * @dataProvider goodFactoryCreateArgument2EasyDBInsertManyProvider
      * @depends      ParagonIE\EasyDB\Tests\Is1DArrayThenDeleteReadOnlyTest::testDeleteThrowsException
      * @depends      ParagonIE\EasyDB\Tests\Is1DArrayThenDeleteReadOnlyTest::testDeleteTableNameEmptyThrowsException
      * @depends      ParagonIE\EasyDB\Tests\Is1DArrayThenDeleteReadOnlyTest::testDeleteTableNameInvalidThrowsException
@@ -27,7 +27,7 @@ class SingleTestThenExistsTest extends EasyDBWriteTest
      */
     public function testExists(callable $cb, array $insertMany)
     {
-        $db = $this->EasyDBExpectedFromCallable($cb);
+        $db = $this->easyDBExpectedFromCallable($cb);
         $this->assertFalse(
             $db->exists('SELECT COUNT(*) FROM irrelevant_but_valid_tablename')
         );

@@ -10,7 +10,7 @@ class Is1DArrayTest extends EasyDBTest
 {
 
     /**
-     * @dataProvider GoodFactoryCreateArgumentProvider
+     * @dataProvider goodFactoryCreateArgumentProvider
      * @param $dsn
      * @param null $username
      * @param null $password
@@ -28,7 +28,7 @@ class Is1DArrayTest extends EasyDBTest
     }
 
     /**
-     * @dataProvider GoodFactoryCreateArgumentProvider
+     * @dataProvider goodFactoryCreateArgumentProvider
      * @depends      testIs1DArray
      * @param $dsn
      * @param null $username
@@ -43,7 +43,7 @@ class Is1DArrayTest extends EasyDBTest
     }
 
     /**
-     * @dataProvider GoodFactoryCreateArgumentProvider
+     * @dataProvider goodFactoryCreateArgumentProvider
      * @depends      testIs1DArray
      * @param $dsn
      * @param null $username
@@ -58,7 +58,7 @@ class Is1DArrayTest extends EasyDBTest
     }
 
     /**
-     * @dataProvider GoodFactoryCreateArgumentProvider
+     * @dataProvider goodFactoryCreateArgumentProvider
      * @depends      testIs1DArray
      * @param $dsn
      * @param null $username

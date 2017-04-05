@@ -11,7 +11,7 @@ class QuoteThenExecThenLastInsertIdTest extends EasyDBWriteTest
 {
 
     /**
-     * @dataProvider GoodFactoryCreateArgument2EasyDBInsertManyProvider
+     * @dataProvider goodFactoryCreateArgument2EasyDBInsertManyProvider
      * @depends      ParagonIE\EasyDB\Tests\QuoteTest::testQuote
      * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifier
      * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifierThrowsSomething
@@ -21,7 +21,7 @@ class QuoteThenExecThenLastInsertIdTest extends EasyDBWriteTest
      */
     public function testLastInsertId(callable $cb, array $maps)
     {
-        $db = $this->EasyDBExpectedFromCallable($cb);
+        $db = $this->easyDBExpectedFromCallable($cb);
         $table = 'irrelevant_but_valid_tablename';
 
         $first = $maps[0];

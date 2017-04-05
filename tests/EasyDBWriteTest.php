@@ -17,9 +17,9 @@ abstract class EasyDBWriteTest extends EasyDBTest
     * EasyDB data provider
     * Returns an array of callables that return instances of EasyDB
     * @return array
-    * @see EasyDBTest::GoodFactoryCreateArgumentProvider()
+    * @see EasyDBTest::goodFactoryCreateArgumentProvider()
     */
-    public function GoodFactoryCreateArgument2EasyDBProvider()
+    public function goodFactoryCreateArgument2EasyDBProvider()
     {
         return array_map(
             function (array $arguments) {
@@ -47,16 +47,16 @@ abstract class EasyDBWriteTest extends EasyDBTest
                     }
                 ];
             },
-            $this->GoodFactoryCreateArgumentProvider()
+            $this->goodFactoryCreateArgumentProvider()
         );
     }
 
     /**
-    * Remaps EasyDBWriteTest::GoodFactoryCreateArgument2EasyDBProvider()
+    * Remaps EasyDBWriteTest::goodFactoryCreateArgument2EasyDBProvider()
     */
-    public function GoodFactoryCreateArgument2EasyDBInsertManyProvider()
+    public function goodFactoryCreateArgument2EasyDBInsertManyProvider()
     {
-        $cbArgsSets = $this->GoodFactoryCreateArgument2EasyDBProvider();
+        $cbArgsSets = $this->goodFactoryCreateArgument2EasyDBProvider();
         $args = [
             [
                 [

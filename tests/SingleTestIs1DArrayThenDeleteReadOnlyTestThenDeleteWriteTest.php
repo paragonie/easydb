@@ -7,7 +7,7 @@ class SingleTestIs1DArrayThenDeleteReadOnlyTestThenDeleteWriteTest extends EasyD
 {
 
     /**
-     * @dataProvider GoodFactoryCreateArgument2EasyDBInsertManyProvider
+     * @dataProvider goodFactoryCreateArgument2EasyDBInsertManyProvider
      * @depends      ParagonIE\EasyDB\Tests\Is1DArrayThenDeleteReadOnlyTest::testDeleteThrowsException
      * @depends      ParagonIE\EasyDB\Tests\Is1DArrayThenDeleteReadOnlyTest::testDeleteTableNameEmptyThrowsException
      * @depends      ParagonIE\EasyDB\Tests\Is1DArrayThenDeleteReadOnlyTest::testDeleteTableNameInvalidThrowsException
@@ -19,7 +19,7 @@ class SingleTestIs1DArrayThenDeleteReadOnlyTestThenDeleteWriteTest extends EasyD
      */
     public function testDelete(callable $cb, array $insertMany)
     {
-        $db = $this->EasyDBExpectedFromCallable($cb);
+        $db = $this->easyDBExpectedFromCallable($cb);
         $db->insertMany('irrelevant_but_valid_tablename', $insertMany);
         $insertManyTotal = count($insertMany);
         $this->assertEquals(
