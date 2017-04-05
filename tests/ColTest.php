@@ -5,8 +5,7 @@ namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyDB;
 
-class ColTest extends
- EasyDBTest
+class ColTest extends EasyDBTest
 {
     protected function GoodColArguments()
     {

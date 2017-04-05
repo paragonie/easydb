@@ -6,8 +6,7 @@ namespace ParagonIE\EasyDB\Tests;
 use ParagonIE\EasyDB\Exception\ConstructorFailed;
 use ParagonIE\EasyDB\Factory;
 
-class ConstructorFailedTest extends
- EasyDBTest
+class ConstructorFailedTest extends EasyDBTest
 {
 
     /**

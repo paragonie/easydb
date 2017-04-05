@@ -3,8 +3,7 @@ declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
-class SingleTestIs1DArrayThenDeleteReadOnlyTestThenDeleteWriteTest extends
- EasyDBWriteTest
+class SingleTestIs1DArrayThenDeleteReadOnlyTestThenDeleteWriteTest extends EasyDBWriteTest
 {
 
     /**

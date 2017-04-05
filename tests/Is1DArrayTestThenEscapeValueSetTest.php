@@ -9,8 +9,7 @@ use InvalidArgumentException;
  * Class EasyDBTest
  * @package ParagonIE\EasyDB\Tests
  */
-class EscapeValueSetTest extends
- EasyDBTest
+class EscapeValueSetTest extends EasyDBTest
 {
 
     /**

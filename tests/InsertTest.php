@@ -6,8 +6,7 @@ namespace ParagonIE\EasyDB\Tests;
 use InvalidArgumentException;
 use PDOException;
 
-class InsertTest extends
- EasyDBWriteTest
+class InsertTest extends EasyDBWriteTest
 {
 
     /**

@@ -10,8 +10,7 @@ use ParagonIE\EasyDB\Factory;
  * Class EasyDBTest
  * @package ParagonIE\EasyDB\Tests
  */
-abstract class EasyDBWriteTest extends
- EasyDBTest
+abstract class EasyDBWriteTest extends EasyDBTest
 {
 
     /**

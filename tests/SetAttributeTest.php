@@ -8,8 +8,7 @@ use ParagonIE\EasyDB\EasyDB;
 use PDO;
 use PDOException;
 
-class SetAttributeTest extends
- GetAttributeTest
+class SetAttributeTest extends GetAttributeTest
 {
 
     /**

@@ -5,8 +5,7 @@ namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyDB;
 
-class QTest extends
- RunTest
+class QTest extends RunTest
 {
     protected function getResultForMethod(EasyDB $db, $statement, $offset, $params)
     {

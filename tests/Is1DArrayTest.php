@@ -6,8 +6,7 @@ namespace ParagonIE\EasyDB\Tests;
 use InvalidArgumentException;
 use ParagonIE\EasyDB\Factory;
 
-class Is1DArrayTest extends
- EasyDBTest
+class Is1DArrayTest extends EasyDBTest
 {
 
     /**

@@ -7,8 +7,7 @@ namespace ParagonIE\EasyDB\Tests;
  * Class ExecTest
  * @package ParagonIE\EasyDB\Tests
  */
-class QuoteThenExecTest extends
- EasyDBWriteTest
+class QuoteThenExecTest extends EasyDBWriteTest
 {
 
     /**

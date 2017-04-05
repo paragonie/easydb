@@ -5,8 +5,7 @@ namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyDB;
 
-class SingleTestThenExistsTest extends
- EasyDBWriteTest
+class SingleTestThenExistsTest extends EasyDBWriteTest
 {
     protected function getResultForMethod(EasyDB $db, $statement, $params)
     {

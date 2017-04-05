@@ -5,8 +5,7 @@ namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
 
-class InsertGetTest extends
- InsertTest
+class InsertGetTest extends InsertTest
 {
 
     /**

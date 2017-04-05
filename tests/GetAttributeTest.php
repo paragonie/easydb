@@ -8,8 +8,7 @@ use PDO;
 use PDOException;
 use ReflectionClass;
 
-class GetAttributeTest extends
- EasyDBTest
+class GetAttributeTest extends EasyDBTest
 {
 
     /**

@@ -9,8 +9,7 @@ use PDOStatement;
  * Class ExecTest
  * @package ParagonIE\EasyDB\Tests
  */
-class QuoteThenQueryTest extends
- EasyDBWriteTest
+class QuoteThenQueryTest extends EasyDBWriteTest
 {
 
     /**

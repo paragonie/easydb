@@ -7,8 +7,7 @@ namespace ParagonIE\EasyDB\Tests;
  * Class ErrorInfoTest
  * @package ParagonIE\EasyDB\Tests
  */
-class ErrorInfoTest extends
- EasyDBTest
+class ErrorInfoTest extends EasyDBTest
 {
 
     /**

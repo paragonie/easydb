@@ -5,8 +5,7 @@ namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyDB;
 
-class RowTest extends
- SafeQueryTest
+class RowTest extends SafeQueryTest
 {
     protected function getResultForMethod(EasyDB $db, $statement, $offset, $params)
     {

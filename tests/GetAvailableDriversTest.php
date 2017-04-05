@@ -6,8 +6,7 @@ namespace ParagonIE\EasyDB\Tests;
 use ParagonIE\EasyDB\Factory;
 use PDO;
 
-class GetAvailableDriversTest extends
- EasyDBTest
+class GetAvailableDriversTest extends EasyDBTest
 {
 
     /**

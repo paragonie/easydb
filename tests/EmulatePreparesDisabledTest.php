@@ -7,8 +7,7 @@ use ParagonIE\EasyDB\Factory;
 use PDO;
 use PDOException;
 
-class EmulatePreparesDisabledTest extends
- EasyDBTest
+class EmulatePreparesDisabledTest extends EasyDBTest
 {
 
     /**
