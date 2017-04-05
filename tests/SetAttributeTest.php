@@ -9,7 +9,7 @@ use PDO;
 use PDOException;
 
 class SetAttributeTest extends
-        GetAttributeTest
+ GetAttributeTest
 {
 
     /**
@@ -64,11 +64,10 @@ class SetAttributeTest extends
                 $initial
             );
         } catch (PDOException $e) {
-            if (
-                strpos(
-                    $e->getMessage(),
-                    ': Driver does not support this function: driver does not support that attribute'
-                ) !== false
+            if (strpos(
+                $e->getMessage(),
+                ': Driver does not support this function: driver does not support that attribute'
+            ) !== false
             ) {
                 $this->markTestSkipped(
                     'Skipping tests for ' .
@@ -85,8 +84,7 @@ class SetAttributeTest extends
                 throw $e;
             }
         } catch (Exception $e) {
-            if (
-                (
+            if ((
                     $attrName === 'ATTR_ERRMODE' &&
                     $e->getMessage() === 'EasyDB only allows the safest-by-default error mode (exceptions).'
                 ) ||

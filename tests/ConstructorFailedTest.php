@@ -7,7 +7,7 @@ use ParagonIE\EasyDB\Exception\ConstructorFailed;
 use ParagonIE\EasyDB\Factory;
 
 class ConstructorFailedTest extends
-        EasyDBTest
+ EasyDBTest
 {
 
     /**
@@ -17,7 +17,7 @@ class ConstructorFailedTest extends
      * @param null $password
      * @param array $options
      */
-    public function testConstructorFailed($dsn, $username=null, $password=null, $options = [])
+    public function testConstructorFailed($dsn, $username = null, $password = null, $options = [])
     {
         $this->expectException(ConstructorFailed::class);
         Factory::create($dsn, $username, $password, $options);

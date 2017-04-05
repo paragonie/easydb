@@ -8,7 +8,7 @@ namespace ParagonIE\EasyDB\Tests;
  * @package ParagonIE\EasyDB\Tests
  */
 class QuoteTest extends
-        EasyDBTest
+ EasyDBTest
 {
 
     /**

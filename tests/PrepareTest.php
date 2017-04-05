@@ -10,7 +10,7 @@ use PDOStatement;
  * @package ParagonIE\EasyDB\Tests
  */
 class PrepareTest extends
-        EasyDBWriteTest
+ EasyDBWriteTest
 {
 
     /**

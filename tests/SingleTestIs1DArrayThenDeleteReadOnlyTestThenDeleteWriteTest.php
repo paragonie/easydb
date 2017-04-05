@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 class SingleTestIs1DArrayThenDeleteReadOnlyTestThenDeleteWriteTest extends
-        EasyDBWriteTest
+ EasyDBWriteTest
 {
 
     /**
@@ -36,7 +36,7 @@ class SingleTestIs1DArrayThenDeleteReadOnlyTestThenDeleteWriteTest extends
                 1
             );
         }
-        for ($i=0;$i<$insertManyTotal;++$i) {
+        for ($i=0; $i<$insertManyTotal; ++$i) {
             $db->delete('irrelevant_but_valid_tablename', $insertMany[$i]);
             $this->assertEquals(
                 $db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename'),

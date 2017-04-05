@@ -7,7 +7,7 @@ use InvalidArgumentException;
 use ParagonIE\EasyDB\Factory;
 
 class Is1DArrayTest extends
-        EasyDBTest
+ EasyDBTest
 {
 
     /**
@@ -17,7 +17,7 @@ class Is1DArrayTest extends
      * @param null $password
      * @param array $options
      */
-    public function testIs1DArray($dsn, $username=null, $password=null, $options = [])
+    public function testIs1DArray($dsn, $username = null, $password = null, $options = [])
     {
         $db = Factory::create($dsn, $username, $password, $options);
         $this->assertTrue($db->is1DArray([]));
@@ -36,7 +36,7 @@ class Is1DArrayTest extends
      * @param null $password
      * @param array $options
      */
-    public function testColumnThrowsException($dsn, $username=null, $password=null, $options = [])
+    public function testColumnThrowsException($dsn, $username = null, $password = null, $options = [])
     {
         $db = Factory::create($dsn, $username, $password, $options);
         $this->expectException(InvalidArgumentException::class);
@@ -51,7 +51,7 @@ class Is1DArrayTest extends
      * @param null $password
      * @param array $options
      */
-    public function testSafeQueryThrowsException($dsn, $username=null, $password=null, $options = [])
+    public function testSafeQueryThrowsException($dsn, $username = null, $password = null, $options = [])
     {
         $db = Factory::create($dsn, $username, $password, $options);
         $this->expectException(InvalidArgumentException::class);
@@ -66,7 +66,7 @@ class Is1DArrayTest extends
      * @param null $password
      * @param array $options
      */
-    public function testSingleThrowsException($dsn, $username=null, $password=null, $options = [])
+    public function testSingleThrowsException($dsn, $username = null, $password = null, $options = [])
     {
         $db = Factory::create($dsn, $username, $password, $options);
         $this->expectException(InvalidArgumentException::class);

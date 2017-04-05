@@ -8,7 +8,7 @@ use PDO;
 use PDOException;
 
 class EmulatePreparesDisabledTest extends
-        EasyDBTest
+ EasyDBTest
 {
 
     /**
@@ -18,7 +18,7 @@ class EmulatePreparesDisabledTest extends
      * @param null $password
      * @param array $options
      */
-    public function testEmulatePreparesDisabled($dsn, $username=null, $password=null, $options = [])
+    public function testEmulatePreparesDisabled($dsn, $username = null, $password = null, $options = [])
     {
         $db = Factory::create($dsn, $username, $password, $options);
         $recheckWithForcedFalse = false;

@@ -6,7 +6,7 @@ namespace ParagonIE\EasyDB\Tests;
 use ParagonIE\EasyDB\EasyDB;
 
 class SingleTest extends
-        CellTest
+ CellTest
 {
     protected function getResultForMethod(EasyDB $db, $statement, $offset, $params)
     {

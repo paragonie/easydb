@@ -7,7 +7,7 @@ use InvalidArgumentException;
 use PDOException;
 
 class InsertManyTest extends
-        EasyDBWriteTest
+ EasyDBWriteTest
 {
 
     /**

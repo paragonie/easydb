@@ -164,9 +164,8 @@ class EscapeIdentifierTest extends EasyDBTest
             $this->assertTrue(true);
             $thrown = true;
         } catch (PHPUnit_Framework_Error $e) {
-            if (
-                preg_match(
-                    (
+            if (preg_match(
+                (
                         '/^' .
                         preg_quote(
                             ('Argument 1 passed to ' . EasyDB::class . '::escapeIdentifier()'),
@@ -174,8 +173,8 @@ class EscapeIdentifierTest extends EasyDBTest
                         ) .
                         ' must be an instance of string, [^ ]+ given$/'
                     ),
-                    $e->getMessage()
-                )
+                $e->getMessage()
+            )
             ) {
                 $this->assertTrue(true);
                 $thrown = true;

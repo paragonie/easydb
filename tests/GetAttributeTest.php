@@ -9,7 +9,7 @@ use PDOException;
 use ReflectionClass;
 
 class GetAttributeTest extends
-        EasyDBTest
+ EasyDBTest
 {
 
     /**
@@ -73,11 +73,10 @@ class GetAttributeTest extends
                 $db->getPdo()->getAttribute($attr)
             );
         } catch (PDOException $e) {
-            if (
-                strpos(
-                    $e->getMessage(),
-                    ': Driver does not support this function: driver does not support that attribute'
-                ) !== false
+            if (strpos(
+                $e->getMessage(),
+                ': Driver does not support this function: driver does not support that attribute'
+            ) !== false
             ) {
                 $this->markTestSkipped(
                     'Skipping tests for ' .

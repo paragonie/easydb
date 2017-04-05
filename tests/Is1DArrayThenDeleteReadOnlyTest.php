@@ -6,7 +6,7 @@ namespace ParagonIE\EasyDB\Tests;
 use InvalidArgumentException;
 
 class Is1DArrayThenDeleteReadOnlyTest extends
-        EasyDBTest
+ EasyDBTest
 {
 
     /**

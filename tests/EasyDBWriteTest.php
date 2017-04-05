@@ -11,7 +11,7 @@ use ParagonIE\EasyDB\Factory;
  * @package ParagonIE\EasyDB\Tests
  */
 abstract class EasyDBWriteTest extends
-        EasyDBTest
+ EasyDBTest
 {
 
     /**
