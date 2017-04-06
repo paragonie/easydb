@@ -136,6 +136,25 @@ $exists = $db->single(
 );
 ```
 
+### Create an escaped alias
+
+```php
+$alias = $db->escapeAlias('users', 'u');
+// users AS u
+```
+
+### Create an escaped list of columns
+```php
+$columns = $db->escapeColumns([
+    'id' => 'user_id',
+    'username',
+]);
+// [
+//     'id AS user_id',
+//     'username',
+// ]
+```
+
 ### Generate dynamic query conditions
 
 ```php
@@ -158,6 +177,23 @@ $user = $db->single("SELECT * FROM users WHERE $statement", $statement->values()
 ```
 
 _**Note**: Passing values with conditions is entirely optional but recommended._
+
+#### Escape fully qualified identifiers
+
+If statements use fully qualified identifiers, in the form `table.column`, the
+identifiers can be escaped by passing an `EasyDB` instance to the `sql()` method:
+
+```php
+$statement = EasyStatement::open()
+    ->with('u.id = ', 10);
+
+// Assuming that $db is an EasyDB instance connected to MySQL:
+echo $statement->sql($db); /* `u`.`id` = ? */
+```
+
+For obvious reasons, this only works when calling `sql()` and not when casting to a string.
+
+_**Note**: This functionality only works when `setAllowSeparators(true)` is enabled!_
 
 #### Variable number of "IN" arguments
 
