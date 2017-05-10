@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
@@ -7,10 +6,8 @@ namespace ParagonIE\EasyDB\Tests;
  * Class ErrorInfoTest
  * @package ParagonIE\EasyDB\Tests
  */
-class ErrorInfoTest extends
-        EasyDBTest
+class ErrorInfoTest extends EasyDBTest
 {
-
     /**
      * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
@@ -18,7 +15,6 @@ class ErrorInfoTest extends
     public function testNoError(callable $cb)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
-
         $info = $db->errorInfo();
         $this->assertTrue(is_array($info));
         $this->assertSame($info[0], '00000');
