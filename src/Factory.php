@@ -46,6 +46,9 @@ abstract class Factory
             case 'pgsql':
                 $post_query = 'SET NAMES UNICODE';
                 break;
+            case 'sqlite':
+                $post_query = 'SET NAMES UTF8';
+                break;
         }
 
         try {
