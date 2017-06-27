@@ -16,3 +16,4 @@ before_script:
 script:
   - vendor/bin/phpcs --standard=psr2 src/
   - vendor/bin/phpunit --coverage-text
+  - vendor/bin/psalm

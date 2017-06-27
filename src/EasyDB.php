@@ -14,12 +14,12 @@ class EasyDB
     /**
      * @var string
      */
-    protected $dbEngine = null;
+    protected $dbEngine = '';
 
     /**
      * @var \PDO
      */
-    protected $pdo = null;
+    protected $pdo;
 
     /**
      * @var bool
@@ -93,7 +93,7 @@ class EasyDB
      * Variadic version of $this->single()
      *
      * @param string $statement SQL query without user data
-     * @param mixed ...$params Parameters
+     * @param mixed ...$params  Parameters
      * @return mixed
      */
     public function cell(string $statement, ...$params)
@@ -104,8 +104,8 @@ class EasyDB
     /**
      * Delete rows in a database table.
      *
-     * @param string $table - table name
-     * @param array $conditions - WHERE clause
+     * @param string $table       Table name
+     * @param array $conditions   Defines the WHERE clause
      * @return int
      * @throws \InvalidArgumentException
      */
@@ -158,11 +158,11 @@ class EasyDB
      *
      * @ref https://stackoverflow.com/questions/10573922/what-does-the-sql-standard-say-about-usage-of-backtick
      *
-     * @param string $string - table or column name
-     * @param boolean $quote - certain SQLs escape column names (i.e. mysql with `backticks`)
+     * @param string $string Table or column name
+     * @param bool $quote    Certain SQLs escape column names (i.e. mysql with `backticks`)
      * @return string
      */
-    public function escapeIdentifier(string $string, $quote = true): string
+    public function escapeIdentifier(string $string, bool $quote = true): string
     {
         if (empty($string)) {
             throw new Issues\InvalidIdentifier(
@@ -362,7 +362,7 @@ class EasyDB
      * Use with SELECT COUNT queries to determine if a record exists.
      *
      * @param string $statement
-     * @param array ...$params
+     * @param mixed ...$params
      * @return bool
      */
     public function exists(string $statement, ...$params): bool
@@ -372,10 +372,8 @@ class EasyDB
     }
 
     /**
-     * Get the first column of each row
-     *
-     * @param $statement
-     * @param array ...$params
+     * @param string $statement
+     * @param mixed ...$params
      * @return mixed
      */
     public function first(string $statement, ...$params)
@@ -571,7 +569,7 @@ class EasyDB
      * Variadic shorthand for $this->safeQuery()
      *
      * @param string $statement SQL query without user data
-     * @param mixed ...$params Parameters
+     * @param mixed ...$params  Parameters
      * @return mixed
      */
     public function q(string $statement, ...$params)
@@ -583,7 +581,7 @@ class EasyDB
      * Similar to $this->q() except it only returns a single row
      *
      * @param string $statement SQL query without user data
-     * @param mixed ...$params Parameters
+     * @param mixed ...$params  Parameters
      * @return mixed
      */
     public function row(string $statement, ...$params)
@@ -599,7 +597,7 @@ class EasyDB
      * Variadic shorthand for $this->safeQuery()
      *
      * @param string $statement SQL query without user data
-     * @param mixed ...$params Parameters
+     * @param mixed ...$params  Parameters
      * @return mixed - If successful, a 2D array
      */
     public function run(string $statement, ...$params)
@@ -650,7 +648,7 @@ class EasyDB
      * Fetch a single result -- useful for SELECT COUNT() queries
      *
      * @param string $statement
-     * @param array $params
+     * @param array  $params
      * @return mixed
      * @throws \InvalidArgumentException
      * @throws Issues\QueryError
@@ -736,7 +734,7 @@ class EasyDB
 
     /**
      * @param bool $value
-     * @return EasyDB
+     * @return self
      */
     public function setAllowSeparators(bool $value): self
     {

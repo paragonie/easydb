@@ -30,6 +30,12 @@ abstract class Factory
     ): EasyDB {
         $dbEngine = '';
         $post_query = null;
+        if (empty($username)) {
+            $username = '';
+        }
+        if (empty($password)) {
+            $password = '';
+        }
 
         // Let's grab the DB engine
         if (strpos($dsn, ':') !== false) {

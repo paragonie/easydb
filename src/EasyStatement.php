@@ -17,7 +17,7 @@ class EasyStatement
     private $parts = [];
 
     /**
-     * @var EasyStatement
+     * @var EasyStatement|null
      */
     private $parent;
 
@@ -35,7 +35,7 @@ class EasyStatement
      * Alias for andWith().
      *
      * @param string $condition
-     * @param mixed $values, ...
+     * @param mixed ...$values
      *
      * @return self
      */
