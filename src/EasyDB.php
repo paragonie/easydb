@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB;
 
 use \ParagonIE\EasyDB\Exception as Issues;
+use \Throwable;
 
 /**
  * Class EasyDB
@@ -918,5 +919,48 @@ class EasyDB
             \count($params) === \count($params, COUNT_RECURSIVE) &&
             \count(\array_filter($params, 'is_array')) < 1
         );
+    }
+
+    /**
+     * Try to execute a callback within the scope of a flat transaction
+     * If already inside a transaction, does not start a new one.
+     * Callable should accept one parameter, i.e. function (EasyDB $db) {}
+     *
+     * @param callable $callback
+     *
+     * @return bool
+     *
+     * @throws \Throwable
+     */
+    public function tryFlatTransaction(callable $callback): bool
+    {
+        $autoStartTransaction = $this->inTransaction() === false;
+
+        /**
+         * If we're starting a transaction, we don't need to catch here
+         */
+        if ($autoStartTransaction) {
+            $this->beginTransaction();
+        }
+        try {
+            $callback($this);
+            /**
+             * If we started the transaction, we should commit here
+             */
+            if ($autoStartTransaction) {
+                $this->commit();
+            }
+        } catch (Throwable $e) {
+            /**
+             * if we started the transaction, we should cleanup here
+             */
+            if ($autoStartTransaction) {
+                $this->rollBack();
+            }
+
+            throw $e;
+        }
+
+        return true;
     }
 }
