@@ -16,6 +16,7 @@ Let's refactor the following legacy insecure code snippet to prevent SQL injecti
 
 ```php
 $query = mysql_query(
+    /*                                         v- Don't do this. -v                     */
     "SELECT * FROM comments WHERE blogpostid = {$_GET['blogpostid']} ORDER BY created ASC"
 );
 while($row = mysql_fetch_assoc($query)) {
@@ -59,6 +60,8 @@ foreach ($rows as $row) {
 ```
 
 We made it a one-liner.
+
+Notice that the variables no longer touch the query string. They're appended as separate arguments, and a placeholder (`?`) is used instead.
 
 ## What else can EasyDB do quickly?
 
