@@ -551,8 +551,6 @@ class EasyDB
             }
         }
 
-        $query = 'INSERT INTO %s (%s) VALUES (%s)';
-
         $columns = \array_map([$this, 'escapeIdentifier'], $columns);
         $placeholders = \array_fill(0, \count($columns), '?');
 
