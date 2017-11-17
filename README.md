@@ -1,6 +1,10 @@
 # EasyDB - Simple Database Abstraction Layer
 
 [![Build Status](https://travis-ci.org/paragonie/easydb.svg?branch=master)](https://travis-ci.org/paragonie/easydb)
+[![Latest Stable Version](https://poser.pugx.org/paragonie/easydb/v/stable)](https://packagist.org/packages/paragonie/easydb)
+[![Latest Unstable Version](https://poser.pugx.org/paragonie/easydb/v/unstable)](https://packagist.org/packages/paragonie/easydb)
+[![License](https://poser.pugx.org/paragonie/easydb/license)](https://packagist.org/packages/paragonie/easydb)
+[![Downloads](https://img.shields.io/packagist/dt/paragonie/easydb.svg)](https://packagist.org/packages/paragonie/easydb)
 
 PDO lacks brevity and simplicity; EasyDB makes separating data from instructions
 easy (and aesthetically pleasing).
