@@ -749,6 +749,75 @@ class EasyDB
         return $this;
     }
 
+
+    /**
+     * Make sure none of this array's elements are arrays
+     *
+     * @param array $params
+     * @return bool
+     */
+    public function is1DArray(array $params): bool
+    {
+        return (
+            \count($params) === \count($params, COUNT_RECURSIVE) &&
+            \count(\array_filter($params, 'is_array')) < 1
+        );
+    }
+
+    /**
+     * Try to execute a callback within the scope of a flat transaction
+     * If already inside a transaction, does not start a new one.
+     * Callable should accept one parameter, i.e. function (EasyDB $db) {}
+     *
+     * @param callable $callback
+     *
+     * @return bool
+     *
+     * @throws Throwable
+     */
+    public function tryFlatTransaction(callable $callback): bool
+    {
+        $autoStartTransaction = $this->inTransaction() === false;
+
+        // If we're starting a transaction, we don't need to catch here
+        if ($autoStartTransaction) {
+            $this->beginTransaction();
+        }
+        try {
+            $callback($this);
+            // If we started the transaction, we should commit here
+            if ($autoStartTransaction) {
+                $this->commit();
+            }
+        } catch (Throwable $e) {
+            // If we started the transaction, we should cleanup here
+            if ($autoStartTransaction) {
+                $this->rollBack();
+            }
+
+            throw $e;
+        }
+
+        return true;
+    }
+
+    /**
+     * Get the type of a variable.
+     *
+     * @param mixed $v
+     * @return string
+     */
+    protected function getValueType($v = null): string
+    {
+        if (\is_scalar($v) || \is_array($v)) {
+            return \gettype($v);
+        }
+        if (\is_object($v)) {
+            return 'an instance of ' . \get_class($v);
+        }
+        return \var_export($v, true);
+    }
+
     /**
      ***************************************************************************
      ***************************************************************************
@@ -914,73 +983,5 @@ class EasyDB
             }
         }
         return $this->pdo->setAttribute($attr, $value);
-    }
-
-    /**
-     * Make sure none of this array's elements are arrays
-     *
-     * @param array $params
-     * @return bool
-     */
-    public function is1DArray(array $params): bool
-    {
-        return (
-            \count($params) === \count($params, COUNT_RECURSIVE) &&
-            \count(\array_filter($params, 'is_array')) < 1
-        );
-    }
-
-    /**
-     * Try to execute a callback within the scope of a flat transaction
-     * If already inside a transaction, does not start a new one.
-     * Callable should accept one parameter, i.e. function (EasyDB $db) {}
-     *
-     * @param callable $callback
-     *
-     * @return bool
-     *
-     * @throws Throwable
-     */
-    public function tryFlatTransaction(callable $callback): bool
-    {
-        $autoStartTransaction = $this->inTransaction() === false;
-
-        // If we're starting a transaction, we don't need to catch here
-        if ($autoStartTransaction) {
-            $this->beginTransaction();
-        }
-        try {
-            $callback($this);
-            // If we started the transaction, we should commit here
-            if ($autoStartTransaction) {
-                $this->commit();
-            }
-        } catch (Throwable $e) {
-            // If we started the transaction, we should cleanup here
-            if ($autoStartTransaction) {
-                $this->rollBack();
-            }
-
-            throw $e;
-        }
-
-        return true;
-    }
-
-    /**
-     * Get the type of a variable.
-     *
-     * @param mixed $v
-     * @return string
-     */
-    protected function getValueType($v = null): string
-    {
-        if (\is_scalar($v) || \is_array($v)) {
-            return \gettype($v);
-        }
-        if (\is_object($v)) {
-            return 'an instance of ' . \get_class($v);
-        }
-        return \var_export($v, true);
     }
 }
