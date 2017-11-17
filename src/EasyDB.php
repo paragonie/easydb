@@ -921,7 +921,8 @@ class EasyDB
         if ($attr === \PDO::ATTR_EMULATE_PREPARES) {
             if ($value !== false) {
                 throw new \Exception(
-                    'EasyDB does not allow the use of emulated prepared statements, which would be a security downgrade.'
+                    'EasyDB does not allow the use of emulated prepared statements, ' .
+                    'which would be a security downgrade.'
                 );
             }
         }
