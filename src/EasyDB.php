@@ -11,6 +11,8 @@ use \ParagonIE\EasyDB\Exception as Issues;
  */
 class EasyDB
 {
+    const DEFAULT_FETCH_STYLE = 0x31420000;
+    
     /**
      * @var string
      */
@@ -36,8 +38,9 @@ class EasyDB
      *
      * @param \PDO $pdo
      * @param string $dbEngine
+     * @param array $options   Extra options
      */
-    public function __construct(\PDO $pdo, string $dbEngine = '', array $options)
+    public function __construct(\PDO $pdo, string $dbEngine = '', array $options = [])
     {
         $this->pdo = $pdo;
         $this->pdo->setAttribute(
@@ -630,12 +633,15 @@ class EasyDB
     public function safeQuery(
         string $statement,
         array $params = [],
-        int $fetchStyle = \PDO::FETCH_ASSOC,
+        int $fetchStyle = self::DEFAULT_FETCH_STYLE,
         bool $returnNumAffected = false
     ) {
-
-        if(isset($this->options[\PDO::ATTR_DEFAULT_FETCH_MODE])) {
-            $fetchStyle = $this->options[\PDO::ATTR_DEFAULT_FETCH_MODE];
+        if ($fetchStyle === self::DEFAULT_FETCH_STYLE) {
+            if (isset($this->options[\PDO::ATTR_DEFAULT_FETCH_MODE])) {
+                $fetchStyle = $this->options[\PDO::ATTR_DEFAULT_FETCH_MODE];
+            } else {
+                $fetchStyle = \PDO::FETCH_ASSOC;
+            }
         }
 
         if (empty($params)) {
