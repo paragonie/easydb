@@ -67,6 +67,6 @@ abstract class Factory
             $pdo->query($post_query);
         }
 
-        return new EasyDB($pdo, $dbEngine);
+        return new EasyDB($pdo, $dbEngine, $options);
     }
 }

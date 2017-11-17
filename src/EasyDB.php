@@ -22,6 +22,11 @@ class EasyDB
     protected $pdo = null;
 
     /**
+     * @var array
+     */
+    protected $options = null;
+
+    /**
      * @var bool
      */
     protected $allowSeparators = false;
@@ -32,7 +37,7 @@ class EasyDB
      * @param \PDO $pdo
      * @param string $dbEngine
      */
-    public function __construct(\PDO $pdo, string $dbEngine = '')
+    public function __construct(\PDO $pdo, string $dbEngine = '', array $options)
     {
         $this->pdo = $pdo;
         $this->pdo->setAttribute(
@@ -47,6 +52,8 @@ class EasyDB
         if (empty($dbEngine)) {
             $dbEngine = $this->pdo->getAttribute(\PDO::ATTR_DRIVER_NAME);
         }
+
+        $this->options = $options;
 
         $this->dbEngine = $dbEngine;
     }
@@ -626,6 +633,11 @@ class EasyDB
         int $fetchStyle = \PDO::FETCH_ASSOC,
         bool $returnNumAffected = false
     ) {
+
+        if(isset($this->options[\PDO::ATTR_DEFAULT_FETCH_MODE])) {
+            $fetchStyle = $this->options[\PDO::ATTR_DEFAULT_FETCH_MODE];
+        }
+
         if (empty($params)) {
             $stmt = $this->pdo->query($statement);
             if ($returnNumAffected) {
