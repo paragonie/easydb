@@ -634,8 +634,8 @@ class EasyDB
         bool $returnNumAffected = false
     ) {
 
-        if(isset($this->options[19])) {
-            $fetchStyle = $this->options[19];
+        if(isset($this->options[\PDO::ATTR_DEFAULT_FETCH_MODE])) {
+            $fetchStyle = $this->options[\PDO::ATTR_DEFAULT_FETCH_MODE];
         }
 
         if (empty($params)) {
