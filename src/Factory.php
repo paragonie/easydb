@@ -43,6 +43,9 @@ abstract class Factory
             $dbEngine = explode(':', $dsn)[0];
         }
 
+        /** @var string $post_query */
+        $post_query = '';
+
         // If no charset is specified, default to UTF-8
         switch ($dbEngine) {
             case 'mysql':
