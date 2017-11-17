@@ -11,6 +11,8 @@ use \ParagonIE\EasyDB\Exception as Issues;
  */
 class EasyDB
 {
+    const DEFAULT_FETCH_STYLE = 0x31420000;
+    
     /**
      * @var string
      */
