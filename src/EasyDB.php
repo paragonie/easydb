@@ -268,17 +268,7 @@ class EasyDB
                             '::' .
                             __METHOD__ .
                             '(), received ' .
-                            (
-                                (
-                                    \is_scalar($v) || \is_array($v)
-                                )
-                                    ? \gettype($v)
-                                    : (
-                                        \is_object($v)
-                                            ? ('an instance of ' . \get_class($v))
-                                            : \var_export($v, true)
-                                    )
-                            )
+                            $this->getValueType($v)
                         );
                     }
                     $join[] = (int) $v + 0;
@@ -296,17 +286,7 @@ class EasyDB
                             '::' .
                             __METHOD__ .
                             '(), received ' .
-                            (
-                                (
-                                    \is_scalar($v) || \is_array($v)
-                                )
-                                    ? \gettype($v)
-                                    : (
-                                        \is_object($v)
-                                            ? ('an instance of ' . \get_class($v))
-                                            : \var_export($v, true)
-                                    )
-                            )
+                            $this->getValueType($v)
                         );
                     }
                     $join[] = (float) $v + 0.0;
@@ -985,5 +965,22 @@ class EasyDB
         }
 
         return true;
+    }
+
+    /**
+     * Get the type of a variable.
+     *
+     * @param mixed $v
+     * @return string
+     */
+    protected function getValueType($v = null): string
+    {
+        if (\is_scalar($v) || \is_array($v)) {
+            return \gettype($v);
+        }
+        if (\is_object($v)) {
+            return 'an instance of ' . \get_class($v);
+        }
+        return \var_export($v, true);
     }
 }
