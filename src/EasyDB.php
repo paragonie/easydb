@@ -836,11 +836,10 @@ class EasyDB
         $results = $stmt->fetchAll($fetchStyle);
         if (\is_array($results)) {
             return (array) $results;
-        } elseif(\is_object($results)) {
+        } elseif (\is_object($results)) {
             return (object) $results;
         }
         throw new \TypeError('Unexpected return type: ' . $this->getValueType($results));
-
     }
 
     /**
