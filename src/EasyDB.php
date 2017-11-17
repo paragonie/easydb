@@ -304,17 +304,7 @@ class EasyDB
                             '::' .
                             __METHOD__ .
                             '(), received ' .
-                            (
-                                (
-                                    \is_scalar($v) || \is_array($v)
-                                )
-                                    ? \gettype($v)
-                                    : (
-                                        \is_object($v)
-                                            ? ('an instance of ' . \get_class($v))
-                                            : \var_export($v, true)
-                                    )
-                            )
+                            $this->getValueType($v)
                         );
                     }
                     $join[] = $this->pdo->quote($v, \PDO::PARAM_STR);
