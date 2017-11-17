@@ -12,16 +12,9 @@ Check out our other [open source projects](https://paragonie.com/projects) too.
 
 ## Why Use EasyDB? Because it's cleaner!
 
-Let's refactor the following legacy insecure code snippet to prevent SQL injection.
-
-```php
-$query = mysql_query(
-    "SELECT * FROM comments WHERE blogpostid = {$_GET['blogpostid']} ORDER BY created ASC"
-);
-while($row = mysql_fetch_assoc($query)) {
-    $template_engine->render('comment', $row);
-}
-```
+Let's refactor a dangerous PHP snippet that previously used string concatenation to pass user input
+instead of prepared statements. For example, imagine something that just dropped `{$_GET['blogpostid']}` into the
+middle of a `mysql_query()` statement. Let's make it secure.
 
 ### The PDO Way
 
