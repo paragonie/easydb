@@ -24,18 +24,12 @@ abstract class Factory
      */
     public static function create(
         string $dsn,
-        string $username = null,
-        string $password = null,
+        string $username = '',
+        string $password = '',
         array $options = []
     ): EasyDB {
         $dbEngine = '';
         $post_query = null;
-        if (empty($username)) {
-            $username = '';
-        }
-        if (empty($password)) {
-            $password = '';
-        }
 
         // Let's grab the DB engine
         if (strpos($dsn, ':') !== false) {
