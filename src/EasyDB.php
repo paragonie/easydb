@@ -27,7 +27,7 @@ class EasyDB
     /**
      * @var array
      */
-    protected $options = null;
+    protected $options = [];
 
     /**
      * @var bool
@@ -57,9 +57,8 @@ class EasyDB
             $dbEngine = $this->pdo->getAttribute(\PDO::ATTR_DRIVER_NAME);
         }
 
-        $this->options = $options;
-
         $this->dbEngine = $dbEngine;
+        $this->options = $options;
     }
 
     /**
@@ -180,8 +179,17 @@ class EasyDB
                 'Invalid identifier: Must be a non-empty string.'
             );
         }
+        switch ($this->dbEngine) {
+            case 'sqlite':
+                $patternWithSep = '/[^\.0-9a-zA-Z_\/]/';
+                $patternWithoutSep = '/[^0-9a-zA-Z_\/]/';
+                break;
+            default:
+                $patternWithSep = '/[^\.0-9a-zA-Z_]/';
+                $patternWithoutSep = '/[^0-9a-zA-Z_]/';
+        }
         if ($this->allowSeparators) {
-            $str = \preg_replace('/[^\.0-9a-zA-Z_]/', '', $string);
+            $str = \preg_replace($patternWithSep, '', $string);
             if (\strpos($str, '.') !== false) {
                 $pieces = \explode('.', $str);
                 foreach ($pieces as $i => $p) {
@@ -190,7 +198,7 @@ class EasyDB
                 return \implode('.', $pieces);
             }
         } else {
-            $str = \preg_replace('/[^0-9a-zA-Z_]/', '', $string);
+            $str = \preg_replace($patternWithoutSep, '', $string);
             if ($str !== \trim($string)) {
                 if ($str === \str_replace('.', '', $string)) {
                     throw new Issues\InvalidIdentifier(
@@ -911,14 +919,19 @@ class EasyDB
     public function setAttribute(int $attr, $value): bool
     {
         if ($attr === \PDO::ATTR_EMULATE_PREPARES) {
-            throw new \Exception(
-                'EasyDB does not allow the use of emulated prepared statements, which would be a security downgrade.'
-            );
+            if ($value !== false) {
+                throw new \Exception(
+                    'EasyDB does not allow the use of emulated prepared statements, ' .
+                    'which would be a security downgrade.'
+                );
+            }
         }
         if ($attr === \PDO::ATTR_ERRMODE) {
-            throw new \Exception(
-                'EasyDB only allows the safest-by-default error mode (exceptions).'
-            );
+            if ($value !== \PDO::ERRMODE_EXCEPTION) {
+                throw new \Exception(
+                    'EasyDB only allows the safest-by-default error mode (exceptions).'
+                );
+            }
         }
         return $this->pdo->setAttribute($attr, $value);
     }
@@ -946,30 +959,24 @@ class EasyDB
      *
      * @return bool
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function tryFlatTransaction(callable $callback): bool
     {
         $autoStartTransaction = $this->inTransaction() === false;
 
-        /**
-         * If we're starting a transaction, we don't need to catch here
-         */
+        // If we're starting a transaction, we don't need to catch here
         if ($autoStartTransaction) {
             $this->beginTransaction();
         }
         try {
             $callback($this);
-            /**
-             * If we started the transaction, we should commit here
-             */
+            // If we started the transaction, we should commit here
             if ($autoStartTransaction) {
                 $this->commit();
             }
         } catch (Throwable $e) {
-            /**
-             * if we started the transaction, we should cleanup here
-             */
+            // If we started the transaction, we should cleanup here
             if ($autoStartTransaction) {
                 $this->rollBack();
             }
