@@ -44,7 +44,7 @@
         "phpunit/phpunit": "^5",
         "spatie/7to5": "^1.0",
         "squizlabs/php_codesniffer": "^2.7",
-        "vimeo/psalm": "dev-master"
+        "vimeo/psalm": "^0|^1"
     },
     "scripts": {
         "php5ize": [
