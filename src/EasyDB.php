@@ -264,21 +264,11 @@ class EasyDB
                             'Expected a integer at index ' .
                                 $k .
                             ' of argument 1 passed to ' .
-                            static::class .
+                                static::class .
                             '::' .
-                            __METHOD__ .
+                                __METHOD__ .
                             '(), received ' .
-                            (
-                                (
-                                    \is_scalar($v) || \is_array($v)
-                                )
-                                    ? \gettype($v)
-                                    : (
-                                        \is_object($v)
-                                            ? ('an instance of ' . \get_class($v))
-                                            : \var_export($v, true)
-                                    )
-                            )
+                            $this->getValueType($v)
                         );
                     }
                     $join[] = (int) $v + 0;
@@ -292,21 +282,11 @@ class EasyDB
                             'Expected a number at index ' .
                                 $k .
                             ' of argument 1 passed to ' .
-                            static::class .
+                                static::class .
                             '::' .
-                            __METHOD__ .
+                                __METHOD__ .
                             '(), received ' .
-                            (
-                                (
-                                    \is_scalar($v) || \is_array($v)
-                                )
-                                    ? \gettype($v)
-                                    : (
-                                        \is_object($v)
-                                            ? ('an instance of ' . \get_class($v))
-                                            : \var_export($v, true)
-                                    )
-                            )
+                            $this->getValueType($v)
                         );
                     }
                     $join[] = (float) $v + 0.0;
@@ -320,21 +300,11 @@ class EasyDB
                             'Expected a string at index ' .
                                 $k .
                             ' of argument 1 passed to ' .
-                            static::class .
+                                static::class .
                             '::' .
-                            __METHOD__ .
+                                __METHOD__ .
                             '(), received ' .
-                            (
-                                (
-                                    \is_scalar($v) || \is_array($v)
-                                )
-                                    ? \gettype($v)
-                                    : (
-                                        \is_object($v)
-                                            ? ('an instance of ' . \get_class($v))
-                                            : \var_export($v, true)
-                                    )
-                            )
+                            $this->getValueType($v)
                         );
                     }
                     $join[] = $this->pdo->quote($v, \PDO::PARAM_STR);
@@ -571,8 +541,6 @@ class EasyDB
             }
         }
 
-        $query = 'INSERT INTO %s (%s) VALUES (%s)';
-
         $columns = \array_map([$this, 'escapeIdentifier'], $columns);
         $placeholders = \array_fill(0, \count($columns), '?');
 
@@ -769,172 +737,6 @@ class EasyDB
         return $this;
     }
 
-    /**
-     ***************************************************************************
-     ***************************************************************************
-     ****             PUNTER METHODS - see PDO class definition             ****
-     ***************************************************************************
-     ***************************************************************************
-    **/
-
-    /**
-     * Initiates a transaction
-     *
-     * @return bool
-     */
-    public function beginTransaction(): bool
-    {
-        return $this->pdo->beginTransaction();
-    }
-
-    /**
-     * Commits a transaction
-     *
-     * @return bool
-     */
-    public function commit(): bool
-    {
-        return $this->pdo->commit();
-    }
-
-    /**
-     * Fetch the SQLSTATE associated with the last operation on the database
-     * handle
-     *
-     * @return mixed
-     */
-    public function errorCode()
-    {
-        return $this->pdo->errorCode();
-    }
-    /**
-     * Fetch extended error information associated with the last operation on
-     * the database handle
-     *
-     * @return array
-     */
-    public function errorInfo(): array
-    {
-        return $this->pdo->errorInfo();
-    }
-    /**
-     * Execute an SQL statement and return the number of affected rows
-     *
-     * @param mixed ...$args
-     * @return int
-     */
-    public function exec(...$args): int
-    {
-        return $this->pdo->exec(...$args);
-    }
-    /**
-     * Retrieve a database connection attribute
-     *
-     * @param mixed ...$args
-     * @return mixed
-     */
-    public function getAttribute(...$args)
-    {
-        return $this->pdo->getAttribute(...$args);
-    }
-
-    /**
-     * Return an array of available PDO drivers
-     *
-     * @return array
-     */
-    public function getAvailableDrivers(): array
-    {
-        return $this->pdo->getAvailableDrivers();
-    }
-    /**
-     * Checks if inside a transaction
-     *
-     * @return bool
-     */
-    public function inTransaction(): bool
-    {
-        return $this->pdo->inTransaction();
-    }
-    /**
-     * Returns the ID of the last inserted row or sequence value
-     *
-     * @param mixed ...$args
-     * @return string
-     */
-    public function lastInsertId(...$args): string
-    {
-        return $this->pdo->lastInsertId(...$args);
-    }
-    /**
-     * Prepares a statement for execution and returns a statement object
-     *
-     * @param mixed ...$args
-     * @return \PDOStatement
-     */
-    public function prepare(...$args): \PDOStatement
-    {
-        return $this->pdo->prepare(...$args);
-    }
-    /**
-     * Executes an SQL statement, returning a result set as a PDOStatement object
-     *
-     * @param mixed ...$args
-     * @return \PDOStatement
-     */
-    public function query(...$args): \PDOStatement
-    {
-        return $this->pdo->query(...$args);
-    }
-    /**
-     * Quotes a string for use in a query
-     *
-     * @param mixed ...$args
-     * @return string
-     */
-    public function quote(...$args): string
-    {
-        return $this->pdo->quote(...$args);
-    }
-
-    /**
-     * Rolls back a transaction
-     *
-     * @return bool
-     */
-    public function rollBack(): bool
-    {
-        return $this->pdo->rollBack();
-    }
-
-
-    /**
-     * Set an attribute
-     *
-     * @param int $attr
-     * @param mixed $value
-     * @return bool
-     * @throws \Exception
-     */
-    public function setAttribute(int $attr, $value): bool
-    {
-        if ($attr === \PDO::ATTR_EMULATE_PREPARES) {
-            if ($value !== false) {
-                throw new \Exception(
-                    'EasyDB does not allow the use of emulated prepared statements, ' .
-                    'which would be a security downgrade.'
-                );
-            }
-        }
-        if ($attr === \PDO::ATTR_ERRMODE) {
-            if ($value !== \PDO::ERRMODE_EXCEPTION) {
-                throw new \Exception(
-                    'EasyDB only allows the safest-by-default error mode (exceptions).'
-                );
-            }
-        }
-        return $this->pdo->setAttribute($attr, $value);
-    }
 
     /**
      * Make sure none of this array's elements are arrays
@@ -985,5 +787,196 @@ class EasyDB
         }
 
         return true;
+    }
+
+    /**
+     * Get the type of a variable.
+     *
+     * @param mixed $v
+     * @return string
+     */
+    protected function getValueType($v = null): string
+    {
+        if (\is_scalar($v) || \is_array($v)) {
+            return \gettype($v);
+        }
+        if (\is_object($v)) {
+            return 'an instance of ' . \get_class($v);
+        }
+        return \var_export($v, true);
+    }
+
+    /**
+     ***************************************************************************
+     ***************************************************************************
+     ****             PUNTER METHODS - see PDO class definition             ****
+     ***************************************************************************
+     ***************************************************************************
+    **/
+
+    /**
+     * Initiates a transaction
+     *
+     * @return bool
+     */
+    public function beginTransaction(): bool
+    {
+        return $this->pdo->beginTransaction();
+    }
+
+    /**
+     * Commits a transaction
+     *
+     * @return bool
+     */
+    public function commit(): bool
+    {
+        return $this->pdo->commit();
+    }
+
+    /**
+     * Fetch the SQLSTATE associated with the last operation on the database
+     * handle
+     *
+     * @return mixed
+     */
+    public function errorCode()
+    {
+        return $this->pdo->errorCode();
+    }
+
+    /**
+     * Fetch extended error information associated with the last operation on
+     * the database handle
+     *
+     * @return array
+     */
+    public function errorInfo(): array
+    {
+        return $this->pdo->errorInfo();
+    }
+
+    /**
+     * Execute an SQL statement and return the number of affected rows
+     *
+     * @param mixed ...$args
+     * @return int
+     */
+    public function exec(...$args): int
+    {
+        return $this->pdo->exec(...$args);
+    }
+
+    /**
+     * Retrieve a database connection attribute
+     *
+     * @param mixed ...$args
+     * @return mixed
+     */
+    public function getAttribute(...$args)
+    {
+        return $this->pdo->getAttribute(...$args);
+    }
+
+    /**
+     * Return an array of available PDO drivers
+     *
+     * @return array
+     */
+    public function getAvailableDrivers(): array
+    {
+        return $this->pdo->getAvailableDrivers();
+    }
+
+    /**
+     * Checks if inside a transaction
+     *
+     * @return bool
+     */
+    public function inTransaction(): bool
+    {
+        return $this->pdo->inTransaction();
+    }
+
+    /**
+     * Returns the ID of the last inserted row or sequence value
+     *
+     * @param mixed ...$args
+     * @return string
+     */
+    public function lastInsertId(...$args): string
+    {
+        return $this->pdo->lastInsertId(...$args);
+    }
+
+    /**
+     * Prepares a statement for execution and returns a statement object
+     *
+     * @param mixed ...$args
+     * @return \PDOStatement
+     */
+    public function prepare(...$args): \PDOStatement
+    {
+        return $this->pdo->prepare(...$args);
+    }
+
+    /**
+     * Executes an SQL statement, returning a result set as a PDOStatement object
+     *
+     * @param mixed ...$args
+     * @return \PDOStatement
+     */
+    public function query(...$args): \PDOStatement
+    {
+        return $this->pdo->query(...$args);
+    }
+
+    /**
+     * Quotes a string for use in a query
+     *
+     * @param mixed ...$args
+     * @return string
+     */
+    public function quote(...$args): string
+    {
+        return $this->pdo->quote(...$args);
+    }
+
+    /**
+     * Rolls back a transaction
+     *
+     * @return bool
+     */
+    public function rollBack(): bool
+    {
+        return $this->pdo->rollBack();
+    }
+
+    /**
+     * Set an attribute
+     *
+     * @param int $attr
+     * @param mixed $value
+     * @return bool
+     * @throws \Exception
+     */
+    public function setAttribute(int $attr, $value): bool
+    {
+        if ($attr === \PDO::ATTR_EMULATE_PREPARES) {
+            if ($value !== false) {
+                throw new \Exception(
+                    'EasyDB does not allow the use of emulated prepared statements, ' .
+                    'which would be a security downgrade.'
+                );
+            }
+        }
+        if ($attr === \PDO::ATTR_ERRMODE) {
+            if ($value !== \PDO::ERRMODE_EXCEPTION) {
+                throw new \Exception(
+                    'EasyDB only allows the safest-by-default error mode (exceptions).'
+                );
+            }
+        }
+        return $this->pdo->setAttribute($attr, $value);
     }
 }

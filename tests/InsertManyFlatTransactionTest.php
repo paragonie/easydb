@@ -8,7 +8,7 @@ use ParagonIE\EasyDB\EasyDB;
 use PDOException;
 
 class InsertManyFlatTransactionTest extends
-        EasyDBWriteTest
+ EasyDBWriteTest
 {
     /**
      * @dataProvider GoodFactoryCreateArgument2EasyDBProvider

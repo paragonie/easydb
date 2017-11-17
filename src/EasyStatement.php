@@ -10,7 +10,6 @@ use RuntimeException;
  */
 class EasyStatement
 {
-
     /**
      * @var array
      */
@@ -302,7 +301,7 @@ class EasyStatement
      * Given a count of 3, the placeholder ?* will become ?, ?, ?
      *
      * @param string $condition
-     * @param integer $count
+     * @param int $count
      *
      * @return string
      */

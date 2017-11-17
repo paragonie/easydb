@@ -70,9 +70,6 @@ abstract class Factory
             );
         }
 
-        // Let's turn off emulated prepares
-        $pdo->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
-
         if (!empty($post_query)) {
             $pdo->query($post_query);
         }
