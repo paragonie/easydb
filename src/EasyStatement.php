@@ -206,16 +206,26 @@ class EasyStatement
      */
     public function sql(): string
     {
-        return \array_reduce(
+        return (string) \array_reduce(
             $this->parts,
             function (string $sql, array $part): string {
-                if ($this->isGroup($part['condition'])) {
+                /** @var string|self $condition */
+                $condition = $part['condition'];
+
+                if ($this->isGroup($condition)) {
                     // (...)
-                    $statement = '(' . $part['condition']->sql() . ')';
+                    if (\is_string($condition)) {
+                        $statement = $condition;
+                    } else {
+                        $statement = '(' . $condition->sql() . ')';
+                    }
                 } else {
                     // foo = ?
-                    $statement = $part['condition'];
+                    $statement = $condition;
                 }
+                /** @var string $statement */
+                $statement = (string) $statement;
+                $part['type'] = (string) $part['type'];
 
                 if ($sql) {
                     switch ($part['type']) {
@@ -243,10 +253,11 @@ class EasyStatement
      */
     public function values(): array
     {
-        return \array_reduce(
+        return (array) \array_reduce(
             $this->parts,
             function (array $values, array $part): array {
                 if ($this->isGroup($part['condition'])) {
+                    /** @var EasyStatement $part['condition'] */
                     return \array_merge(
                         $values,
                         $part['condition']->values()

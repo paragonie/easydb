@@ -1,7 +1,9 @@
 <?xml version="1.0"?>
 <psalm
+    name="EasyDB static analysis tests."
     stopOnFirstError="false"
     useDocblockTypes="true"
+    totallyTyped="true"
 >
     <projectFiles>
         <directory name="src" />

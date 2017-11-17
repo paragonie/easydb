@@ -54,7 +54,7 @@ class EasyDB
         );
 
         if (empty($dbEngine)) {
-            $dbEngine = $this->pdo->getAttribute(\PDO::ATTR_DRIVER_NAME);
+            $dbEngine = (string) $this->pdo->getAttribute(\PDO::ATTR_DRIVER_NAME);
         }
 
         $this->dbEngine = $dbEngine;
@@ -118,6 +118,8 @@ class EasyDB
      * @param array $conditions   Defines the WHERE clause
      * @return int
      * @throws \InvalidArgumentException
+     * @psalm-suppress MixedAssignment
+     * @psalm-suppress MixedArgument
      */
     public function delete(string $table, array $conditions): int
     {
@@ -241,6 +243,8 @@ class EasyDB
      * @param string $type
      * @return string
      * @throws \InvalidArgumentException
+     * @psalm-suppress MixedAssignment
+     * @psalm-suppress MixedArgument
      */
     public function escapeValueSet(array $values, string $type = 'string'): string
     {
@@ -262,9 +266,9 @@ class EasyDB
                     if (!\is_int($v)) {
                         throw new \InvalidArgumentException(
                             'Expected a integer at index ' .
-                                $k .
+                                (string) $k .
                             ' of argument 1 passed to ' .
-                                static::class .
+                                (string) static::class .
                             '::' .
                                 __METHOD__ .
                             '(), received ' .
@@ -280,9 +284,9 @@ class EasyDB
                     if (!\is_numeric($v)) {
                         throw new \InvalidArgumentException(
                             'Expected a number at index ' .
-                                $k .
+                                (string) $k .
                             ' of argument 1 passed to ' .
-                                static::class .
+                                (string) static::class .
                             '::' .
                                 __METHOD__ .
                             '(), received ' .
@@ -298,9 +302,9 @@ class EasyDB
                     if (!\is_string($v)) {
                         throw new \InvalidArgumentException(
                             'Expected a string at index ' .
-                                $k .
+                                (string) $k .
                             ' of argument 1 passed to ' .
-                                static::class .
+                                (string) static::class .
                             '::' .
                                 __METHOD__ .
                             '(), received ' .
@@ -353,6 +357,7 @@ class EasyDB
      * @param string $statement
      * @param mixed ...$params
      * @return bool
+     * @psalm-suppress MixedAssignment
      */
     public function exists(string $statement, ...$params): bool
     {
@@ -430,6 +435,8 @@ class EasyDB
      * @param string $field
      * @return mixed
      * @throws \Exception
+     * @psalm-suppress MixedAssignment
+     * @psalm-suppress MixedArgument
      */
     public function insertGet(string $table, array $map, string $field)
     {
@@ -487,15 +494,17 @@ class EasyDB
      * @return int
      * @throws \InvalidArgumentException
      * @throws Issues\QueryError
+     * @psalm-suppress MixedAssignment
+     * @psalm-suppress MixedArgument
      */
     public function insertMany(string $table, array $maps): int
     {
         if (count($maps) < 1) {
             throw new \InvalidArgumentException(
                 'Argument 2 passed to ' .
-                static::class .
+                    (string) static::class .
                 '::' .
-                __METHOD__ .
+                    __METHOD__ .
                 '() must contain at least one field set!'
             );
         }
@@ -561,7 +570,9 @@ class EasyDB
      */
     public function q(string $statement, ...$params)
     {
-        return $this->safeQuery($statement, $params);
+        /** @var array $result */
+        $result = (array) $this->safeQuery($statement, $params, \PDO::FETCH_ASSOC);
+        return $result;
     }
 
     /**
@@ -573,7 +584,8 @@ class EasyDB
      */
     public function row(string $statement, ...$params)
     {
-        $result = $this->safeQuery($statement, $params);
+        /** @var array $result */
+        $result = (array) $this->safeQuery($statement, $params, \PDO::FETCH_ASSOC);
         if (\is_array($result)) {
             return \array_shift($result);
         }
@@ -601,7 +613,7 @@ class EasyDB
      *                                   statements)
      * @param int $fetchStyle            PDO::FETCH_STYLE
      * @param bool $returnNumAffected    Return the number of rows affected?
-     * @return array|int
+     * @return array|int|object
      * @throws \InvalidArgumentException
      * @throws Issues\QueryError
      */
@@ -613,6 +625,7 @@ class EasyDB
     ) {
         if ($fetchStyle === self::DEFAULT_FETCH_STYLE) {
             if (isset($this->options[\PDO::ATTR_DEFAULT_FETCH_MODE])) {
+                /** @var int $fetchStyle */
                 $fetchStyle = $this->options[\PDO::ATTR_DEFAULT_FETCH_MODE];
             } else {
                 $fetchStyle = \PDO::FETCH_ASSOC;
@@ -622,9 +635,9 @@ class EasyDB
         if (empty($params)) {
             $stmt = $this->pdo->query($statement);
             if ($returnNumAffected) {
-                return $stmt->rowCount();
+                return (int) $stmt->rowCount();
             }
-            return $stmt->fetchAll($fetchStyle);
+            return $this->getResultsStrictTyped($stmt, $fetchStyle);
         }
         if (!$this->is1DArray($params)) {
             throw new \InvalidArgumentException(
@@ -634,9 +647,9 @@ class EasyDB
         $stmt = $this->pdo->prepare($statement);
         $stmt->execute($params);
         if ($returnNumAffected) {
-            return $stmt->rowCount();
+            return (int) $stmt->rowCount();
         }
-        return $stmt->fetchAll($fetchStyle);
+        return $this->getResultsStrictTyped($stmt, $fetchStyle);
     }
 
     /**
@@ -670,6 +683,9 @@ class EasyDB
      * @return int
      * @throws \InvalidArgumentException
      * @throws Issues\QueryError
+     *
+     * @psalm-suppress MixedAssignment
+     * @psalm-suppress MixedArgument
      */
     public function update(string $table, array $changes, array $conditions): int
     {
@@ -798,12 +814,33 @@ class EasyDB
     protected function getValueType($v = null): string
     {
         if (\is_scalar($v) || \is_array($v)) {
-            return \gettype($v);
+            return (string) \gettype($v);
         }
         if (\is_object($v)) {
             return 'an instance of ' . \get_class($v);
         }
-        return \var_export($v, true);
+        return (string) \var_export($v, true);
+    }
+
+    /**
+     * Helper for PDOStatement::fetchAll() that always returns an array or object.
+     *
+     * @param \PDOStatement $stmt
+     * @param int $fetchStyle
+     * @return array|object
+     * @throws \TypeError
+     */
+    protected function getResultsStrictTyped(\PDOStatement $stmt, int $fetchStyle = \PDO::FETCH_ASSOC)
+    {
+        /** @var array|object $results */
+        $results = $stmt->fetchAll($fetchStyle);
+        if (\is_array($results)) {
+            return (array) $results;
+        } elseif(\is_object($results)) {
+            return (object) $results;
+        }
+        throw new \TypeError('Unexpected return type: ' . $this->getValueType($results));
+
     }
 
     /**
