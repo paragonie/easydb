@@ -264,9 +264,9 @@ class EasyDB
                             'Expected a integer at index ' .
                                 $k .
                             ' of argument 1 passed to ' .
-                            static::class .
+                                static::class .
                             '::' .
-                            __METHOD__ .
+                                __METHOD__ .
                             '(), received ' .
                             $this->getValueType($v)
                         );
@@ -282,9 +282,9 @@ class EasyDB
                             'Expected a number at index ' .
                                 $k .
                             ' of argument 1 passed to ' .
-                            static::class .
+                                static::class .
                             '::' .
-                            __METHOD__ .
+                                __METHOD__ .
                             '(), received ' .
                             $this->getValueType($v)
                         );
@@ -300,9 +300,9 @@ class EasyDB
                             'Expected a string at index ' .
                                 $k .
                             ' of argument 1 passed to ' .
-                            static::class .
+                                static::class .
                             '::' .
-                            __METHOD__ .
+                                __METHOD__ .
                             '(), received ' .
                             $this->getValueType($v)
                         );
