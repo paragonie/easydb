@@ -30,11 +30,21 @@ abstract class Factory
     ): EasyDB {
         $dbEngine = '';
         $post_query = null;
+        
+        if (!\is_string($username)) {
+            $username = '';
+        }
+        if (!\is_string($password)) {
+            $password = '';
+        }
 
         // Let's grab the DB engine
         if (strpos($dsn, ':') !== false) {
             $dbEngine = explode(':', $dsn)[0];
         }
+
+        /** @var string $post_query */
+        $post_query = '';
 
         // If no charset is specified, default to UTF-8
         switch ($dbEngine) {
