@@ -10,6 +10,19 @@ as part of our effort to encourage better [application security](https://paragon
 
 Check out our other [open source projects](https://paragonie.com/projects) too.
 
+## Installing EasyDB
+
+First, [get Composer](https://getcomposer.org/download/), if you don't already use it.
+
+Next, run the following command:
+
+```bash
+/path/to/your/local/composer.phar require paragonie/easydb:^2
+```
+
+If you've installed Composer in `/usr/bin`, you can replace
+`/path/to/your/local/composer.phar` with just `composer`.
+
 ## Why Use EasyDB? Because it's cleaner!
 
 Let's refactor a dangerous PHP snippet that previously used string concatenation to pass user input
