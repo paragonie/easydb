@@ -1,3 +1,13 @@
+# Version 2.4.0
+
+* Thanks to [@SignpostMarv](https://github.com/SignpostMarv), you can now easily run
+  an entire block of code in a flat transaction:  
+  `$easyDb->tryFlatTransaction(function (EasyDB $db) { /* ... */ });`
+* EasyDB is now fully type-safe. This is verified by [Psalm](https://github.com/vimeo/psalm).
+  If you're using a static analysis tool on your project that uses EasyDB, this should
+  eliminate a lot of false positive findings.
+* We now allow the `/` character to be used in SQLite identifiers.
+
 # Version 2.3.1
 
 * Fix SQLite setting UTF-8 mode.
