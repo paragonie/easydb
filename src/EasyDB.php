@@ -639,9 +639,9 @@ class EasyDB
         if ($fetchStyle === self::DEFAULT_FETCH_STYLE) {
             if (isset($this->options[\PDO::ATTR_DEFAULT_FETCH_MODE])) {
                 $fetchStyle = $this->options[\PDO::ATTR_DEFAULT_FETCH_MODE];
+            } else {
+                $fetchStyle = \PDO::FETCH_ASSOC;
             }
-        } else {
-            $fetchStyle = \PDO::FETCH_ASSOC;
         }
 
         if (empty($params)) {
