@@ -856,6 +856,7 @@ class EasyDB
     {
         return $this->pdo->errorCode();
     }
+
     /**
      * Fetch extended error information associated with the last operation on
      * the database handle
@@ -866,6 +867,7 @@ class EasyDB
     {
         return $this->pdo->errorInfo();
     }
+
     /**
      * Execute an SQL statement and return the number of affected rows
      *
@@ -876,6 +878,7 @@ class EasyDB
     {
         return $this->pdo->exec(...$args);
     }
+
     /**
      * Retrieve a database connection attribute
      *
@@ -896,6 +899,7 @@ class EasyDB
     {
         return $this->pdo->getAvailableDrivers();
     }
+
     /**
      * Checks if inside a transaction
      *
@@ -905,6 +909,7 @@ class EasyDB
     {
         return $this->pdo->inTransaction();
     }
+
     /**
      * Returns the ID of the last inserted row or sequence value
      *
@@ -915,6 +920,7 @@ class EasyDB
     {
         return $this->pdo->lastInsertId(...$args);
     }
+
     /**
      * Prepares a statement for execution and returns a statement object
      *
@@ -925,6 +931,7 @@ class EasyDB
     {
         return $this->pdo->prepare(...$args);
     }
+
     /**
      * Executes an SQL statement, returning a result set as a PDOStatement object
      *
@@ -935,6 +942,7 @@ class EasyDB
     {
         return $this->pdo->query(...$args);
     }
+
     /**
      * Quotes a string for use in a query
      *
@@ -955,7 +963,6 @@ class EasyDB
     {
         return $this->pdo->rollBack();
     }
-
 
     /**
      * Set an attribute
