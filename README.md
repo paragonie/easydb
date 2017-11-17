@@ -129,6 +129,16 @@ $exists = $db->single(
 );
 ```
 
+### Try to perform a transaction
+```php
+$save = function (EasyDB $db) use ($userData, $query) {
+    $db->safeQuery($query, [$userData['userId']]);
+    \Some\Other\Package::CleanUpTable($db);
+};
+// auto starts, commits and rolls back a transaction as necessary
+$db->tryFlatTransaction($save);
+```
+
 ### Generate dynamic query conditions
 
 ```php
