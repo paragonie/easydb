@@ -5,10 +5,9 @@ namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyDB;
 
-class RunTest extends
-        ColTest
+class RunTest extends ColTest
 {
-    protected function GoodColArguments()
+    protected function goodColArguments()
     {
         return [
             [
@@ -18,10 +17,16 @@ class RunTest extends
                 'SELECT 1 AS foo, 2 AS bar', 0, [], [['foo' => 1, 'bar' => 2]]
             ],
             [
-                'SELECT 1 AS foo, 2 AS bar UNION SELECT 3 AS foo, 4 AS bar', 0, [], [['foo' => 1, 'bar' => 2], ['foo' => 3, 'bar' => 4]]
+                'SELECT 1 AS foo, 2 AS bar UNION SELECT 3 AS foo, 4 AS bar',
+                0,
+                [],
+                [['foo' => 1, 'bar' => 2], ['foo' => 3, 'bar' => 4]],
             ],
             [
-                'SELECT ? AS foo, ? AS bar UNION SELECT ? AS foo, ? AS bar', 0, [1, 2, 3, 4], [['foo' => 1, 'bar' => 2], ['foo' => 3, 'bar' => 4]]
+                'SELECT ? AS foo, ? AS bar UNION SELECT ? AS foo, ? AS bar',
+                0,
+                [1, 2, 3, 4],
+                [['foo' => 1, 'bar' => 2], ['foo' => 3, 'bar' => 4]],
             ],
         ];
     }
@@ -36,7 +41,7 @@ class RunTest extends
     }
 
     /**
-     * @dataProvider GoodColArgumentsProvider
+     * @dataProvider goodColArgumentsProvider
      * @param callable $cb
      * @param string $statement
      * @param int $offset
@@ -45,7 +50,7 @@ class RunTest extends
      */
     public function testMethod(callable $cb, $statement, $offset, $params, $expectedResult)
     {
-        $db = $this->EasyDBExpectedFromCallable($cb);
+        $db = $this->easyDBExpectedFromCallable($cb);
 
         $results = $this->getResultForMethod($db, $statement, $offset, $params);
 

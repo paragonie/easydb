@@ -215,5 +215,5 @@ $easy = new \ParagonIE\EasyDB\EasyDB($pdo, 'mysql');
 ## How do I run tests ?
 
 ```sh
-./phpunit.sh
+vendor/bin/phpunit
 ```

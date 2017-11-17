@@ -9,12 +9,11 @@ use PDOStatement;
  * Class ExecTest
  * @package ParagonIE\EasyDB\Tests
  */
-class QuoteThenQueryTest extends
-        EasyDBWriteTest
+class QuoteThenQueryTest extends EasyDBWriteTest
 {
 
     /**
-     * @dataProvider GoodFactoryCreateArgument2EasyDBInsertManyProvider
+     * @dataProvider goodFactoryCreateArgument2EasyDBInsertManyProvider
      * @depends      ParagonIE\EasyDB\Tests\QuoteTest::testQuote
      * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifier
      * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifierThrowsSomething
@@ -23,7 +22,7 @@ class QuoteThenQueryTest extends
      */
     public function testQuery(callable $cb, array $maps)
     {
-        $db = $this->EasyDBExpectedFromCallable($cb);
+        $db = $this->easyDBExpectedFromCallable($cb);
         $table = 'irrelevant_but_valid_tablename';
 
         $first = $maps[0];

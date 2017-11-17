@@ -6,8 +6,7 @@ namespace ParagonIE\EasyDB\Tests;
 use ParagonIE\EasyDB\Factory;
 use PDO;
 
-class GetAvailableDriversTest extends
-        EasyDBTest
+class GetAvailableDriversTest extends EasyDBTest
 {
 
     /**
@@ -15,9 +14,10 @@ class GetAvailableDriversTest extends
      * @param null $username
      * @param null $password
      * @param array $options
-     * @dataProvider GoodFactoryCreateArgumentProvider
+     * @dataProvider goodFactoryCreateArgumentProvider
      */
     public function testGetAvailableDrivers(
+        $expectedDriver,
         $dsn,
         $username = null,
         $password = null,

@@ -8,17 +8,16 @@ use PDO;
 use PDOException;
 use ReflectionClass;
 
-class GetAttributeTest extends
-        EasyDBTest
+class GetAttributeTest extends EasyDBTest
 {
 
     /**
     * EasyDB data provider
     * Returns an array of callables that return instances of EasyDB
     * @return array
-    * @see EasyDBTest::GoodFactoryCreateArgument2EasyDBProvider()
+    * @see EasyDBTest::goodFactoryCreateArgument2EasyDBProvider()
     */
-    public function GoodFactoryCreateArgument2EasyDBWithPDOAttributeProvider()
+    public function goodFactoryCreateArgument2EasyDBWithPDOAttributeProvider()
     {
         $ref = new ReflectionClass(PDO::class);
         if (defined('ARRAY_FILTER_USE_KEY')) {
@@ -43,7 +42,7 @@ class GetAttributeTest extends
             );
         }
         return array_reduce(
-            $this->GoodFactoryCreateArgument2EasyDBProvider(),
+            $this->goodFactoryCreateArgument2EasyDBProvider(),
             function (array $was, array $cbArgs) use ($attrs) {
                 foreach ($attrs as $attrName => $attr) {
                     $args = [$attr, $attrName];
@@ -59,25 +58,24 @@ class GetAttributeTest extends
     }
 
     /**
-     * @dataProvider GoodFactoryCreateArgument2EasyDBWithPDOAttributeProvider
+     * @dataProvider goodFactoryCreateArgument2EasyDBWithPDOAttributeProvider
      * @param callable $cb
      * @param $attr
      * @param string $attrName
      */
     public function testAttribute(callable $cb, $attr, string $attrName)
     {
-        $db = $this->EasyDBExpectedFromCallable($cb);
+        $db = $this->easyDBExpectedFromCallable($cb);
         try {
             $this->assertSame(
                 $db->getAttribute($attr),
                 $db->getPdo()->getAttribute($attr)
             );
         } catch (PDOException $e) {
-            if (
-                strpos(
-                    $e->getMessage(),
-                    ': Driver does not support this function: driver does not support that attribute'
-                ) !== false
+            if (strpos(
+                $e->getMessage(),
+                ': Driver does not support this function: driver does not support that attribute'
+            ) !== false
             ) {
                 $this->markTestSkipped(
                     'Skipping tests for ' .

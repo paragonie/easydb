@@ -7,12 +7,11 @@ namespace ParagonIE\EasyDB\Tests;
  * Class ExecTest
  * @package ParagonIE\EasyDB\Tests
  */
-class QuoteThenExecTest extends
-        EasyDBWriteTest
+class QuoteThenExecTest extends EasyDBWriteTest
 {
 
     /**
-     * @dataProvider GoodFactoryCreateArgument2EasyDBInsertManyProvider
+     * @dataProvider goodFactoryCreateArgument2EasyDBInsertManyProvider
      * @depends      ParagonIE\EasyDB\Tests\QuoteTest::testQuote
      * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifier
      * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifierThrowsSomething
@@ -21,7 +20,7 @@ class QuoteThenExecTest extends
      */
     public function testExec(callable $cb, array $maps)
     {
-        $db = $this->EasyDBExpectedFromCallable($cb);
+        $db = $this->easyDBExpectedFromCallable($cb);
         $table = 'irrelevant_but_valid_tablename';
 
         $first = $maps[0];

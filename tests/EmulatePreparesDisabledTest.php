@@ -7,19 +7,23 @@ use ParagonIE\EasyDB\Factory;
 use PDO;
 use PDOException;
 
-class EmulatePreparesDisabledTest extends
-        EasyDBTest
+class EmulatePreparesDisabledTest extends EasyDBTest
 {
 
     /**
-     * @dataProvider GoodFactoryCreateArgumentProvider
+     * @dataProvider goodFactoryCreateArgumentProvider
      * @param $dsn
      * @param null $username
      * @param null $password
      * @param array $options
      */
-    public function testEmulatePreparesDisabled($dsn, $username=null, $password=null, $options = [])
-    {
+    public function testEmulatePreparesDisabled(
+        $expectedDriver,
+        $dsn,
+        $username = null,
+        $password = null,
+        $options = []
+    ) {
         $db = Factory::create($dsn, $username, $password, $options);
         $recheckWithForcedFalse = false;
         try {

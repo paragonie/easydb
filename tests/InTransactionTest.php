@@ -13,9 +13,10 @@ class InTransactionTest extends EasyDBTest
      * @param string|null $username
      * @param string|null $password
      * @param array $options
-     * @dataProvider GoodFactoryCreateArgumentProvider
+     * @dataProvider goodFactoryCreateArgumentProvider
      */
     public function testInTransaction(
+        $expectedDriver,
         $dsn,
         $username = null,
         $password = null,

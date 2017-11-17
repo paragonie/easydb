@@ -8,12 +8,11 @@ use ParagonIE\EasyDB\EasyDB;
 use PDO;
 use PDOException;
 
-class SetAttributeTest extends
-        GetAttributeTest
+class SetAttributeTest extends GetAttributeTest
 {
 
     /**
-     * @dataProvider GoodFactoryCreateArgument2EasyDBWithPDOAttributeProvider
+     * @dataProvider goodFactoryCreateArgument2EasyDBWithPDOAttributeProvider
      * @depends      ParagonIE\EasyDB\Tests\GetAttributeTest::testAttribute
      * @param callable $cb
      * @param $attr
@@ -22,7 +21,7 @@ class SetAttributeTest extends
      */
     public function testAttribute(callable $cb, $attr, string $attrName)
     {
-        $db = $this->EasyDBExpectedFromCallable($cb);
+        $db = $this->easyDBExpectedFromCallable($cb);
         $skipping = [
             'ATTR_STATEMENT_CLASS'
         ];
@@ -64,11 +63,10 @@ class SetAttributeTest extends
                 $initial
             );
         } catch (PDOException $e) {
-            if (
-                strpos(
-                    $e->getMessage(),
-                    ': Driver does not support this function: driver does not support that attribute'
-                ) !== false
+            if (strpos(
+                $e->getMessage(),
+                ': Driver does not support this function: driver does not support that attribute'
+            ) !== false
             ) {
                 $this->markTestSkipped(
                     'Skipping tests for ' .
@@ -85,14 +83,16 @@ class SetAttributeTest extends
                 throw $e;
             }
         } catch (Exception $e) {
-            if (
-                (
+            if ((
                     $attrName === 'ATTR_ERRMODE' &&
                     $e->getMessage() === 'EasyDB only allows the safest-by-default error mode (exceptions).'
                 ) ||
                 (
                     $attrName === 'ATTR_EMULATE_PREPARES' &&
-                    $e->getMessage() === 'EasyDB does not allow the use of emulated prepared statements, which would be a security downgrade.'
+                    $e->getMessage() === (
+                        'EasyDB does not allow the use of emulated prepared statements' .
+                        ', which would be a security downgrade.'
+                    )
                 )
             ) {
                 $this->markTestSkipped(
@@ -115,9 +115,9 @@ class SetAttributeTest extends
     * EasyDB data provider
     * Returns an array of callables that return instances of EasyDB
     * @return array
-    * @see EasyDBTest::GoodFactoryCreateArgument2EasyDBProvider()
+    * @see EasyDBTest::goodFactoryCreateArgument2EasyDBProvider()
     */
-    public function GoodFactoryCreateArgument2EasyDBForSetPDOAttributeThrowsExceptionProvider()
+    public function goodFactoryCreateArgument2EasyDBForSetPDOAttributeThrowsExceptionProvider()
     {
         $exceptionProvider = [
             [
@@ -146,7 +146,7 @@ class SetAttributeTest extends
             ],
         ];
         return array_reduce(
-            $this->GoodFactoryCreateArgument2EasyDBProvider(),
+            $this->goodFactoryCreateArgument2EasyDBProvider(),
             function (array $was, array $cbArgs) use ($exceptionProvider) {
                 return array_merge(
                     $was,
@@ -167,7 +167,7 @@ class SetAttributeTest extends
 
     /**
      * Test which attributes will always throw an exception when set
-     * @dataProvider GoodFactoryCreateArgument2EasyDBForSetPDOAttributeThrowsExceptionProvider
+     * @dataProvider goodFactoryCreateArgument2EasyDBForSetPDOAttributeThrowsExceptionProvider
      * @depends      testAttribute
      * @param callable $cb
      * @param int $attribute
@@ -182,7 +182,7 @@ class SetAttributeTest extends
         string $exceptionClassName,
         string $exceptionMessage
     ) {
-        $db = $this->EasyDBExpectedFromCallable($cb);
+        $db = $this->easyDBExpectedFromCallable($cb);
         $this->expectException($exceptionClassName);
         $this->expectExceptionMessage($exceptionMessage);
 

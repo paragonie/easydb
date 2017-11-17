@@ -7,12 +7,11 @@ namespace ParagonIE\EasyDB\Tests;
  * Class ExecTest
  * @package ParagonIE\EasyDB\Tests
  */
-class QuoteTest extends
-        EasyDBTest
+class QuoteTest extends EasyDBTest
 {
 
     /**
-     * @dataProvider GoodFactoryCreateArgument2EasyDBQuoteProvider
+     * @dataProvider goodFactoryCreateArgument2EasyDBQuoteProvider
      * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifier
      * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifierThrowsSomething
      * @param callable $cb
@@ -21,7 +20,7 @@ class QuoteTest extends
      */
     public function testQuote(callable $cb, $quoteThis, array $expectOneOfThese)
     {
-        $db = $this->EasyDBExpectedFromCallable($cb);
+        $db = $this->easyDBExpectedFromCallable($cb);
 
         $this->assertTrue(count($expectOneOfThese) > 0);
 

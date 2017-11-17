@@ -12,11 +12,11 @@ class ErrorCodeTest extends EasyDBTest
 
     /**
      * @param callable $cb
-     * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
+     * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      */
     public function testNoError(callable $cb)
     {
-        $db = $this->EasyDBExpectedFromCallable($cb);
+        $db = $this->easyDBExpectedFromCallable($cb);
 
         $this->assertSame($db->errorCode(), '00000');
     }

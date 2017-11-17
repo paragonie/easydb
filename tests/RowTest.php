@@ -5,8 +5,7 @@ namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyDB;
 
-class RowTest extends
-        SafeQueryTest
+class RowTest extends SafeQueryTest
 {
     protected function getResultForMethod(EasyDB $db, $statement, $offset, $params)
     {
@@ -17,7 +16,7 @@ class RowTest extends
     }
 
     /**
-     * @dataProvider GoodColArgumentsProvider
+     * @dataProvider goodColArgumentsProvider
      * @param callable $cb
      * @param string $statement
      * @param int $offset
@@ -26,7 +25,7 @@ class RowTest extends
      */
     public function testMethod(callable $cb, $statement, $offset, $params, $expectedResult)
     {
-        $db = $this->EasyDBExpectedFromCallable($cb);
+        $db = $this->easyDBExpectedFromCallable($cb);
 
         $result = $this->getResultForMethod($db, $statement, $offset, $params);
 
