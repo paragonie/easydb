@@ -571,7 +571,7 @@ class EasyDB
     public function q(string $statement, ...$params)
     {
         /** @var array $result */
-        $result = (array) $this->safeQuery($statement, $params, \PDO::FETCH_ASSOC);
+        $result = (array) $this->safeQuery($statement, $params);
         return $result;
     }
 
@@ -585,7 +585,7 @@ class EasyDB
     public function row(string $statement, ...$params)
     {
         /** @var array $result */
-        $result = (array) $this->safeQuery($statement, $params, \PDO::FETCH_ASSOC);
+        $result = (array) $this->safeQuery($statement, $params);
         if (\is_array($result)) {
             return \array_shift($result);
         }
