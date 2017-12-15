@@ -11,7 +11,6 @@ use RuntimeException;
  */
 class EasyStatementTest extends TestCase
 {
-
     public function testBasicAndOr()
     {
         $statement = EasyStatement::open()
