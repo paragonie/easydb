@@ -434,6 +434,7 @@ class EasyDB
      * @param array $map
      * @param string $sequenceName (optional)
      * @return string
+     * @throws Issues\QueryError
      */
     public function insertReturnId(string $table, array $map, string $sequenceName = '')
     {
