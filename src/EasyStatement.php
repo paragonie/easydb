@@ -217,14 +217,14 @@ class EasyStatement
                     if (\is_string($condition)) {
                         $statement = $condition;
                     } else {
-                        $statement = '(' . $condition->sql() . ')';
+                        $statement = $condition->sql();
                     }
                 } else {
                     // foo = ?
                     $statement = $condition;
                 }
                 /** @var string $statement */
-                $statement = (string) $statement;
+                $statement = (string) '(' . $statement . ')';
                 $part['type'] = (string) $part['type'];
 
                 if ($sql) {
