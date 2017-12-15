@@ -206,6 +206,9 @@ class EasyStatement
      */
     public function sql(): string
     {
+        if (empty($this->parts)) {
+            return ' 1 ';
+        }
         return (string) \array_reduce(
             $this->parts,
             function (string $sql, array $part): string {
