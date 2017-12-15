@@ -428,6 +428,25 @@ class EasyDB
     }
 
     /**
+     * Wrapper for insert() and lastInsertId()
+     *
+     * @param string $table
+     * @param array $map
+     * @param string $sequenceName (optional)
+     * @return string
+     */
+    public function insertReturnId(string $table, array $map, string $sequenceName = '')
+    {
+        if (!$this->insert($table, $map)) {
+            throw new Issues\QueryError('Could not insert a new row into ' . $table . '.');
+        }
+        if ($sequenceName) {
+            return (string) $this->lastInsertId($sequenceName);
+        }
+        return (string) $this->lastInsertId();
+    }
+
+    /**
      * Insert a new record then get a particular field from the new row
      *
      * @param string $table
