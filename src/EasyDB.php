@@ -440,6 +440,9 @@ class EasyDB
      */
     public function insertGet(string $table, array $map, string $field)
     {
+        if (empty($map)) {
+            throw new \Exception('An empty array is not allowed for insertGet()');
+        }
         if ($this->insert($table, $map) < 1) {
             throw new \Exception('Insert failed');
         }
