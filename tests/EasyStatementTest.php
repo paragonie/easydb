@@ -88,6 +88,12 @@ class EasyStatementTest extends TestCase
         $this->assertSame($values, $statement->values());
     }
 
+    public function testEmpty()
+    {
+        $stmt = EasyStatement::open();
+        $this->assertSql($stmt, '1');
+    }
+
     public function testPrecedence()
     {
         $sth1 = EasyStatement::open();
