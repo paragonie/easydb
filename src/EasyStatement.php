@@ -46,12 +46,32 @@ class EasyStatement
     /**
      * Add a condition that will be applied with a logical "AND".
      *
+     * @param string|self $condition
+     * @param mixed ...$values
+     *
+     * @return self
+     * @throws \TypeError
+     */
+    public function andWith($condition, ...$values): self
+    {
+        if ($condition instanceof EasyStatement) {
+            $condition = '(' . $condition . ')';
+        }
+        if (!\is_string($condition)) {
+            throw new \TypeError('An EasyStatement or string is expected for argument 1');
+        }
+        return $this->andWithString($condition, ...$values);
+    }
+
+    /**
+     * Add a condition that will be applied with a logical "AND".
+     *
      * @param string $condition
      * @param mixed ...$values
      *
      * @return self
      */
-    public function andWith(string $condition, ...$values): self
+    public function andWithString(string $condition, ...$values): self
     {
         $this->parts[] = [
             'type' => 'AND',
@@ -65,12 +85,32 @@ class EasyStatement
     /**
      * Add a condition that will be applied with a logical "OR".
      *
+     * @param string|self $condition
+     * @param mixed ...$values
+     *
+     * @return self
+     * @throws \TypeError
+     */
+    public function orWith($condition, ...$values): self
+    {
+        if ($condition instanceof EasyStatement) {
+            $condition = '(' . $condition . ')';
+        }
+        if (!\is_string($condition)) {
+            throw new \TypeError('An EasyStatement or string is expected for argument 1');
+        }
+        return $this->orWithString($condition, ...$values);
+    }
+
+    /**
+     * Add a condition that will be applied with a logical "OR".
+     *
      * @param string $condition
      * @param mixed ...$values
      *
      * @return self
      */
-    public function orWith(string $condition, ...$values): self
+    public function orWithString(string $condition, ...$values): self
     {
         $this->parts[] = [
             'type' => 'OR',
@@ -257,10 +297,11 @@ class EasyStatement
             $this->parts,
             function (array $values, array $part): array {
                 if ($this->isGroup($part['condition'])) {
-                    /** @var EasyStatement $part['condition'] */
+                    /** @var EasyStatement $condition */
+                    $condition = $part['condition'];
                     return \array_merge(
                         $values,
-                        $part['condition']->values()
+                        $condition->values()
                     );
                 }
                 return \array_merge($values, $part['values']);

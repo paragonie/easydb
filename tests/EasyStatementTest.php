@@ -11,6 +11,7 @@ use RuntimeException;
  */
 class EasyStatementTest extends TestCase
 {
+
     public function testBasicAndOr()
     {
         $statement = EasyStatement::open()
@@ -86,5 +87,19 @@ class EasyStatementTest extends TestCase
     private function assertValues(EasyStatement $statement, array $values)
     {
         $this->assertSame($values, $statement->values());
+    }
+
+    public function testPrecedence()
+    {
+        $sth1 = EasyStatement::open();
+        $sth1->with("a=1");
+        $sth1->orWith("a=2");
+        $sth1->orWith("a=3");
+
+        $sth2 = EasyStatement::open();
+        $sth2->with("status=1");
+        $sth2->andWith($sth1);
+
+        $this->assertSql($sth2, 'status=1 AND (a=1 OR a=2 OR a=3)');
     }
 }
