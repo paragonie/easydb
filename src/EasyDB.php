@@ -535,14 +535,23 @@ class EasyDB
     /**
      * Wrapper for insert() and lastInsertId()
      *
+     * Do not use this with the pgsql driver. It is extremely unreliable.
+     *
      * @param string $table
      * @param array $map
      * @param string $sequenceName (optional)
      * @return string
      * @throws Issues\QueryError
+     * @throws \Exception
      */
     public function insertReturnId(string $table, array $map, string $sequenceName = '')
     {
+        if ($this->dbEngine === 'pgsql') {
+            throw new \Exception(
+                'Do not use insertReturnId() with PostgreSQL. Use insertGet() instead, ' .
+                'with an explicit column name rather than a sequence name.'
+            );
+        }
         if (!$this->insert($table, $map)) {
             throw new Issues\QueryError('Could not insert a new row into ' . $table . '.');
         }
