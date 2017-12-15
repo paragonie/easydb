@@ -53,4 +53,17 @@ class InsertGetTest extends InsertTest
             'bar'
         );
     }
+    /**
+     * @dataProvider goodFactoryCreateArgument2EasyDBProvider
+     * @param callable $cb
+     */
+    public function testInsertGetException(callable $cb)
+    {
+        $db = $this->easyDBExpectedFromCallable($cb);
+        $this->expectException(\Exception::class);
+        $this->assertEquals(
+            $db->insertGet('irrelevant_but_valid_tablename', [], 'bar'),
+            'bar'
+        );
+    }
 }
