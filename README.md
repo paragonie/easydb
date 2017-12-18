@@ -14,7 +14,8 @@ as part of our effort to encourage better [application security](https://paragon
 
 Check out our other [open source projects](https://paragonie.com/projects) too.
 
-If you're looking for a full-fledged query builder, check out [Latitude](https://github.com/shadowhand/latitude),
+If you're looking for a full-fledged query builder, check out
+[Latitude](https://github.com/shadowhand/latitude) and [Aura.SqlQuery](https://github.com/auraphp/Aura.SqlQuery),
 which can be used with EasyDB.
 
 ## Installing EasyDB
