@@ -1,3 +1,16 @@
+# Version 2.5.0
+
+* [#56](https://github.com/paragonie/easydb/pull/56): `EasyDB::q()` and `EasyDB::row()` no
+  longer explicitly force `PDO::FETCH_ASSOC`. Thanks [@nfreader](https://github.com/nfreader).
+* [#57](https://github.com/paragonie/easydb/issues/57): Added `EasyDB::insertReturnId()`
+  which wraps `insert()` and `lastInsertId()`. **Important:** Do not use this on PostgreSQL,
+  as it is not reliable. Use `insertGet()` instead, as you normally would have.
+  Reported by [@duskwuff](https://github.com/duskwuff).
+* [#58](https://github.com/paragonie/easydb/issues/58): Empty `EasyStatement` clauses
+  no longer cause broken queries. Reported by [@duskwuff](https://github.com/duskwuff).
+* [#59](https://github.com/paragonie/easydb/issues/59): Fixed grouping/precedence issues
+  with `EasyStatement` subqueries. Reported by [@duskwuff](https://github.com/duskwuff).
+
 # Version 2.4.0
 
 * Thanks to [@SignpostMarv](https://github.com/SignpostMarv), you can now easily run
