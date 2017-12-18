@@ -14,6 +14,9 @@ as part of our effort to encourage better [application security](https://paragon
 
 Check out our other [open source projects](https://paragonie.com/projects) too.
 
+If you're looking for a full-fledged query builder, check out [Latitude](https://github.com/shadowhand/latitude),
+which can be used with EasyDB.
+
 ## Installing EasyDB
 
 First, [get Composer](https://getcomposer.org/download/), if you don't already use it.
