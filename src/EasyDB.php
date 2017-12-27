@@ -146,10 +146,8 @@ class EasyDB
             $i = $this->escapeIdentifier($i);
             if ($v === null) {
                 $arr [] = " {$i} IS NULL ";
-            } elseif ($v === true) {
-                $arr [] = " {$i} = TRUE ";
-            } elseif ($v === false) {
-                $arr [] = " {$i} = FALSE ";
+            } elseif (\is_bool($v)) {
+                $arr []= $this->makeBooleanArgument($i, $v);
             } else {
                 $arr []= " {$i} = ? ";
                 $params[] = $v;
@@ -453,10 +451,8 @@ class EasyDB
             $i = $this->escapeIdentifier($i);
             if ($v === null) {
                 $post []= " {$i} IS NULL ";
-            } elseif ($v === true) {
-                $post []= " {$i} = TRUE ";
-            } elseif ($v === false) {
-                $post []= " {$i} = FALSE ";
+            } elseif (\is_bool($v)) {
+                $post []= $this->makeBooleanArgument($i, $v);
             } else {
                 // We use prepared statements for handling the users' data
                 $post []= " {$i} = ? ";
@@ -738,10 +734,8 @@ class EasyDB
             $i = $this->escapeIdentifier($i);
             if ($v === null) {
                 $pre []= " {$i} = NULL";
-            } elseif ($v === true) {
-                $pre []= " {$i} = TRUE";
-            } elseif ($v === false) {
-                $pre []= " {$i} = FALSE";
+            } elseif (\is_bool($v)) {
+                $pre []= $this->makeBooleanArgument($i, $v);
             } else {
                 $pre []= " {$i} = ?";
                 $params[] = $v;
@@ -756,10 +750,8 @@ class EasyDB
             $i = $this->escapeIdentifier($i);
             if ($v === null) {
                 $post []= " {$i} IS NULL";
-            } elseif ($v === true) {
-                $post []= " {$i} = TRUE";
-            } elseif ($v === false) {
-                $post []= " {$i} = FALSE";
+            } elseif (\is_bool($v)) {
+                $post []= $this->makeBooleanArgument($i, $v);
             } else {
                 $post []= " {$i} = ? ";
                 $params[] = $v;
@@ -1018,6 +1010,27 @@ class EasyDB
     public function rollBack(): bool
     {
         return $this->pdo->rollBack();
+    }
+
+    /**
+     * @param string $column
+     * @param bool $value
+     * @return string
+     */
+    protected function makeBooleanArgument(string $column, bool $value): string
+    {
+        if ($value === true) {
+            if ($this->dbEngine === 'sqlite') {
+                return " {$column} = 1 ";
+            } else {
+                return " {$column} = TRUE ";
+            }
+        }
+        if ($this->dbEngine === 'sqlite') {
+            return " {$column} = 0 ";
+        } else {
+            return " {$column} = FALSE ";
+        }
     }
 
     /**
