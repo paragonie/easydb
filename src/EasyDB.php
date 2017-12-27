@@ -867,6 +867,27 @@ class EasyDB
     }
 
     /**
+     * @param string $column
+     * @param bool $value
+     * @return string
+     */
+    protected function makeBooleanArgument(string $column, bool $value): string
+    {
+        if ($value === true) {
+            if ($this->dbEngine === 'sqlite') {
+                return " {$column} = 1 ";
+            } else {
+                return " {$column} = TRUE ";
+            }
+        }
+        if ($this->dbEngine === 'sqlite') {
+            return " {$column} = 0 ";
+        } else {
+            return " {$column} = FALSE ";
+        }
+    }
+
+    /**
      ***************************************************************************
      ***************************************************************************
      ****             PUNTER METHODS - see PDO class definition             ****
@@ -1010,27 +1031,6 @@ class EasyDB
     public function rollBack(): bool
     {
         return $this->pdo->rollBack();
-    }
-
-    /**
-     * @param string $column
-     * @param bool $value
-     * @return string
-     */
-    protected function makeBooleanArgument(string $column, bool $value): string
-    {
-        if ($value === true) {
-            if ($this->dbEngine === 'sqlite') {
-                return " {$column} = 1 ";
-            } else {
-                return " {$column} = TRUE ";
-            }
-        }
-        if ($this->dbEngine === 'sqlite') {
-            return " {$column} = 0 ";
-        } else {
-            return " {$column} = FALSE ";
-        }
     }
 
     /**
