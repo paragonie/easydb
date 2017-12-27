@@ -1,3 +1,7 @@
+# Version 2.5.1
+
+* Fixed boolean handling for SQLite databases.
+
 # Version 2.5.0
 
 * [#56](https://github.com/paragonie/easydb/pull/56): `EasyDB::q()` and `EasyDB::row()` no
