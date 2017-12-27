@@ -147,9 +147,17 @@ class EasyDB
             if ($v === null) {
                 $arr [] = " {$i} IS NULL ";
             } elseif ($v === true) {
-                $arr [] = " {$i} = TRUE ";
+                if ($this->dbEngine === 'sqlite') {
+                    $arr []= " {$i} = 1 ";
+                } else {
+                    $arr []= " {$i} = TRUE ";
+                }
             } elseif ($v === false) {
-                $arr [] = " {$i} = FALSE ";
+                if ($this->dbEngine === 'sqlite') {
+                    $arr []= " {$i} = 0 ";
+                } else {
+                    $arr []= " {$i} = FALSE ";
+                }
             } else {
                 $arr []= " {$i} = ? ";
                 $params[] = $v;
@@ -454,9 +462,17 @@ class EasyDB
             if ($v === null) {
                 $post []= " {$i} IS NULL ";
             } elseif ($v === true) {
-                $post []= " {$i} = TRUE ";
+                if ($this->dbEngine === 'sqlite') {
+                    $post [] = " {$i} = 1 ";
+                } else {
+                    $post [] = " {$i} = TRUE ";
+                }
             } elseif ($v === false) {
-                $post []= " {$i} = FALSE ";
+                if ($this->dbEngine === 'sqlite') {
+                    $post [] = " {$i} = 0 ";
+                } else {
+                    $post [] = " {$i} = FALSE ";
+                }
             } else {
                 // We use prepared statements for handling the users' data
                 $post []= " {$i} = ? ";
@@ -739,9 +755,17 @@ class EasyDB
             if ($v === null) {
                 $pre []= " {$i} = NULL";
             } elseif ($v === true) {
-                $pre []= " {$i} = TRUE";
+                if ($this->dbEngine === 'sqlite') {
+                    $pre []= " {$i} = 1 ";
+                } else {
+                    $pre []= " {$i} = TRUE ";
+                }
             } elseif ($v === false) {
-                $pre []= " {$i} = FALSE";
+                if ($this->dbEngine === 'sqlite') {
+                    $pre []= " {$i} = 0 ";
+                } else {
+                    $pre []= " {$i} = FALSE ";
+                }
             } else {
                 $pre []= " {$i} = ?";
                 $params[] = $v;
@@ -757,9 +781,17 @@ class EasyDB
             if ($v === null) {
                 $post []= " {$i} IS NULL";
             } elseif ($v === true) {
-                $post []= " {$i} = TRUE";
+                if ($this->dbEngine === 'sqlite') {
+                    $post []= " {$i} = 1 ";
+                } else {
+                    $post []= " {$i} = TRUE ";
+                }
             } elseif ($v === false) {
-                $post []= " {$i} = FALSE";
+                if ($this->dbEngine === 'sqlite') {
+                    $post []= " {$i} = 0 ";
+                } else {
+                    $post []= " {$i} = FALSE ";
+                }
             } else {
                 $post []= " {$i} = ? ";
                 $params[] = $v;
