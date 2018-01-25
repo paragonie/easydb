@@ -1,6 +1,9 @@
 <?php
 namespace ParagonIE\EasyDB\Exception;
 
-class QueryError extends \RuntimeException
+/**
+ * QueryError.
+ */
+class QueryError extends \RuntimeException implements ExceptionInterface
 {
 }
