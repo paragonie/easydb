@@ -266,14 +266,14 @@ class EasyDB
                             'Expected a integer at index ' .
                                 (string) $k .
                             ' of argument 1 passed to ' .
-                                (string) static::class .
+                                static::class .
                             '::' .
                                 __METHOD__ .
                             '(), received ' .
                             $this->getValueType($v)
                         );
                     }
-                    $join[] = (int) $v + 0;
+                    $join[] = $v + 0;
                     break;
                 case 'float':
                 case 'decimal':
@@ -284,7 +284,7 @@ class EasyDB
                             'Expected a number at index ' .
                                 (string) $k .
                             ' of argument 1 passed to ' .
-                                (string) static::class .
+                                static::class .
                             '::' .
                                 __METHOD__ .
                             '(), received ' .
@@ -302,7 +302,7 @@ class EasyDB
                             'Expected a string at index ' .
                                 (string) $k .
                             ' of argument 1 passed to ' .
-                                (string) static::class .
+                                static::class .
                             '::' .
                                 __METHOD__ .
                             '(), received ' .
@@ -501,7 +501,7 @@ class EasyDB
         if (count($maps) < 1) {
             throw new \InvalidArgumentException(
                 'Argument 2 passed to ' .
-                    (string) static::class .
+                    static::class .
                 '::' .
                     __METHOD__ .
                 '() must contain at least one field set!'
@@ -552,9 +552,9 @@ class EasyDB
             throw new Issues\QueryError('Could not insert a new row into ' . $table . '.');
         }
         if ($sequenceName) {
-            return (string) $this->lastInsertId($sequenceName);
+            return $this->lastInsertId($sequenceName);
         }
-        return (string) $this->lastInsertId();
+        return $this->lastInsertId();
     }
 
     /**
@@ -859,9 +859,9 @@ class EasyDB
         /** @var array|object $results */
         $results = $stmt->fetchAll($fetchStyle);
         if (\is_array($results)) {
-            return (array) $results;
+            return $results;
         } elseif (\is_object($results)) {
-            return (object) $results;
+            return $results;
         }
         throw new \TypeError('Unexpected return type: ' . $this->getValueType($results));
     }
