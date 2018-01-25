@@ -1,6 +1,9 @@
 <?php
 namespace ParagonIE\EasyDB\Exception;
 
-class ConstructorFailed extends \RuntimeException
+/**
+ * ConstructorFailed.
+ */
+class ConstructorFailed extends \RuntimeException implements ExceptionInterface
 {
 }
