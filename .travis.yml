@@ -3,7 +3,6 @@ sudo: false
 php:
   - 7.0.27
   - 7.1.13
-  - 7.2.0
   - 7.2.1
   - hhvm
 matrix:
