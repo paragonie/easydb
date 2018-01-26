@@ -11,29 +11,23 @@
          processIsolation="false"
          stopOnError="false"
          stopOnFailure="false"
-         syntaxCheck="true"
->
-    <testsuites>
-        <testsuite name="Unit">
-            <directory>./tests/unit</directory>
-        </testsuite>
-    </testsuites>
-    <testsuites>
-        <testsuite name="EasyDB Test Suite">
-            <directory suffix="Test.php">./tests</directory>
-        </testsuite>
-    </testsuites>
+         syntaxCheck="true">
+    <testsuite name="paragonie/easydb Test Suite">
+        <directory suffix="Test.php">./tests</directory>
+    </testsuite>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./src</directory>
+            <exclude>
+                <directory>./vendor</directory>
+                <directory>./tests</directory>
+            </exclude>
         </whitelist>
     </filter>
     <logging>
-        <log
-            type="coverage-text"
-            target="php://stdout"
-            showUncoveredFiles="true"
-            showOnlySummary="false"
-        />
+        <log type="coverage-text"
+             target="php://stdout"
+             showUncoveredFiles="true"
+             showOnlySummary="false" />
     </logging>
 </phpunit>
