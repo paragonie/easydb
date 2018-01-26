@@ -18,7 +18,7 @@ install:
     - travis_retry composer install --no-interaction
 script:
     - ./vendor/bin/phpcs --standard=psr2 src/
-    - ./vendor/bin/phpunit
+    - ./vendor/bin/phpunit --coverage-text
     - ./vendor/bin/psalm
 cache:
     directories:
