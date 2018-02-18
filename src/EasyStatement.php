@@ -37,6 +37,7 @@ class EasyStatement
      * @param mixed ...$values
      *
      * @return self
+     * @throws \TypeError
      */
     public function with(string $condition, ...$values): self
     {
@@ -51,6 +52,7 @@ class EasyStatement
      *
      * @return self
      * @throws \TypeError
+     * @psalm-suppress RedundantConditionGivenDocblockType
      */
     public function andWith($condition, ...$values): self
     {
@@ -90,6 +92,7 @@ class EasyStatement
      *
      * @return self
      * @throws \TypeError
+     * @psalm-suppress RedundantConditionGivenDocblockType
      */
     public function orWith($condition, ...$values): self
     {
@@ -128,6 +131,7 @@ class EasyStatement
      * @param array $values
      *
      * @return self
+     * @throws \TypeError
      */
     public function in(string $condition, array $values): self
     {
@@ -143,6 +147,7 @@ class EasyStatement
      * @param array $values
      *
      * @return self
+     * @throws \TypeError
      */
     public function andIn(string $condition, array $values): self
     {
@@ -158,6 +163,7 @@ class EasyStatement
      * @param array $values
      *
      * @return self
+     * @throws \TypeError
      */
     public function orIn(string $condition, array $values): self
     {
