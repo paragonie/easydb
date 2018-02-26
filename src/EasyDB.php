@@ -595,6 +595,7 @@ class EasyDB
      * @param string $statement SQL query without user data
      * @param mixed ...$params  Parameters
      * @return mixed
+     * @throws \TypeError
      */
     public function q(string $statement, ...$params)
     {
@@ -609,10 +610,11 @@ class EasyDB
      * @param string $statement SQL query without user data
      * @param mixed ...$params  Parameters
      * @return mixed
+     * @throws \TypeError
      */
     public function row(string $statement, ...$params)
     {
-        /** @var array $result */
+        /** @var array|int $result */
         $result = (array) $this->safeQuery($statement, $params);
         if (\is_array($result)) {
             return \array_shift($result);
@@ -626,6 +628,7 @@ class EasyDB
      * @param string $statement SQL query without user data
      * @param mixed ...$params  Parameters
      * @return mixed - If successful, a 2D array
+     * @throws \TypeError
      */
     public function run(string $statement, ...$params)
     {
@@ -644,6 +647,7 @@ class EasyDB
      * @return array|int|object
      * @throws \InvalidArgumentException
      * @throws Issues\QueryError
+     * @throws \TypeError
      */
     public function safeQuery(
         string $statement,
@@ -856,7 +860,7 @@ class EasyDB
      */
     protected function getResultsStrictTyped(\PDOStatement $stmt, int $fetchStyle = \PDO::FETCH_ASSOC)
     {
-        /** @var array|object $results */
+        /** @var array|object|bool $results */
         $results = $stmt->fetchAll($fetchStyle);
         if (\is_array($results)) {
             return (array) $results;
