@@ -119,8 +119,8 @@ class EasyDB
      * @param mixed $conditions   Defines the WHERE clause
      * @return int
      * @throws \InvalidArgumentException
-     * @disabled-psalm-suppress MixedAssignment
-     * @disabled-psalm-suppress MixedArgument
+     * @psalm-suppress MixedAssignment
+     * @psalm-suppress MixedArgument
      * @throws \TypeError
      */
     public function delete(string $table, $conditions): int
@@ -141,8 +141,8 @@ class EasyDB
      * @param array $conditions   Defines the WHERE clause
      * @return int
      * @throws \InvalidArgumentException
-     * @disabled-psalm-suppress MixedAssignment
-     * @disabled-psalm-suppress MixedArgument
+     * @psalm-suppress MixedAssignment
+     * @psalm-suppress MixedArgument
      * @throws \TypeError
      */
     protected function deleteWhereArray(string $table, array $conditions): int
@@ -202,8 +202,8 @@ class EasyDB
      * @param EasyStatement $conditions   Defines the WHERE clause
      * @return int
      * @throws \InvalidArgumentException
-     * @disabled-psalm-suppress MixedAssignment
-     * @disabled-psalm-suppress MixedArgument
+     * @psalm-suppress MixedAssignment
+     * @psalm-suppress MixedArgument
      * @throws \TypeError
      */
     protected function deleteWhereStatement(string $table, EasyStatement $conditions): int
@@ -315,8 +315,8 @@ class EasyDB
      * @param string $type
      * @return string
      * @throws \InvalidArgumentException
-     * @disabled-psalm-suppress MixedAssignment
-     * @disabled-psalm-suppress MixedArgument
+     * @psalm-suppress MixedAssignment
+     * @psalm-suppress MixedArgument
      */
     public function escapeValueSet(array $values, string $type = 'string'): string
     {
@@ -433,7 +433,7 @@ class EasyDB
      * @param string $statement
      * @param mixed ...$params
      * @return bool
-     * @disabled-psalm-suppress MixedAssignment
+     * @psalm-suppress MixedAssignment
      */
     public function exists(string $statement, ...$params): bool
     {
@@ -513,8 +513,8 @@ class EasyDB
      * @param string $field
      * @return mixed
      * @throws \Exception
-     * @disabled-psalm-suppress MixedAssignment
-     * @disabled-psalm-suppress MixedArgument
+     * @psalm-suppress MixedAssignment
+     * @psalm-suppress MixedArgument
      */
     public function insertGet(string $table, array $map, string $field)
     {
@@ -577,8 +577,8 @@ class EasyDB
      * @return int
      * @throws \InvalidArgumentException
      * @throws Issues\QueryError
-     * @disabled-psalm-suppress MixedAssignment
-     * @disabled-psalm-suppress MixedArgument
+     * @psalm-suppress MixedAssignment
+     * @psalm-suppress MixedArgument
      */
     public function insertMany(string $table, array $maps): int
     {
@@ -827,8 +827,8 @@ class EasyDB
      * @throws \InvalidArgumentException
      * @throws Issues\QueryError
      *
-     * @disabled-psalm-suppress MixedAssignment
-     * @disabled-psalm-suppress MixedArgument
+     * @psalm-suppress MixedAssignment
+     * @psalm-suppress MixedArgument
      * @throws \TypeError
      */
     protected function updateWhereArray(string $table, array $changes, array $conditions): int
@@ -905,8 +905,8 @@ class EasyDB
      * @throws \InvalidArgumentException
      * @throws Issues\QueryError
      *
-     * @disabled-psalm-suppress MixedAssignment
-     * @disabled-psalm-suppress MixedArgument
+     * @psalm-suppress MixedAssignment
+     * @psalm-suppress MixedArgument
      * @throws \TypeError
      */
     protected function updateWhereStatement(string $table, array $changes, EasyStatement $conditions): int
