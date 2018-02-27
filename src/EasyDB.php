@@ -111,6 +111,29 @@ class EasyDB
         return $this->single($statement, $params);
     }
 
+
+    /**
+     * Delete rows in a database table.
+     *
+     * @param string $table       Table name
+     * @param mixed $conditions   Defines the WHERE clause
+     * @return int
+     * @throws \InvalidArgumentException
+     * @disabled-psalm-suppress MixedAssignment
+     * @disabled-psalm-suppress MixedArgument
+     * @throws \TypeError
+     */
+    public function delete(string $table, $conditions): int
+    {
+        if ($conditions instanceof EasyStatement) {
+            return $this->deleteWhereStatement($table, $conditions);
+        } elseif (\is_array($conditions)) {
+            return $this->deleteWhereArray($table, $conditions);
+        } else {
+            throw new \TypeError('Conditions must be an array or EasyStatement');
+        }
+    }
+
     /**
      * Delete rows in a database table.
      *
@@ -118,10 +141,11 @@ class EasyDB
      * @param array $conditions   Defines the WHERE clause
      * @return int
      * @throws \InvalidArgumentException
-     * @psalm-suppress MixedAssignment
-     * @psalm-suppress MixedArgument
+     * @disabled-psalm-suppress MixedAssignment
+     * @disabled-psalm-suppress MixedArgument
+     * @throws \TypeError
      */
-    public function delete(string $table, array $conditions): int
+    protected function deleteWhereArray(string $table, array $conditions): int
     {
         if (empty($table)) {
             throw new \InvalidArgumentException(
@@ -137,11 +161,18 @@ class EasyDB
                 'Only one-dimensional arrays are allowed.'
             );
         }
+        /** @var string $queryString */
         $queryString = 'DELETE FROM ' . $this->escapeIdentifier($table) . ' WHERE ';
 
         // Simple array for joining the strings together
+        /** @var array $params */
         $params = [];
+        /** @var array $arr */
         $arr = [];
+        /**
+         * @var string $i
+         * @var string|int|bool|float|null $v
+         */
         foreach ($conditions as $i => $v) {
             $i = $this->escapeIdentifier($i);
             if ($v === null) {
@@ -154,6 +185,49 @@ class EasyDB
             }
         }
         $queryString .= \implode(' AND ', $arr);
+
+        return (int) $this->safeQuery(
+            $queryString,
+            $params,
+            \PDO::FETCH_BOTH,
+            true
+        );
+    }
+
+
+    /**
+     * Delete rows in a database table.
+     *
+     * @param string $table       Table name
+     * @param EasyStatement $conditions   Defines the WHERE clause
+     * @return int
+     * @throws \InvalidArgumentException
+     * @disabled-psalm-suppress MixedAssignment
+     * @disabled-psalm-suppress MixedArgument
+     * @throws \TypeError
+     */
+    protected function deleteWhereStatement(string $table, EasyStatement $conditions): int
+    {
+        if (empty($table)) {
+            throw new \InvalidArgumentException(
+                'Table name must be a non-empty string.'
+            );
+        }
+        if ($conditions->count() < 1) {
+            // Don't allow foot-bullets
+            return 0;
+        }
+        /** @var string $queryString */
+        $queryString = 'DELETE FROM ' . $this->escapeIdentifier($table) . ' WHERE ' . $conditions;
+
+        /** @var array $params */
+        $params = [];
+        /**
+         * @var string|int|bool|float|null $v
+         */
+        foreach ($conditions->values() as $v) {
+            $params[] = $v;
+        }
 
         return (int) $this->safeQuery(
             $queryString,
@@ -241,8 +315,8 @@ class EasyDB
      * @param string $type
      * @return string
      * @throws \InvalidArgumentException
-     * @psalm-suppress MixedAssignment
-     * @psalm-suppress MixedArgument
+     * @disabled-psalm-suppress MixedAssignment
+     * @disabled-psalm-suppress MixedArgument
      */
     public function escapeValueSet(array $values, string $type = 'string'): string
     {
@@ -258,6 +332,10 @@ class EasyDB
         }
         // Build our array
         $join = [];
+        /**
+         * @var string $i
+         * @var string|int|bool|float|null $v
+         */
         foreach ($values as $k => $v) {
             switch ($type) {
                 case 'int':
@@ -355,10 +433,11 @@ class EasyDB
      * @param string $statement
      * @param mixed ...$params
      * @return bool
-     * @psalm-suppress MixedAssignment
+     * @disabled-psalm-suppress MixedAssignment
      */
     public function exists(string $statement, ...$params): bool
     {
+        /** @var string|int|float|bool|null $result */
         $result = $this->single($statement, $params);
         return !empty($result);
     }
@@ -401,6 +480,7 @@ class EasyDB
      * @param array $map - associative array of which values should be assigned to each field
      * @return int
      * @throws \InvalidArgumentException
+     * @throws \TypeError
      */
     public function insert(string $table, array $map): int
     {
@@ -433,8 +513,8 @@ class EasyDB
      * @param string $field
      * @return mixed
      * @throws \Exception
-     * @psalm-suppress MixedAssignment
-     * @psalm-suppress MixedArgument
+     * @disabled-psalm-suppress MixedAssignment
+     * @disabled-psalm-suppress MixedArgument
      */
     public function insertGet(string $table, array $map, string $field)
     {
@@ -446,6 +526,10 @@ class EasyDB
         }
         $post = [];
         $params = [];
+        /**
+         * @var string $i
+         * @var string|bool|null|int|float $v
+         */
         foreach ($map as $i => $v) {
             // Escape the identifier to prevent stupidity
             $i = $this->escapeIdentifier($i);
@@ -493,8 +577,8 @@ class EasyDB
      * @return int
      * @throws \InvalidArgumentException
      * @throws Issues\QueryError
-     * @psalm-suppress MixedAssignment
-     * @psalm-suppress MixedArgument
+     * @disabled-psalm-suppress MixedAssignment
+     * @disabled-psalm-suppress MixedArgument
      */
     public function insertMany(string $table, array $maps): int
     {
@@ -507,7 +591,9 @@ class EasyDB
                 '() must contain at least one field set!'
             );
         }
+        /** @var array $first */
         $first = $maps[0];
+        /** @var array $map */
         foreach ($maps as $map) {
             if (!$this->is1DArray($map)) {
                 throw new \InvalidArgumentException(
@@ -521,6 +607,7 @@ class EasyDB
         // Now let's run a query with the parameters
         $stmt = $this->pdo->prepare($queryString);
         $count = 0;
+        /** @var array $params */
         foreach ($maps as $params) {
             $stmt->execute(\array_values($params));
             $count += $stmt->rowCount();
@@ -708,6 +795,30 @@ class EasyDB
     /**
      * Update a row in a database table.
      *
+     * @param string $table  Table name
+     * @param array $changes Associative array of which values should be
+     *                       assigned to each field
+     * @param mixed          $conditions WHERE clause
+     * @return int
+     * @throws \InvalidArgumentException
+     * @throws Issues\QueryError
+     *
+     * @throws \TypeError
+     */
+    public function update(string $table, array $changes, $conditions): int
+    {
+        if ($conditions instanceof EasyStatement) {
+            return $this->updateWhereStatement($table, $changes, $conditions);
+        } elseif (\is_array($conditions)) {
+            return $this->updateWhereArray($table, $changes, $conditions);
+        } else {
+            throw new \TypeError('Conditions must be an array or instance of EasyStatement');
+        }
+    }
+
+    /**
+     * Update a row in a database table.
+     *
      * @param string $table     Table name
      * @param array $changes    Associative array of which values should be
      *                            assigned to each field
@@ -716,10 +827,11 @@ class EasyDB
      * @throws \InvalidArgumentException
      * @throws Issues\QueryError
      *
-     * @psalm-suppress MixedAssignment
-     * @psalm-suppress MixedArgument
+     * @disabled-psalm-suppress MixedAssignment
+     * @disabled-psalm-suppress MixedArgument
+     * @throws \TypeError
      */
-    public function update(string $table, array $changes, array $conditions): int
+    protected function updateWhereArray(string $table, array $changes, array $conditions): int
     {
         if (empty($changes) || empty($conditions)) {
             return 0;
@@ -729,11 +841,18 @@ class EasyDB
                 'Only one-dimensional arrays are allowed.'
             );
         }
+        /** @var string $queryString */
         $queryString = 'UPDATE ' . $this->escapeIdentifier($table) . ' SET ';
+        /** @var array $params */
         $params = [];
 
         // The first set (pre WHERE)
+        /** @var array $pre */
         $pre = [];
+        /**
+         * @var string $i
+         * @var string|int|bool|float|null $v
+         */
         foreach ($changes as $i => $v) {
             $i = $this->escapeIdentifier($i);
             if ($v === null) {
@@ -750,6 +869,10 @@ class EasyDB
 
         // The last set (post WHERE)
         $post = [];
+        /**
+         * @var string $i
+         * @var string|int|bool|float|null $v
+         */
         foreach ($conditions as $i => $v) {
             $i = $this->escapeIdentifier($i);
             if ($v === null) {
@@ -762,6 +885,64 @@ class EasyDB
             }
         }
         $queryString .= \implode(' AND ', $post);
+
+        return (int) $this->safeQuery(
+            $queryString,
+            $params,
+            \PDO::FETCH_BOTH,
+            true
+        );
+    }
+
+    /**
+     * Update a row in a database table.
+     *
+     * @param string $table             Table name
+     * @param array $changes            Associative array of which values
+     *                                  should be assigned to each field
+     * @param EasyStatement $conditions WHERE clause
+     * @return int
+     * @throws \InvalidArgumentException
+     * @throws Issues\QueryError
+     *
+     * @disabled-psalm-suppress MixedAssignment
+     * @disabled-psalm-suppress MixedArgument
+     * @throws \TypeError
+     */
+    protected function updateWhereStatement(string $table, array $changes, EasyStatement $conditions): int
+    {
+        if (empty($changes) || $conditions->count() < 1) {
+            return 0;
+        }
+        $queryString = 'UPDATE ' . $this->escapeIdentifier($table) . ' SET ';
+        $params = [];
+
+        // The first set (pre WHERE)
+        $pre = [];
+        /**
+         * @var string $i
+         * @var string|int|bool|float|null $v
+         */
+        foreach ($changes as $i => $v) {
+            $i = $this->escapeIdentifier($i);
+            if ($v === null) {
+                $pre []= " {$i} = NULL";
+            } elseif (\is_bool($v)) {
+                $pre []= $this->makeBooleanArgument($i, $v);
+            } else {
+                $pre []= " {$i} = ?";
+                $params[] = $v;
+            }
+        }
+
+        $queryString .= \implode(', ', $pre);
+        $queryString .= " WHERE {$conditions}";
+        /**
+         * @var string|int|bool|float|null $v
+         */
+        foreach ($conditions->values() as $v) {
+            $params[] = $v;
+        }
 
         return (int) $this->safeQuery(
             $queryString,

@@ -21,6 +21,14 @@ class EasyStatement
     private $parent;
 
     /**
+     * @return int
+     */
+    public function count(): int
+    {
+        return \count($this->parts);
+    }
+
+    /**
      * Open a new statement.
      *
      * @return self
