@@ -1,3 +1,11 @@
+# Version 2.6.0
+
+* [#69](https://github.com/paragonie/easydb/pull/69): Fixed an error when using EasyDB
+  with SQLite.
+* [#70](https://github.com/paragonie/easydb/issues/70): You can now use `EasyStatement`
+  objects for the conditions instead of arrays in `EasyDB::update()` and `EasyDB::delete()`.
+  (Arrays are still supported!)
+
 # Version 2.5.1
 
 * Fixed boolean handling for SQLite databases.
