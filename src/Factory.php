@@ -30,7 +30,7 @@ abstract class Factory
     ): EasyDB {
         $dbEngine = '';
         $post_query = null;
-        
+
         if (!\is_string($username)) {
             $username = '';
         }
