@@ -1,45 +1,43 @@
 {
-    "name":         "paragonie/easydb",
-    "description":  "Easy-to-use database abstraction",
+    "name": "paragonie/easydb",
+    "description": "Easy-to-use database abstraction.",
     "keywords": [
         "database",
         "PDO",
         "sql",
         "security"
     ],
-    "license":      "MIT",
-    "type":         "library",
+    "license": "MIT",
+    "type": "library",
     "authors": [
         {
-            "name":     "Scott Arciszewski",
-            "email":    "scott@paragonie.com",
+            "name": "Scott Arciszewski",
+            "email": "scott@paragonie.com",
             "homepage": "https://paragonie.com",
-            "role":     "Developer"
+            "role": "Developer"
         },
         {
-            "name":     "Woody Gilk",
+            "name": "Woody Gilk",
             "homepage": "https://github.com/shadowhand",
-            "role":     "Contributor"
+            "role": "Contributor"
         },
         {
-            "name":     "SignpostMarv",
+            "name": "SignpostMarv",
             "homepage": "https://github.com/SignpostMarv",
-            "role":     "Contributor"
+            "role": "Contributor"
         }
     ],
     "support": {
-        "issues":   "https://github.com/paragonie/easydb/issues",
-        "email":    "info@paragonie.com",
-        "source":   "https://github.com/paragonie/easydb"
+        "email": "info@paragonie.com"
     },
     "autoload": {
         "psr-4": {
-            "ParagonIE\\EasyDB\\": "src"
+            "ParagonIE\\EasyDB\\": "./src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "ParagonIE\\EasyDB\\Tests\\": "tests"
+            "ParagonIE\\EasyDB\\Tests\\": "./tests"
         }
     },
     "require": {
@@ -60,5 +58,11 @@
         ],
         "check-style": "phpcs -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src tests",
         "fix-style": "phpcbf -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src tests"
-    }
+    },
+    "config": {
+        "preferred-install": "dist",
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "prefer-stable": true
 }
