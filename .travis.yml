@@ -1,9 +1,9 @@
 language: php
 sudo: false
 php:
-  - 7.0.27
-  - 7.1.13
-  - 7.2.1
+  - 7.0.28
+  - 7.1.15
+  - 7.2.3
   - hhvm
   - nightly
 matrix:
