@@ -2,10 +2,10 @@
 namespace ParagonIE\EasyDB\Exception;
 
 /**
- * QueryError.
+ * ExceptionInterface.
  *
  * @package ParagonIE\EasyDB
  */
-class QueryError extends \RuntimeException implements ExceptionInterface
+interface ExceptionInterface
 {
 }

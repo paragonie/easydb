@@ -1,20 +1,26 @@
 language: php
-
+sudo: false
 php:
-  - 7.0
-  - 7.1
-  - 7.2
+  - 7.0.27
+  - 7.1.13
+  - 7.2.1
   - hhvm
   - nightly
-
 matrix:
-  allow_failures:
-    - php: hhvm
-
-before_script:
-  - composer install
-
+    fast_finish: true
+    allow_failures:
+        - php: hhvm
+        - php: nightly
+os:
+    - windows
+    - linux
+install:
+    - travis_retry composer install --no-interaction
 script:
-  - vendor/bin/phpcs --standard=psr2 src/
-  - vendor/bin/phpunit --coverage-text
-  - vendor/bin/psalm
+    - ./vendor/bin/phpcs --standard=psr2 src/
+    - ./vendor/bin/phpunit --coverage-text
+    - ./vendor/bin/psalm
+cache:
+    directories:
+        - vendor
+        - $HOME/.cache/composer
