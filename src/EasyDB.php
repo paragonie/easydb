@@ -793,7 +793,7 @@ class EasyDB
         }
         if(isset($this->options['TABLE_PREFIX']))
         {
-            $table = str_replace('tbl_', 
+            $statement = str_replace('tbl_', 
                 $this->options['TABLE_PREFIX'], 
                 $statement
             );
@@ -824,7 +824,7 @@ class EasyDB
         }
         if(isset($this->options['TABLE_PREFIX']))
         {
-            $table = str_replace('tbl_', 
+            $statement = str_replace('tbl_', 
                 $this->options['TABLE_PREFIX'], 
                 $statement
             );
