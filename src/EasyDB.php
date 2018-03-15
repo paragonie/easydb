@@ -778,7 +778,13 @@ class EasyDB
                 $fetchStyle = \PDO::FETCH_ASSOC;
             }
         }
-
+        if(isset($this->options['TABLE_PREFIX']))
+        {
+            $statement = str_replace('tbl_', 
+                $this->options['TABLE_PREFIX'], 
+                $statement
+            );
+        }
         if (empty($params)) {
             $stmt = $this->pdo->query($statement);
             if ($returnNumAffected) {
@@ -789,13 +795,6 @@ class EasyDB
         if (!$this->is1DArray($params)) {
             throw new \InvalidArgumentException(
                 'Only one-dimensional arrays are allowed.'
-            );
-        }
-        if(isset($this->options['TABLE_PREFIX']))
-        {
-            $statement = str_replace('tbl_', 
-                $this->options['TABLE_PREFIX'], 
-                $statement
             );
         }
         $stmt = $this->pdo->prepare($statement);
