@@ -163,8 +163,8 @@ class EasyDB
             );
         }
         /**
- * @var string $queryString
-*/
+         * @var string $queryString
+         */
         $queryString = 'DELETE FROM ' . $this->escapeIdentifier($table) . ' WHERE ';
 
         // Simple array for joining the strings together
