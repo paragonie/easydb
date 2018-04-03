@@ -1,6 +1,9 @@
+/build/
 /vendor/
+/composer.phar
 /composer.lock
 /tests/phpunit.phar
 /tests/phpunit.phar.asc
 /.editorconfig
-/phpunit.xml
+/phpunit.xml.dist
+/psalm.xml
