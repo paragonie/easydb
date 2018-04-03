@@ -38,7 +38,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "ParagonIE\\EasyDB\\Tests": "./tests"
+            "ParagonIE\\EasyDB\\Tests\\": "./tests"
         }
     },
     "require": {
