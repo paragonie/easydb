@@ -1,33 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit backupGlobals="true"
          backupStaticAttributes="false"
-         bootstrap="vendor/autoload.php"
-         colors="true"
+         bootstrap="./vendor/autoload.php"
+         cacheTokens="false"
+         colors="false"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
-         failOnRisky="true"
-         failOnWarning="true"
+         forceCoversAnnotation="false"
+         mapTestClassNameToCoveredClassName="false"
          processIsolation="false"
          stopOnError="false"
          stopOnFailure="false"
-         syntaxCheck="true">
-    <testsuite name="paragonie/easydb Test Suite">
-        <directory suffix="Test.php">./tests</directory>
-    </testsuite>
+         stopOnIncomplete="false"
+         stopOnSkipped="false"
+         stopOnRisky="false"
+         failOnRisky="true"
+         failOnWarning="true"
+         timeoutForSmallTests="1"
+         timeoutForMediumTests="10"
+         timeoutForLargeTests="60"
+         verbose="false">
+    <testsuites>
+        <testsuite name="paragonie/easydb Test Suite">
+            <directory suffix="Test.php">./tests</directory>
+        </testsuite>
+    </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./src</directory>
             <exclude>
                 <directory>./vendor</directory>
-                <directory>./tests</directory>
+                <directory>./build</directory>
             </exclude>
         </whitelist>
     </filter>
     <logging>
-        <log type="coverage-text"
-             target="php://stdout"
-             showUncoveredFiles="true"
-             showOnlySummary="false" />
+        <log type="coverage-text" target="php://stdout" showUncoveredFiles="true" showOnlySummary="false" />
     </logging>
 </phpunit>
