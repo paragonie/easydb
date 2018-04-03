@@ -3,7 +3,7 @@
 namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyStatement;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
 /**
