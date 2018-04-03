@@ -1,0 +1,11 @@
+; top-most EditorConfig file
+root = true
+
+; Unix-style newlines
+[*]
+end_of_line = LF
+
+; Indention style
+[*.php]
+indent_style = space
+indent_size = 4
