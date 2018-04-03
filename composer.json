@@ -40,10 +40,10 @@
         "ext-pdo": "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5",
-        "spatie/7to5": "^1.0",
-        "squizlabs/php_codesniffer": "^2.7",
-        "vimeo/psalm": "^1.0"
+        "phpunit/phpunit": "^6|^7",
+        "squizlabs/php_codesniffer": "^2",
+        "spatie/7to5": "^1",
+        "vimeo/psalm": "^1"
     },
     "scripts": {
         "php5ize": [
