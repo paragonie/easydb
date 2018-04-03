@@ -1030,6 +1030,7 @@ class EasyDB
             $this->beginTransaction();
         }
         try {
+            /** @psalm-suppress TooManyArguments */
             $callback($this);
             // If we started the transaction, we should commit here
             if ($autoStartTransaction) {
