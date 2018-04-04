@@ -16,6 +16,7 @@ namespace ParagonIE\EasyDB;
 
 use PDO;
 use PDOException;
+use object;
 
 /**
  * Factory.
