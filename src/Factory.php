@@ -31,7 +31,7 @@ abstract class Factory
      * @param string|null $password The database password.
      * @param array       $options  The database options.
      *
-     * @throws Exception\Exception\ConstructorFailed If the PDO connection could
+     * @throws Exception\ConstructorFailed If the PDO connection could
      *                                               not be created.
      *
      * @return EasyDB Return the EasyDB class.
