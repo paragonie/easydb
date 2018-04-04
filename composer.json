@@ -1,6 +1,6 @@
 {
     "name": "paragonie/easydb",
-    "description": "Easy-to-use database abstraction",
+    "description": "Easy-to-use database abstraction.",
     "homepage": "https://paragonie.com/",
     "keywords": [
         "database",
@@ -15,17 +15,12 @@
             "name": "Scott Arciszewski",
             "email": "scott@paragonie.com",
             "homepage": "https://paragonie.com",
-            "role": "Developer"
+            "role": "Develop"
         },
         {
-            "name": "Woody Gilk",
-            "homepage": "https://github.com/shadowhand",
-            "role": "Contributor"
-        },
-        {
-            "name": "SignpostMarv",
-            "homepage": "https://github.com/SignpostMarv",
-            "role": "Contributor"
+            "name": "EasyDB Contributors",
+            "homepage": "https://github.com/paragonie/easydb/graphs/contributors",
+            "role": "Contribute"
         }
     ],
     "support": {
