@@ -5,13 +5,13 @@ namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Factory;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class EasyDBTest
  * @package ParagonIE\EasyDB\Tests
  */
-abstract class EasyDBTest extends PHPUnit_Framework_TestCase
+abstract class EasyDBTest extends TestCase
 {
 
     /**

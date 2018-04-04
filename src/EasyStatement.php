@@ -1,12 +1,23 @@
 <?php
+declare(strict_types=1);
+/**
+ * Paragon Initiative Enterprises.
+ *
+ * @author  Scott Arciszewski   <scott@paragonie.com>.
+ * @author  EasyDB Contributors <https://github.com/paragonie/easydb/graphs/contributors>
+ *
+ * @link    <https://github.com/paragonie/easydb> Github Repository.
+ * @license <https://github.com/paragonie/easydb/blob/master/LICENSE> MIT License.
+ *
+ * @package ParagonIE\EasyDB
+ */
 
 namespace ParagonIE\EasyDB;
 
 use RuntimeException;
 
 /**
- * Class EasyStatement
- * @package ParagonIE\EasyDB
+ * EasyStatement.
  */
 class EasyStatement
 {
@@ -340,10 +351,11 @@ class EasyStatement
     /**
      * Don't instantiate directly. Instead, use open() (static method).
      *
-     * EasyStatement constructor.
-     * @param EasyStatement|null $parent
+     * @param EasyStatement|null $parent The EasyStatement class.
+     *
+     * @return void Return nothing.
      */
-    protected function __construct(EasyStatement $parent = null)
+    protected function __construct(EasyStatement $parent = \null)
     {
         $this->parent = $parent;
     }
@@ -358,9 +370,8 @@ class EasyStatement
     protected function isGroup($condition): bool
     {
         if (!\is_object($condition)) {
-            return false;
+            return \false;
         }
-
         return $condition instanceof EasyStatement;
     }
 
@@ -369,15 +380,16 @@ class EasyStatement
      *
      * Given a count of 3, the placeholder ?* will become ?, ?, ?
      *
-     * @param string $condition
-     * @param int $count
+     * @param string $condition The condition.
+     * @param int    $count     The count.
      *
-     * @return string
+     * @return string The replaced group placeholder.
      */
     private function unpackCondition(string $condition, int $count): string
     {
         // Replace a grouped placeholder with an matching count of placeholders.
         $params = '?' . \str_repeat(', ?', $count - 1);
+        // Return the result.
         return \str_replace('?*', $params, $condition);
     }
 }

@@ -13,5 +13,4 @@ return Symfony\CS\Config::create()
     ->finder(
         Symfony\CS\Finder\DefaultFinder::create()
             ->in(__DIR__)
-    )
-    ;
+    );
