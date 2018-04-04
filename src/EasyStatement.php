@@ -15,12 +15,12 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB;
 
 use RuntimeException;
+use object;
 
 /**
- * Class EasyStatement
- * @package ParagonIE\EasyDB
+ * EasyStatement.
  */
-class EasyStatement
+class EasyStatement implements object
 {
     /**
      * @var array
@@ -352,10 +352,11 @@ class EasyStatement
     /**
      * Don't instantiate directly. Instead, use open() (static method).
      *
-     * EasyStatement constructor.
-     * @param EasyStatement|null $parent
+     * @param EasyStatement|null $parent The EasyStatement class.
+     *
+     * @return void Return nothing.
      */
-    protected function __construct(EasyStatement $parent = null)
+    protected function __construct(EasyStatement $parent = \null)
     {
         $this->parent = $parent;
     }
@@ -363,17 +364,13 @@ class EasyStatement
     /**
      * Check if a condition is a sub-group.
      *
-     * @param mixed $condition
+     * @param object $condition The condition
      *
      * @return bool
      */
     protected function isGroup($condition): bool
     {
-        if (!\is_object($condition)) {
-            return false;
-        }
-
-        return $condition instanceof EasyStatement;
+        return (object) $condition instanceof EasyStatement;
     }
 
     /**
@@ -381,15 +378,16 @@ class EasyStatement
      *
      * Given a count of 3, the placeholder ?* will become ?, ?, ?
      *
-     * @param string $condition
-     * @param int $count
+     * @param string $condition The condition.
+     * @param int    $count     The count.
      *
-     * @return string
+     * @return string The replaced group placeholder.
      */
     private function unpackCondition(string $condition, int $count): string
     {
         // Replace a grouped placeholder with an matching count of placeholders.
         $params = '?' . \str_repeat(', ?', $count - 1);
+        // Return the result.
         return \str_replace('?*', $params, $condition);
     }
 }
