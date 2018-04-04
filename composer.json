@@ -29,8 +29,7 @@
     "autoload": {
         "psr-4": {
             "ParagonIE\\EasyDB\\": "./src"
-        },
-        "classmap": ["object.php"]
+        }
     },
     "autoload-dev": {
         "psr-4": {
