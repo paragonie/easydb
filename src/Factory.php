@@ -20,7 +20,7 @@ use PDOException;
 /**
  * Factory.
  */
-abstract class Factory
+abstract class Factory implements object
 {
 
     /**
