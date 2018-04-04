@@ -16,12 +16,11 @@ namespace ParagonIE\EasyDB;
 
 use PDO;
 use PDOException;
-use object;
 
 /**
  * Factory.
  */
-abstract class Factory implements object
+abstract class Factory
 {
 
     /**
