@@ -15,12 +15,11 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB;
 
 use RuntimeException;
-use object;
 
 /**
  * EasyStatement.
  */
-class EasyStatement implements object
+class EasyStatement
 {
     /**
      * @var array
@@ -364,13 +363,16 @@ class EasyStatement implements object
     /**
      * Check if a condition is a sub-group.
      *
-     * @param object $condition The condition
+     * @param mixed $condition
      *
      * @return bool
      */
     protected function isGroup($condition): bool
     {
-        return (object) $condition instanceof EasyStatement;
+        if (!\is_object($condition)) {
+            return \false;
+        }
+        return $condition instanceof EasyStatement;
     }
 
     /**
