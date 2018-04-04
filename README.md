@@ -40,7 +40,7 @@ middle of a `mysql_query()` statement. Let's make it secure.
 ### The PDO Way
 
 ```php
-$db = new \PDO(
+$db = new PDO(
     'mysql:host=localhost;dbname=something',
     'username',
     'putastrongpasswordhere'
@@ -48,7 +48,7 @@ $db = new \PDO(
 
 $statement = $db->prepare('SELECT * FROM comments WHERE blogpostid = ? ORDER BY created ASC');
 $exec = $statement->execute([$_GET['blogpostid']]);
-$rows = $exec->fetchAll(\PDO::FETCH_ASSOC);
+$rows = $exec->fetchAll(PDO::FETCH_ASSOC);
 foreach ($rows as $row) {
     $template_engine->render('comment', $row);
 }
@@ -60,7 +60,7 @@ we end up repeating ourselves a lot.
 ### The EasyDB Solution
 
 ```php
-$db = \ParagonIE\EasyDB\Factory::create(
+$db = ParagonIE\EasyDB\Factory::create(
     'mysql:host=localhost;dbname=something',
     'username',
     'putastrongpasswordhere'
@@ -101,7 +101,7 @@ $sql = $db->buildInsertQuery('comments', [
 $result = $db->q(
     $sql,
     $values,
-    \PDO::FETCH_BOTH,
+    PDO::FETCH_BOTH,
     true
 );
 ```
@@ -154,7 +154,7 @@ $exists = $db->single(
 ```php
 $save = function (EasyDB $db) use ($userData, $query) {
     $db->safeQuery($query, [$userData['userId']]);
-    \Some\Other\Package::CleanUpTable($db);
+    Some\Other\Package::CleanUpTable($db);
 };
 // auto starts, commits and rolls back a transaction as necessary
 $db->tryFlatTransaction($save);
@@ -230,7 +230,7 @@ $pdo = $db->getPdo();
 **Yes!** It's as simple as doing this:
 
 ```php
-$easy = new \ParagonIE\EasyDB\EasyDB($pdo, 'mysql');
+$easy = new ParagonIE\EasyDB\EasyDB($pdo, 'mysql');
 ```
 
 ## How do I run tests ?
