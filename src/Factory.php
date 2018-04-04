@@ -26,10 +26,10 @@ abstract class Factory
     /**
      * Create a new EasyDB object based on PDO constructors
      *
-     * @param string $dsn      The dns connection string.
-     * @param string $username The database username.
-     * @param string $password The database password.
-     * @param array  $options  The database options.
+     * @param string      $dsn      The dns connection string.
+     * @param string|null $username The database username.
+     * @param string|null $password The database password.
+     * @param array       $options  The database options.
      *
      * @throws Exception\Exception\ConstructorFailed If the PDO connection could
      *                                               not be created.
@@ -38,10 +38,16 @@ abstract class Factory
      */
     public static function create(
         string $dsn,
-        string $username = '',
-        string $password = '',
+        string $username = \null,
+        string $password = \null,
         array  $options  = []
     ): EasyDB {
+        if (\is_null($username)) {
+            $username = '';   
+        }
+        if (\is_null($password)) {
+            $password = '';   
+        }
         $dbEngine = '';
         if (\strpos($dsn, ':') !== \false) {
             $dbEngine = \explode(':', $dsn)[0];
