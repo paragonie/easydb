@@ -1,52 +1,53 @@
 <?php
 declare(strict_types=1);
-
-namespace ParagonIE\EasyDB;
-
-use \ParagonIE\EasyDB\Exception as Issues;
-
 /**
- * Class Factory
+ * Paragon Initiative Enterprises.
+ *
+ * @author  Scott Arciszewski   <scott@paragonie.com>.
+ * @author  EasyDB Contributors <https://github.com/paragonie/easydb/graphs/contributors>
+ *
+ * @link    <https://github.com/paragonie/easydb> Github Repository.
+ * @license <https://github.com/paragonie/easydb/blob/master/LICENSE> MIT License.
  *
  * @package ParagonIE\EasyDB
  */
+
+namespace ParagonIE\EasyDB;
+
+use PDO;
+use PDOException;
+
+/**
+ * Class Factory.
+ */
 abstract class Factory
 {
+
     /**
      * Create a new EasyDB object based on PDO constructors
      *
-     * @param string $dsn
-     * @param string $username
-     * @param string $password
-     * @param array $options
-     * @return \ParagonIE\EasyDB\EasyDB
-     * @throws Issues\ConstructorFailed
+     * @param string $dsn      The dns connection string.
+     * @param string $username The database username.
+     * @param string $password The database password.
+     * @param array  $options  The database options.
+     *
+     * @throws Exception\Exception\ConstructorFailed If the PDO connection could
+     *                                               not be created.
+     *
+     * @return EasyDB Return the EasyDB class.
      */
     public static function create(
         string $dsn,
-        string $username = null,
-        string $password = null,
-        array $options = []
+        string $username = '',
+        string $password = '',
+        array  $options  = []
     ): EasyDB {
         $dbEngine = '';
-        $post_query = null;
-
-        if (!\is_string($username)) {
-            $username = '';
+        if (\strpos($dsn, ':') !== \false) {
+            $dbEngine = \explode(':', $dsn)[0];
         }
-        if (!\is_string($password)) {
-            $password = '';
-        }
-
-        // Let's grab the DB engine
-        if (strpos($dsn, ':') !== false) {
-            $dbEngine = explode(':', $dsn)[0];
-        }
-
         /** @var string $post_query */
         $post_query = '';
-
-        // If no charset is specified, default to UTF-8
         switch ($dbEngine) {
             case 'mysql':
                 if (\strpos($dsn, ';charset=') === false) {
@@ -57,20 +58,17 @@ abstract class Factory
                 $post_query = 'SET NAMES UNICODE';
                 break;
         }
-
         try {
-            $pdo = new \PDO($dsn, $username, $password, $options);
-        } catch (\PDOException $e) {
-            // Don't leak credentials directly if we can.
-            throw new Issues\ConstructorFailed(
+            $pdo = new PDO($dsn, $username, $password, $options);
+        } catch (PDOException $e) {
+            throw new Exception\ConstructorFailed(
                 'Could not create a PDO connection. Please check your username and password.'
             );
         }
-
         if (!empty($post_query)) {
             $pdo->query($post_query);
         }
-
         return new EasyDB($pdo, $dbEngine, $options);
     }
+
 }
