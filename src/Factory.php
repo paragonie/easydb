@@ -32,7 +32,7 @@ abstract class Factory
      * @param array       $options  The database options.
      *
      * @throws Exception\ConstructorFailed If the PDO connection could
-     *                                               not be created.
+     *                                     not be created.
      *
      * @return EasyDB Return the EasyDB class.
      */
