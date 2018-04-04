@@ -49,31 +49,39 @@ abstract class Factory
             $password = '';
         }
         $dbEngine = '';
+        // Get the pdo driver.
         if (\strpos($dsn, ':') !== \false) {
+            // Explode the dns string into parts.
             $dbEngine = \explode(':', $dsn)[0];
         }
         /** @var string $post_query */
         $post_query = '';
         switch ($dbEngine) {
             case 'mysql':
+                // Set the charset.
                 if (\strpos($dsn, ';charset=') === \false) {
                     $dsn .= ';charset=utf8mb4';
                 }
                 break;
             case 'pgsql':
+                // Set names unicode.
                 $post_query = 'SET NAMES UNICODE';
                 break;
         }
         try {
+            // Try to create a new connection.
             $pdo = new PDO($dsn, $username, $password, $options);
         } catch (PDOException $e) {
+            // Suppress errors to prevent sensitive information from being displayed.
             throw new Exception\ConstructorFailed(
                 'Could not create a PDO connection. Please check your username and password.'
             );
         }
+        // Execute post query if it is not empty.
         if (!empty($post_query)) {
             $pdo->query($post_query);
         }
+        // Return the EasyDB classs.
         return new EasyDB($pdo, $dbEngine, $options);
     }
 }
