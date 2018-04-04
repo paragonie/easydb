@@ -24,7 +24,7 @@ abstract class Factory
 {
 
     /**
-     * Create a new EasyDB object based on PDO constructors
+     * Create a new EasyDB object based on PDO constructors.
      *
      * @param string      $dsn      The dns connection string.
      * @param string|null $username The database username.
