@@ -5,6 +5,7 @@
 [![Latest Unstable Version](https://poser.pugx.org/paragonie/easydb/v/unstable)](https://packagist.org/packages/paragonie/easydb)
 [![License](https://poser.pugx.org/paragonie/easydb/license)](https://packagist.org/packages/paragonie/easydb)
 [![Downloads](https://img.shields.io/packagist/dt/paragonie/easydb.svg)](https://packagist.org/packages/paragonie/easydb)
+[![Coverage Status](https://coveralls.io/repos/github/paragonie/easydb/badge.svg?branch=master)](https://coveralls.io/github/paragonie/easydb?branch=master)
 
 PDO lacks brevity and simplicity; EasyDB makes separating data from instructions
 easy (and aesthetically pleasing).
