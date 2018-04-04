@@ -18,7 +18,7 @@ use PDO;
 use PDOException;
 
 /**
- * Class Factory.
+ * Factory.
  */
 abstract class Factory
 {
