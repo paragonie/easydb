@@ -40,13 +40,13 @@ abstract class Factory
         string $dsn,
         string $username = \null,
         string $password = \null,
-        array  $options  = []
+        array  $options = []
     ): EasyDB {
         if (\is_null($username)) {
-            $username = '';   
+            $username = '';
         }
         if (\is_null($password)) {
-            $password = '';   
+            $password = '';
         }
         $dbEngine = '';
         if (\strpos($dsn, ':') !== \false) {
@@ -76,5 +76,4 @@ abstract class Factory
         }
         return new EasyDB($pdo, $dbEngine, $options);
     }
-
 }
