@@ -10,6 +10,17 @@ use RuntimeException;
  */
 class EasyStatementTest extends TestCase
 {
+    /**
+     * @param string $exception
+     */
+    public function expectException($exception)
+    {
+        if (PHP_VERSION_ID >= 50600) {
+            return parent::expectException($exception);
+        }
+        // NOP;
+    }
+
     public function testBasicAndOr()
     {
         $statement = EasyStatement::open()->with('id = ?', 1)->andWith('last_login > ?', 'today')->orWith('last_login IS NULL');
