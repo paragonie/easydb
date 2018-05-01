@@ -1,13 +1,10 @@
 <?php
-declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
-
 class InsertReturnIdTest extends InsertTest
 {
-
     /**
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
@@ -18,7 +15,6 @@ class InsertReturnIdTest extends InsertTest
         $this->expectException(InvalidArgumentException::class);
         $db->insertReturnId('', ['foo' => 1], 'foo');
     }
-
     /**
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
@@ -29,7 +25,6 @@ class InsertReturnIdTest extends InsertTest
         $this->expectException(InvalidArgumentException::class);
         $db->insertReturnId('irrelevant_but_valid_tablename', [[1]], 'foo');
     }
-
     /**
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
@@ -40,7 +35,6 @@ class InsertReturnIdTest extends InsertTest
         $this->expectException(InvalidArgumentException::class);
         $db->insertReturnId('irrelevant_but_valid_tablename', ['1foo' => 1], '1foo');
     }
-
     /**
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
@@ -48,14 +42,8 @@ class InsertReturnIdTest extends InsertTest
     public function testInsertReturnId(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
-        $this->assertEquals(
-            $db->insertReturnId('irrelevant_but_valid_tablename', ['foo' => 'bar']),
-            '1'
-        );
-        $this->assertEquals(
-            $db->insertReturnId('irrelevant_but_valid_tablename', ['foo' => 'bar2']),
-            '2'
-        );
+        $this->assertEquals($db->insertReturnId('irrelevant_but_valid_tablename', ['foo' => 'bar']), '1');
+        $this->assertEquals($db->insertReturnId('irrelevant_but_valid_tablename', ['foo' => 'bar2']), '2');
     }
     /**
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
@@ -65,9 +53,6 @@ class InsertReturnIdTest extends InsertTest
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $this->expectException(\Exception::class);
-        $this->assertEquals(
-            $db->insertReturnId('irrelevant_but_valid_tablename', [], 'bar'),
-            'bar'
-        );
+        $this->assertEquals($db->insertReturnId('irrelevant_but_valid_tablename', [], 'bar'), 'bar');
     }
 }

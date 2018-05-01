@@ -3,7 +3,6 @@
 namespace ParagonIE\EasyDB;
 
 use RuntimeException;
-
 /**
  * Class EasyStatement
  * @package ParagonIE\EasyDB
@@ -14,30 +13,26 @@ class EasyStatement
      * @var array
      */
     private $parts = [];
-
     /**
      * @var EasyStatement|null
      */
     private $parent;
-
     /**
      * @return int
      */
-    public function count(): int
+    public function count()
     {
         return \count($this->parts);
     }
-
     /**
      * Open a new statement.
      *
      * @return self
      */
-    public static function open(): self
+    public static function open()
     {
         return new static();
     }
-
     /**
      * Alias for andWith().
      *
@@ -47,11 +42,13 @@ class EasyStatement
      * @return self
      * @throws \TypeError
      */
-    public function with(string $condition, ...$values): self
+    public function with(/*$condition, ...$values*/)
     {
-        return $this->andWith($condition, ...$values);
+        return \call_user_func_array(
+            [$this, 'andWith'],
+            \func_get_args()
+        );
     }
-
     /**
      * Add a condition that will be applied with a logical "AND".
      *
@@ -62,17 +59,23 @@ class EasyStatement
      * @throws \TypeError
      * @psalm-suppress RedundantConditionGivenDocblockType
      */
-    public function andWith($condition, ...$values): self
+    public function andWith(/*$condition, ...$values*/)
     {
+        $arguments = func_get_args();
+        $condition = \array_shift($arguments);
+
         if ($condition instanceof EasyStatement) {
             $condition = '(' . $condition . ')';
         }
         if (!\is_string($condition)) {
             throw new \TypeError('An EasyStatement or string is expected for argument 1');
         }
-        return $this->andWithString($condition, ...$values);
+        \array_unshift($arguments, $condition);
+        return \call_user_func_array(
+            [$this, 'andWithString'],
+            $arguments
+        );
     }
-
     /**
      * Add a condition that will be applied with a logical "AND".
      *
@@ -81,17 +84,14 @@ class EasyStatement
      *
      * @return self
      */
-    public function andWithString(string $condition, ...$values): self
+    public function andWithString(/*$condition, ...$values*/)
     {
-        $this->parts[] = [
-            'type' => 'AND',
-            'condition' => $condition,
-            'values' => $values,
-        ];
-
+        $arguments = func_get_args();
+        $condition = \array_shift($arguments);
+        $values = \array_values($arguments);
+        $this->parts[] = ['type' => 'AND', 'condition' => $condition, 'values' => $values];
         return $this;
     }
-
     /**
      * Add a condition that will be applied with a logical "OR".
      *
@@ -102,17 +102,23 @@ class EasyStatement
      * @throws \TypeError
      * @psalm-suppress RedundantConditionGivenDocblockType
      */
-    public function orWith($condition, ...$values): self
+    public function orWith(/*$condition, ...$values*/)
     {
+        $arguments = func_get_args();
+        $condition = \array_shift($arguments);
+
         if ($condition instanceof EasyStatement) {
             $condition = '(' . $condition . ')';
         }
         if (!\is_string($condition)) {
             throw new \TypeError('An EasyStatement or string is expected for argument 1');
         }
-        return $this->orWithString($condition, ...$values);
+        \array_unshift($arguments, $condition);
+        return \call_user_func_array(
+            [$this, 'orWithString'],
+            $arguments
+        );
     }
-
     /**
      * Add a condition that will be applied with a logical "OR".
      *
@@ -121,17 +127,15 @@ class EasyStatement
      *
      * @return self
      */
-    public function orWithString(string $condition, ...$values): self
+    public function orWithString(/*$condition, ...$values*/)
     {
-        $this->parts[] = [
-            'type' => 'OR',
-            'condition' => $condition,
-            'values' => $values,
-        ];
+        $arguments = func_get_args();
+        $condition = \array_shift($arguments);
+        $values = \array_values($arguments);
 
+        $this->parts[] = ['type' => 'OR', 'condition' => $condition, 'values' => $values];
         return $this;
     }
-
     /**
      * Alias for andIn().
      *
@@ -141,11 +145,10 @@ class EasyStatement
      * @return self
      * @throws \TypeError
      */
-    public function in(string $condition, array $values): self
+    public function in($condition, array $values)
     {
         return $this->andIn($condition, $values);
     }
-
     /**
      * Add an IN condition that will be applied with a logical "AND".
      *
@@ -157,11 +160,20 @@ class EasyStatement
      * @return self
      * @throws \TypeError
      */
-    public function andIn(string $condition, array $values): self
+    public function andIn(/*$condition, array $values*/)
     {
-        return $this->andWith($this->unpackCondition($condition, \count($values)), ...$values);
-    }
+        $arguments = \func_get_args();
+        $condition = \array_shift($arguments);
+        $values = \array_shift($arguments);
 
+        $unpacked = $this->unpackCondition($condition, \count($values));
+        \array_unshift($values, $unpacked);
+
+        return \call_user_func_array(
+            [$this, 'andWith'],
+            $values
+        );
+    }
     /**
      * Add an IN condition that will be applied with a logical "OR".
      *
@@ -173,21 +185,29 @@ class EasyStatement
      * @return self
      * @throws \TypeError
      */
-    public function orIn(string $condition, array $values): self
+    public function orIn($condition, array $values)
     {
-        return $this->orWith($this->unpackCondition($condition, \count($values)), ...$values);
-    }
+        $arguments = \func_get_args();
+        $condition = \array_shift($arguments);
+        $values = \array_shift($arguments);
 
+        $unpacked = $this->unpackCondition($condition, \count($values));
+        \array_unshift($values, $unpacked);
+
+        return \call_user_func_array(
+            [$this, 'orWith'],
+            $values
+        );
+    }
     /**
      * Alias for andGroup().
      *
      * @return self
      */
-    public function group(): self
+    public function group()
     {
         return $this->andGroup();
     }
-
     /**
      * Start a new grouping that will be applied with a logical "AND".
      *
@@ -195,18 +215,12 @@ class EasyStatement
      *
      * @return self
      */
-    public function andGroup(): self
+    public function andGroup()
     {
         $group = new self($this);
-
-        $this->parts[] = [
-            'type' => 'AND',
-            'condition' => $group,
-        ];
-
+        $this->parts[] = ['type' => 'AND', 'condition' => $group];
         return $group;
     }
-
     /**
      * Start a new grouping that will be applied with a logical "OR".
      *
@@ -214,28 +228,21 @@ class EasyStatement
      *
      * @return self
      */
-    public function orGroup(): self
+    public function orGroup()
     {
         $group = new self($this);
-
-        $this->parts[] = [
-            'type' => 'OR',
-            'condition' => $group,
-        ];
-
+        $this->parts[] = ['type' => 'OR', 'condition' => $group];
         return $group;
     }
-
     /**
      * Alias for endGroup().
      *
      * @return self
      */
-    public function end(): self
+    public function end()
     {
         return $this->endGroup();
     }
-
     /**
      * Exit the current grouping and return the parent statement.
      *
@@ -244,99 +251,78 @@ class EasyStatement
      * @throws RuntimeException
      *  If the current statement has no parent context.
      */
-    public function endGroup(): self
+    public function endGroup()
     {
         if (empty($this->parent)) {
             throw new RuntimeException('Already at the top of the statement');
         }
-
         return $this->parent;
     }
-
     /**
      * Compile the current statement into PDO-ready SQL.
      *
      * @return string
      */
-    public function sql(): string
+    public function sql()
     {
         if (empty($this->parts)) {
             return '1';
         }
-        return (string) \array_reduce(
-            $this->parts,
-            function (string $sql, array $part): string {
-                /** @var string|self $condition */
-                $condition = $part['condition'];
-
-                if ($this->isGroup($condition)) {
-                    // (...)
-                    if (\is_string($condition)) {
-                        $statement = '(' . $condition . ')';
-                    } else {
-                        $statement = '(' . $condition->sql() . ')';
-                    }
+        return (string) \array_reduce($this->parts, function ($sql, array $part) {
+            /** @var string|self $condition */
+            $condition = $part['condition'];
+            if ($this->isGroup($condition)) {
+                // (...)
+                if (\is_string($condition)) {
+                    $statement = '(' . $condition . ')';
                 } else {
-                    // foo = ?
-                    $statement = $condition;
+                    $statement = '(' . $condition->sql() . ')';
                 }
-                /** @var string $statement */
-                $statement = (string) $statement;
-                $part['type'] = (string) $part['type'];
-
-                if ($sql) {
-                    switch ($part['type']) {
-                        case 'AND':
-                        case 'OR':
-                            $statement = $part['type'] . ' ' . $statement;
-                            break;
-                        default:
-                            throw new RuntimeException(
-                                \sprintf('Invalid joiner %s', $part['type'])
-                            );
-                    }
+            } else {
+                // foo = ?
+                $statement = $condition;
+            }
+            /** @var string $statement */
+            $statement = (string) $statement;
+            $part['type'] = (string) $part['type'];
+            if ($sql) {
+                switch ($part['type']) {
+                    case 'AND':
+                    case 'OR':
+                        $statement = $part['type'] . ' ' . $statement;
+                        break;
+                    default:
+                        throw new RuntimeException(\sprintf('Invalid joiner %s', $part['type']));
                 }
-
-                return \trim($sql . ' ' . $statement);
-            },
-            ''
-        );
+            }
+            return \trim($sql . ' ' . $statement);
+        }, '');
     }
-
     /**
      * Get all of the parameters attached to this statement.
      *
      * @return array
      */
-    public function values(): array
+    public function values()
     {
-        return (array) \array_reduce(
-            $this->parts,
-            function (array $values, array $part): array {
-                if ($this->isGroup($part['condition'])) {
-                    /** @var EasyStatement $condition */
-                    $condition = $part['condition'];
-                    return \array_merge(
-                        $values,
-                        $condition->values()
-                    );
-                }
-                return \array_merge($values, $part['values']);
-            },
-            []
-        );
+        return (array) \array_reduce($this->parts, function (array $values, array $part) {
+            if ($this->isGroup($part['condition'])) {
+                /** @var EasyStatement $condition */
+                $condition = $part['condition'];
+                return \array_merge($values, $condition->values());
+            }
+            return \array_merge($values, $part['values']);
+        }, []);
     }
-
     /**
      * Convert the statement to a string.
      *
      * @return string
      */
-    public function __toString(): string
+    public function __toString()
     {
         return $this->sql();
     }
-
     /**
      * Don't instantiate directly. Instead, use open() (static method).
      *
@@ -347,7 +333,6 @@ class EasyStatement
     {
         $this->parent = $parent;
     }
-
     /**
      * Check if a condition is a sub-group.
      *
@@ -355,15 +340,13 @@ class EasyStatement
      *
      * @return bool
      */
-    protected function isGroup($condition): bool
+    protected function isGroup($condition)
     {
         if (!\is_object($condition)) {
             return false;
         }
-
         return $condition instanceof EasyStatement;
     }
-
     /**
      * Replace a grouped placeholder with a list of placeholders.
      *
@@ -374,7 +357,7 @@ class EasyStatement
      *
      * @return string
      */
-    private function unpackCondition(string $condition, int $count): string
+    private function unpackCondition($condition, $count)
     {
         // Replace a grouped placeholder with an matching count of placeholders.
         $params = '?' . \str_repeat(', ?', $count - 1);

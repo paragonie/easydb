@@ -1,13 +1,10 @@
 <?php
-declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
-
 class Is1DArrayThenDeleteReadOnlyTest extends EasyDBTest
 {
-
     /**
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @depends      ParagonIE\EasyDB\Tests\Is1DArrayTest::testIs1DArray
@@ -19,7 +16,6 @@ class Is1DArrayThenDeleteReadOnlyTest extends EasyDBTest
         $this->expectException(InvalidArgumentException::class);
         $db->delete('irrelevant_but_valid_tablename', [[1]]);
     }
-
     /**
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
@@ -30,7 +26,6 @@ class Is1DArrayThenDeleteReadOnlyTest extends EasyDBTest
         $this->expectException(InvalidArgumentException::class);
         $db->delete('', ['foo' => 'bar']);
     }
-
     /**
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
@@ -41,7 +36,6 @@ class Is1DArrayThenDeleteReadOnlyTest extends EasyDBTest
         $this->expectException(InvalidArgumentException::class);
         $db->delete('1foo', ['foo' => 'bar']);
     }
-
     /**
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
@@ -49,9 +43,6 @@ class Is1DArrayThenDeleteReadOnlyTest extends EasyDBTest
     public function testDeleteConditionsReturnsNull(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
-        $this->assertEquals(
-            $db->delete('irrelevant_but_valid_tablename', []),
-            null
-        );
+        $this->assertEquals($db->delete('irrelevant_but_valid_tablename', []), null);
     }
 }

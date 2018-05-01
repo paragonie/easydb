@@ -1,4 +1,5 @@
 <?php
+
 namespace ParagonIE\EasyDB\Exception;
 
 /**
