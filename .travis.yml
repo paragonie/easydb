@@ -18,7 +18,6 @@ install:
 script:
     - ./vendor/bin/phpcs --standard=psr2 src/
     - ./vendor/bin/phpunit --coverage-text
-    - ./vendor/bin/psalm
 cache:
     directories:
         - vendor
