@@ -1,3 +1,8 @@
+# Version 2.6.1
+
+* [#77](https://github.com/paragonie/easydb/pull/77): Detect when the
+  driver is missing and throw a distinct error message to aid in debugging.
+
 # Version 2.6.0
 
 * [#69](https://github.com/paragonie/easydb/pull/69): Fixed an error when using EasyDB
