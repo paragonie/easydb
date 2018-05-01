@@ -13,9 +13,6 @@ matrix:
     allow_failures:
         - php: hhvm
         - php: nightly
-os:
-    - windows
-    - linux
 install:
     - travis_retry composer install --no-interaction
 script:
