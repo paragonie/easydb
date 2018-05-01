@@ -1,6 +1,4 @@
+/.idea
 /vendor/
 /composer.lock
-/tests/phpunit.phar
-/tests/phpunit.phar.asc
 /.editorconfig
-/phpunit.xml
