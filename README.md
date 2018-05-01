@@ -6,6 +6,8 @@
 [![License](https://poser.pugx.org/paragonie/easydb/license)](https://packagist.org/packages/paragonie/easydb)
 [![Downloads](https://img.shields.io/packagist/dt/paragonie/easydb.svg)](https://packagist.org/packages/paragonie/easydb)
 
+> **This is the legacy branch (v1). Only the v2 branch is supported.**
+
 PDO lacks brevity and simplicity; EasyDB makes separating data from instructions
 easy (and aesthetically pleasing).
 
