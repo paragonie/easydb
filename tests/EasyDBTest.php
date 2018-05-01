@@ -11,6 +11,18 @@ use PHPUnit_Framework_TestCase;
  */
 abstract class EasyDBTest extends PHPUnit_Framework_TestCase
 {
+
+    /**
+     * @param string $exception
+     */
+    public function expectException($exception)
+    {
+        if (PHP_VERSION_ID >= 50600) {
+            return parent::expectException($exception);
+        }
+        // NOP;
+    }
+
     /**
      * Data provider for arguments to be passed to Factory::create
      * These arguments will not result in a valid EasyDB instance
