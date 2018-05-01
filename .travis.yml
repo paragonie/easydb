@@ -16,7 +16,6 @@ matrix:
 install:
     - travis_retry composer install --no-interaction
 script:
-    - ./vendor/bin/phpcs --standard=psr2 src/
     - ./vendor/bin/phpunit --coverage-text
 cache:
     directories:

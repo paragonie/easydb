@@ -873,40 +873,6 @@ class EasyDB
         return \count($params) === \count($params, COUNT_RECURSIVE) && \count(\array_filter($params, 'is_array')) < 1;
     }
     /**
-     * Try to execute a callback within the scope of a flat transaction
-     * If already inside a transaction, does not start a new one.
-     * Callable should accept one parameter, i.e. function (EasyDB $db) {}
-     *
-     * @param callable $callback
-     *
-     * @return bool
-     *
-     * @throws Throwable
-     */
-    public function tryFlatTransaction(callable $callback)
-    {
-        $autoStartTransaction = $this->inTransaction() === false;
-        // If we're starting a transaction, we don't need to catch here
-        if ($autoStartTransaction) {
-            $this->beginTransaction();
-        }
-        try {
-            /** @psalm-suppress TooManyArguments Psalm has no way of knowing this. */
-            $callback($this);
-            // If we started the transaction, we should commit here
-            if ($autoStartTransaction) {
-                $this->commit();
-            }
-        } catch (Throwable $e) {
-            // If we started the transaction, we should cleanup here
-            if ($autoStartTransaction) {
-                $this->rollBack();
-            }
-            throw $e;
-        }
-        return true;
-    }
-    /**
      * Get the type of a variable.
      *
      * @param  mixed $v
