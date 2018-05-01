@@ -43,6 +43,7 @@
         }
     },
     "require": {
+        "php": "^7",
         "ext-pdo": "*"
     },
     "require-dev": {
