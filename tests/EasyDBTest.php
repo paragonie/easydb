@@ -20,6 +20,18 @@ abstract class EasyDBTest extends PHPUnit_Framework_TestCase
         if (PHP_VERSION_ID >= 50600) {
             return parent::expectException($exception);
         }
+        $this->markTestSkipped('PHP 5.6+ only');
+        // NOP;
+    }
+    /**
+     * @param string $exception
+     */
+    public function expectExceptionMessage($exception)
+    {
+        if (PHP_VERSION_ID >= 50600) {
+            return parent::expectExceptionMessage($exception);
+        }
+        $this->markTestSkipped('PHP 5.6+ only');
         // NOP;
     }
 
