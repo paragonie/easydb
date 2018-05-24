@@ -48,7 +48,7 @@ $db = new \PDO(
 
 $statement = $db->prepare('SELECT * FROM comments WHERE blogpostid = ? ORDER BY created ASC');
 $exec = $statement->execute([$_GET['blogpostid']]);
-$rows = $exec->fetchAll(\PDO::FETCH_ASSOC);
+$rows = $statement->fetchAll(\PDO::FETCH_ASSOC);
 foreach ($rows as $row) {
     $template_engine->render('comment', $row);
 }
