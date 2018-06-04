@@ -507,10 +507,9 @@ class EasyDB
             }
         }
 
-        $columns = \array_keys($map);
         $values = \array_values($map);
 
-        $queryString = $this->buildInsertQuery($table, $columns);
+        $queryString = $this->buildInsertQueryBoolSafe($table, $map);
 
         return (int) $this->safeQuery(
             $queryString,
@@ -688,6 +687,44 @@ class EasyDB
 
         $columns = \array_map([$this, 'escapeIdentifier'], $columns);
         $placeholders = \array_fill(0, \count($columns), '?');
+
+        return \sprintf(
+            'INSERT INTO %s (%s) VALUES (%s)',
+            $this->escapeIdentifier($table),
+            \implode(', ', $columns),
+            \implode(', ', $placeholders)
+        );
+    }
+
+    /**
+     * Get an query string for an INSERT statement.
+     *
+     * @param string $table
+     * @param array  $map
+     *
+     * @return string
+     *
+     * @throws \InvalidArgumentException
+     *   If $columns is not a one-dimensional array.
+     */
+    public function buildInsertQueryBoolSafe(string $table, array $map): string
+    {
+        $columns = [];
+        $placeholders = [];
+        foreach ($map as $key => $value) {
+            if (\is_null($value)) {
+                $placeholders[] = 'NULL';
+            } elseif (\is_bool($value)) {
+                if ($this->dbEngine === 'sqlite') {
+                    $placeholders[] = $value ? '1' : '0';
+                } else {
+                    $placeholders[] = $value ? 'TRUE' : 'FALSE';
+                }
+            } else {
+                $placeholders[] = '?';
+            }
+        }
+        $columns = \array_map([$this, 'escapeIdentifier'], $columns);
 
         return \sprintf(
             'INSERT INTO %s (%s) VALUES (%s)',
