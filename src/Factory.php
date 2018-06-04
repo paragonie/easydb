@@ -54,7 +54,7 @@ abstract class Factory
                 }
                 break;
             case 'pgsql':
-                $post_query = 'SET NAMES UNICODE';
+                $post_query = "SET NAMES 'UNICODE'";
                 break;
         }
 
