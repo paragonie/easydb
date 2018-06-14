@@ -76,6 +76,11 @@ class InsertTest extends EasyDBWriteTest
             $db->single('SELECT COUNT(foo) FROM irrelevant_but_valid_tablename WHERE foo = ?', [1]),
             '1'
         );
+        $db->insert('table_with_bool', ['foo' => 'test', 'bar' => true]);
+        $this->assertEquals(
+            $db->single('SELECT COUNT(foo) FROM table_with_bool WHERE bar = ?', [1]),
+            '1'
+        );
     }
 
     /**

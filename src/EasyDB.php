@@ -507,13 +507,15 @@ class EasyDB
             }
         }
 
-        $columns = \array_keys($map);
-        $values = \array_values($map);
-
-        $queryString = $this->buildInsertQuery($table, $columns);
+        list($queryString, $values) = $this->buildInsertQueryBoolSafe(
+            $table,
+            $map
+        );
+        /** @var string $queryString */
+        /** @var array $values */
 
         return (int) $this->safeQuery(
-            $queryString,
+            (string) $queryString,
             $values,
             \PDO::FETCH_BOTH,
             true
@@ -695,6 +697,56 @@ class EasyDB
             \implode(', ', $columns),
             \implode(', ', $placeholders)
         );
+    }
+
+    /**
+     * Get an query string for an INSERT statement.
+     *
+     * @param string $table
+     * @param array  $map
+     *
+     * @return array {0: string, 1: array}
+     *
+     * @throws \InvalidArgumentException
+     *   If $columns is not a one-dimensional array.
+     */
+    public function buildInsertQueryBoolSafe(string $table, array $map): array
+    {
+        /** @var array<int, string> $columns */
+        $columns = [];
+        /** @var array<int, string> $placeholders */
+        $placeholders = [];
+        /** @var array $values */
+        $values = [];
+        /**
+         * @var string $key
+         * @var string|bool|null $value
+         */
+        foreach ($map as $key => $value) {
+            $columns[] = $key;
+            if (\is_null($value)) {
+                $placeholders[] = 'NULL';
+            } elseif (\is_bool($value)) {
+                if ($this->dbEngine === 'sqlite') {
+                    $placeholders[] = $value ? "'1'" : "'0'";
+                } else {
+                    $placeholders[] = $value ? 'TRUE' : 'FALSE';
+                }
+            } else {
+                $placeholders[] = '?';
+                $values[] = $value;
+            }
+        }
+        $columns = \array_map([$this, 'escapeIdentifier'], $columns);
+
+        /** @var string $query */
+        $query = \sprintf(
+            'INSERT INTO %s (%s) VALUES (%s)',
+            $this->escapeIdentifier($table),
+            \implode(', ', $columns),
+            \implode(', ', $placeholders)
+        );
+        return array($query, $values);
     }
 
     /**
