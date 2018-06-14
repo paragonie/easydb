@@ -604,7 +604,7 @@ class EasyDB
      * @throws \InvalidArgumentException
      *   If $columns is not a one-dimensional array.
      */
-    public function buildInsertQueryBoolSafe($table, array $map): array
+    public function buildInsertQueryBoolSafe($table, array $map)
     {
         /** @var array<int, string> $columns */
         $columns = [];
