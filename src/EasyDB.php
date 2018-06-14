@@ -514,7 +514,7 @@ class EasyDB
         /** @var string $queryString */
         /** @var array $values */
 
-        return (int)$this->safeQuery(
+        return (int) $this->safeQuery(
             (string) $queryString,
             $values,
             \PDO::FETCH_BOTH,
