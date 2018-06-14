@@ -3,7 +3,7 @@
     name="EasyDB static analysis tests."
     stopOnFirstError="false"
     useDocblockTypes="true"
-    totallyTyped="true"
+    totallyTyped="false"
 >
     <projectFiles>
         <directory name="src" />

@@ -187,17 +187,23 @@ class EasyStatement
      */
     public function orIn($condition, array $values)
     {
+        /** @var array<int, mixed> $arguments */
         $arguments = \func_get_args();
+        /** @var string $condition */
         $condition = \array_shift($arguments);
+        /** @var array<int, mixed> $values */
         $values = \array_shift($arguments);
 
         $unpacked = $this->unpackCondition($condition, \count($values));
         \array_unshift($values, $unpacked);
+        /** @var array<int, mixed> $values */
 
-        return \call_user_func_array(
+        /** @var EasyStatement $result */
+        $result = \call_user_func_array(
             [$this, 'orWith'],
             $values
         );
+        return $result;
     }
     /**
      * Alias for andGroup().
@@ -268,7 +274,13 @@ class EasyStatement
         if (empty($this->parts)) {
             return '1';
         }
-        return (string) \array_reduce($this->parts, function ($sql, array $part) {
+        return (string) \array_reduce($this->parts,
+            /**
+             * @param string $sql
+             * @param array $parts
+             * @return string
+             */
+            function ($sql, array $part) {
             /** @var string|self $condition */
             $condition = $part['condition'];
             if ($this->isGroup($condition)) {
@@ -305,14 +317,21 @@ class EasyStatement
      */
     public function values()
     {
-        return (array) \array_reduce($this->parts, function (array $values, array $part) {
-            if ($this->isGroup($part['condition'])) {
-                /** @var EasyStatement $condition */
-                $condition = $part['condition'];
-                return \array_merge($values, $condition->values());
-            }
-            return \array_merge($values, $part['values']);
-        }, []);
+        return (array) \array_reduce(
+            $this->parts,
+            /**
+             * @return array
+             */
+            function (array $values, array $part) {
+                if ($this->isGroup($part['condition'])) {
+                    /** @var EasyStatement $condition */
+                    $condition = $part['condition'];
+                    return \array_merge($values, $condition->values());
+                }
+                return \array_merge($values, $part['values']);
+            },
+            []
+        );
     }
     /**
      * Convert the statement to a string.

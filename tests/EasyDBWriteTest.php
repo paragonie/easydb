@@ -26,7 +26,13 @@ abstract class EasyDBWriteTest extends EasyDBTest
             return [function () use($dsn, $username, $password, $options) {
                 $factory = Factory::create($dsn, $username, $password, $options);
                 try {
-                    $factory->run('CREATE TABLE irrelevant_but_valid_tablename (foo char(36) PRIMARY KEY)');
+                    $factory->run(
+                        'CREATE TABLE irrelevant_but_valid_tablename (foo char(36) PRIMARY KEY)'
+                    );
+                    $factory->run(
+                        'CREATE TABLE table_with_bool (foo char(36) PRIMARY KEY, bar BOOLEAN)'
+                    );
+
                 } catch (Exception $e) {
                     $this->markTestSkipped($e->getMessage());
                     return null;

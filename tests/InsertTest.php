@@ -65,6 +65,11 @@ class InsertTest extends EasyDBWriteTest
         $db = $this->easyDBExpectedFromCallable($cb);
         $db->insert('irrelevant_but_valid_tablename', ['foo' => 1]);
         $this->assertEquals($db->single('SELECT COUNT(foo) FROM irrelevant_but_valid_tablename WHERE foo = ?', [1]), '1');
+        $db->insert('table_with_bool', ['foo' => 'test', 'bar' => true]);
+        $this->assertEquals(
+            $db->single('SELECT COUNT(foo) FROM table_with_bool WHERE bar'),
+            '1'
+        );
     }
     /**
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
