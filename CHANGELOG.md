@@ -1,3 +1,7 @@
+# Version 2.6.2
+
+* Fix errors when inserting booleans.
+
 # Version 2.6.1
 
 * [#77](https://github.com/paragonie/easydb/pull/77): Detect when the
