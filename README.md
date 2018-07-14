@@ -143,21 +143,21 @@ $exists = $db->cell(
 );
 /* OR YOU CAN CALL IT THIS WAY: */
 $exists = $db->single(
-    "SELECT count(id) FROM users WHERE email = ?", 
+    "SELECT count(id) FROM users WHERE email = ?",
     array(
-        $_POST['email'] 
+        $_POST['email']
     )
 );
 ```
 
 ### Try to perform a transaction
 ```php
-$save = function (EasyDB $db) use ($userData, $query) {
+$save = function (EasyDB $db) use ($userData, $query) : int {
     $db->safeQuery($query, [$userData['userId']]);
-    \Some\Other\Package::CleanUpTable($db);
+    return \Some\Other\Package::CleanUpTable($db);
 };
 // auto starts, commits and rolls back a transaction as necessary
-$db->tryFlatTransaction($save);
+$returnedInt = $db->tryFlatTransaction($save);
 ```
 
 ### Generate dynamic query conditions
