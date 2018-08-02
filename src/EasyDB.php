@@ -72,7 +72,7 @@ class EasyDB
      * @return mixed
      */
     public function col(string $statement, int $offset = 0, ...$params)
-    {
+    {   
         return $this->column($statement, $params, $offset);
     }
 
@@ -86,7 +86,14 @@ class EasyDB
      * @return mixed
      */
     public function column(string $statement, array $params = [], int $offset = 0)
-    {
+    {   
+        if(isset($this->options['TABLE_PREFIX']))
+        {
+            $statement = str_replace('tbl_', 
+                $this->options['TABLE_PREFIX'], 
+                $statement
+            );
+        }
         $stmt = $this->pdo->prepare($statement);
         if (!$this->is1DArray($params)) {
             throw new \InvalidArgumentException(
@@ -126,6 +133,13 @@ class EasyDB
      */
     public function delete(string $table, $conditions): int
     {
+        if(isset($this->options['TABLE_PREFIX']))
+        {
+            $table = str_replace('tbl_', 
+                $this->options['TABLE_PREFIX'], 
+                $table
+            );
+        }
         if ($conditions instanceof EasyStatement) {
             return $this->deleteWhereStatement($table, $conditions);
         } elseif (\is_array($conditions)) {
@@ -261,6 +275,13 @@ class EasyDB
      */
     public function escapeIdentifier(string $string, bool $quote = true): string
     {
+        if(isset($this->options['TABLE_PREFIX']))
+        {
+            $table = str_replace('tbl_', 
+                $this->options['TABLE_PREFIX'], 
+                $string
+            );
+        }
         if (empty($string)) {
             throw new Issues\InvalidIdentifier(
                 'Invalid identifier: Must be a non-empty string.'
@@ -424,7 +445,14 @@ class EasyDB
      * @return string
      */
     public function escapeLikeValue(string $value): string
-    {
+    {   
+        if(isset($this->options['TABLE_PREFIX']))
+        {
+            $table = str_replace('tbl_', 
+                $this->options['TABLE_PREFIX'], 
+                $value
+            );
+        }
         // Backslash is used to escape wildcards.
         $value = str_replace('\\', '\\\\', $value);
         // Standard wildcards are underscore and percent sign.
@@ -829,7 +857,13 @@ class EasyDB
                 $fetchStyle = \PDO::FETCH_ASSOC;
             }
         }
-
+        if(isset($this->options['TABLE_PREFIX']))
+        {
+            $statement = str_replace('tbl_', 
+                $this->options['TABLE_PREFIX'], 
+                $statement
+            );
+        }
         if (empty($params)) {
             $stmt = $this->pdo->query($statement);
             if ($returnNumAffected) {
@@ -864,6 +898,13 @@ class EasyDB
         if (!$this->is1DArray($params)) {
             throw new \InvalidArgumentException(
                 'Only one-dimensional arrays are allowed.'
+            );
+        }
+        if(isset($this->options['TABLE_PREFIX']))
+        {
+            $statement = str_replace('tbl_', 
+                $this->options['TABLE_PREFIX'], 
+                $statement
             );
         }
         $stmt = $this->pdo->prepare($statement);
