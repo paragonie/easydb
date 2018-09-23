@@ -1,3 +1,10 @@
+# Version 2.7.0
+
+* Changed the behavior of several public APIs to invoke
+  `$this->prepare()` instead of `$this->pdo->prepare()`.
+  This might seem subtle, but in actuality, it allows classes
+  that extend `EasyDB` to implement prepared statement caching.
+
 # Version 2.6.2
 
 * Fix errors when inserting booleans.
