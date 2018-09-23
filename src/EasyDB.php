@@ -1213,7 +1213,7 @@ class EasyDB
     /**
      * Execute an SQL statement and return the number of affected rows
      *
-     * @param  mixed ...$args
+     * @param  string ...$args
      * @return int
      */
     public function exec(...$args): int
@@ -1224,7 +1224,7 @@ class EasyDB
     /**
      * Retrieve a database connection attribute
      *
-     * @param  mixed ...$args
+     * @param  int ...$args
      * @return mixed
      */
     public function getAttribute(...$args)
@@ -1255,7 +1255,7 @@ class EasyDB
     /**
      * Returns the ID of the last inserted row or sequence value
      *
-     * @param  mixed ...$args
+     * @param  string ...$args
      * @return string
      */
     public function lastInsertId(...$args): string
@@ -1266,7 +1266,7 @@ class EasyDB
     /**
      * Prepares a statement for execution and returns a statement object
      *
-     * @param  mixed ...$args
+     * @param  string ...$args
      * @return \PDOStatement
      */
     public function prepare(...$args): \PDOStatement
@@ -1277,7 +1277,7 @@ class EasyDB
     /**
      * Executes an SQL statement, returning a result set as a PDOStatement object
      *
-     * @param  mixed ...$args
+     * @param  string ...$args
      * @return \PDOStatement
      */
     public function query(...$args): \PDOStatement
@@ -1288,7 +1288,7 @@ class EasyDB
     /**
      * Quotes a string for use in a query
      *
-     * @param  mixed ...$args
+     * @param  string ...$args
      * @return string
      */
     public function quote(...$args): string
