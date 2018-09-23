@@ -1069,11 +1069,11 @@ class EasyDB
      *
      * @param callable $callback
      *
-     * @return bool
+     * @return mixed
      *
      * @throws Throwable
      */
-    public function tryFlatTransaction(callable $callback): bool
+    public function tryFlatTransaction(callable $callback)
     {
         $autoStartTransaction = $this->inTransaction() === false;
 
@@ -1082,12 +1082,16 @@ class EasyDB
             $this->beginTransaction();
         }
         try {
-            /** @psalm-suppress TooManyArguments Psalm has no way of knowing this. */
-            $callback($this);
+            /**
+            * @var scalar|null|array|object|resource $out
+            */
+            $out = $callback($this);
             // If we started the transaction, we should commit here
             if ($autoStartTransaction) {
                 $this->commit();
             }
+
+            return $out;
         } catch (Throwable $e) {
             // If we started the transaction, we should cleanup here
             if ($autoStartTransaction) {
@@ -1096,8 +1100,6 @@ class EasyDB
 
             throw $e;
         }
-
-        return true;
     }
 
     /**

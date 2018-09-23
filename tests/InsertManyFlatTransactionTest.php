@@ -18,6 +18,9 @@ class InsertManyFlatTransactionTest extends
     {
         $db = $this->EasyDBExpectedFromCallable($cb);
         $db->insertMany('irrelevant_but_valid_tablename', [['foo' => '1'], ['foo' => '2']]);
+        $expectedCount = $db->tryFlatTransaction(function (EasyDB $db) : int {
+            return (int) $db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename');
+        });
         $callbackWillThrow = function (EasyDB $mightNotBeTheOtherDb) {
             $mightNotBeTheOtherDb->insertMany('irrelevant_but_valid_tablename', [['foo' => '3'], ['foo' => '4']]);
 
@@ -31,7 +34,7 @@ class InsertManyFlatTransactionTest extends
             // we do nothing here on purpose
         }
         $this->assertEquals(
-            $db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename'),
+            $expectedCount,
             2
         );
     }
