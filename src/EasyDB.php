@@ -87,7 +87,7 @@ class EasyDB
      */
     public function column(string $statement, array $params = [], int $offset = 0)
     {
-        $stmt = $this->pdo->prepare($statement);
+        $stmt = $this->prepare($statement);
         if (!$this->is1DArray($params)) {
             throw new \InvalidArgumentException(
                 'Only one-dimensional arrays are allowed.'
@@ -626,7 +626,7 @@ class EasyDB
         $queryString = $this->buildInsertQuery($table, \array_keys($first));
 
         // Now let's run a query with the parameters
-        $stmt = $this->pdo->prepare($queryString);
+        $stmt = $this->prepare($queryString);
         $count = 0;
         /**
          * @var array $params
@@ -842,7 +842,7 @@ class EasyDB
                 'Only one-dimensional arrays are allowed.'
             );
         }
-        $stmt = $this->pdo->prepare($statement);
+        $stmt = $this->prepare($statement);
         $stmt->execute($params);
         if ($returnNumAffected) {
             return (int) $stmt->rowCount();
@@ -866,7 +866,7 @@ class EasyDB
                 'Only one-dimensional arrays are allowed.'
             );
         }
-        $stmt = $this->pdo->prepare($statement);
+        $stmt = $this->prepare($statement);
         $stmt->execute($params);
         return $stmt->fetchColumn(0);
     }
