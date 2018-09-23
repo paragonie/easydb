@@ -18,6 +18,10 @@ If you're looking for a full-fledged query builder, check out
 [Latitude](https://github.com/shadowhand/latitude) and [Aura.SqlQuery](https://github.com/auraphp/Aura.SqlQuery),
 which can be used with EasyDB.
 
+If you'd like to use EasyDB but cache prepared statements in memory for
+multiple queries (i.e. to reduce database round-trips), check out our
+[EasyDB-Cache](https://github.com/paragonie/easydb-cache) wrapper class.
+
 ## Installing EasyDB
 
 First, [get Composer](https://getcomposer.org/download/), if you don't already use it.
