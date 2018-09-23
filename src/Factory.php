@@ -66,6 +66,13 @@ abstract class Factory
                     'Could not create a PDO connection. Is the driver installed/enabled?'
                 );
             }
+            
+            if (\strpos((string) $e->getMessage(), 'unknown database') !== false) {
+                throw new Issues\ConstructorFailed(
+                    'Could not create a PDO connection. Check that your database exists.'
+                );
+            }
+            
             // Don't leak credentials directly if we can.
             throw new Issues\ConstructorFailed(
                 'Could not create a PDO connection. Please check your username and password.'
