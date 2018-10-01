@@ -1,11 +1,10 @@
 <?xml version="1.0"?>
 <psalm
-    name="EasyDB static analysis tests."
-    stopOnFirstError="false"
-    useDocblockTypes="true"
-    totallyTyped="false"
+name="EasyDB static analysis tests."
+useDocblockTypes="true"
+totallyTyped="false"
 >
-    <projectFiles>
-        <directory name="src" />
-    </projectFiles>
+<projectFiles>
+    <directory name="src" />
+</projectFiles>
 </psalm>
