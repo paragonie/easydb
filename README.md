@@ -242,3 +242,42 @@ $easy = new \ParagonIE\EasyDB\EasyDB($pdo, 'mysql');
 ```sh
 vendor/bin/phpunit
 ```
+
+## Troubleshooting Common Issues
+
+### Only one-dimensional arrays are allowed
+
+This comes up a lot when trying to pass an array of parameters to `run()`.
+
+`EasyDB::run()` expects a query string, then any number of optional parameters.
+It does **NOT** expect an array of all the parameters.
+
+If you want to use an API that looks like `$obj->method($string, $array)`,
+use `safeQuery()` instead of `run()`.
+
+```diff
+<?php
+/**
+ * @var EasyDB $db
+ * @var string $query
+ * @var array $params 
+ */
+- $rows = $db->run($query, $params);
++ $rows = $db->safeQuery($query, $params);
+```
+
+Alternatively, you can flatten your array with the [splat operator](https://secure.php.net/manual/en/migration56.new-features.php#migration56.new-features.splat):
+
+```diff
+<?php
+/**
+ * @var EasyDB $db
+ * @var string $query
+ * @var array $params 
+ */
+- $rows = $db->run($query, $params);
++ $rows = $db->run($query, ...$params);
+```
+
+EasyDB's `run()` method is a variadic wrapper for `safeQuery()`, so either
+solution is correct.
