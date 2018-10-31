@@ -762,7 +762,13 @@ class EasyDB
         /**
          * @var array $result
          */
-        $result = (array) $this->safeQuery($statement, $params);
+        $result = (array) $this->safeQuery(
+            $statement,
+            $params,
+            self::DEFAULT_FETCH_STYLE,
+            false,
+            true
+        );
         return $result;
     }
 
@@ -779,7 +785,13 @@ class EasyDB
         /**
          * @var array|int $result
          */
-        $result = (array) $this->safeQuery($statement, $params);
+        $result = (array) $this->safeQuery(
+            $statement,
+            $params,
+            self::DEFAULT_FETCH_STYLE,
+            false,
+            true
+        );
         if (\is_array($result)) {
             return \array_shift($result);
         }
@@ -796,7 +808,7 @@ class EasyDB
      */
     public function run(string $statement, ...$params)
     {
-        return $this->safeQuery($statement, $params);
+        return $this->safeQuery($statement, $params, self::DEFAULT_FETCH_STYLE, false, true);
     }
 
     /**
@@ -808,6 +820,7 @@ class EasyDB
      *                                   statements)
      * @param  int    $fetchStyle        PDO::FETCH_STYLE
      * @param  bool   $returnNumAffected Return the number of rows affected?
+     * @param  bool   $calledWithVariadicParams Indicates method is being invoked from variadic $params method
      * @return array|int|object
      * @throws \InvalidArgumentException
      * @throws Issues\QueryError
@@ -817,7 +830,8 @@ class EasyDB
         string $statement,
         array $params = [],
         int $fetchStyle = self::DEFAULT_FETCH_STYLE,
-        bool $returnNumAffected = false
+        bool $returnNumAffected = false,
+        bool $calledWithVariadicParams = false
     ) {
         if ($fetchStyle === self::DEFAULT_FETCH_STYLE) {
             if (isset($this->options[\PDO::ATTR_DEFAULT_FETCH_MODE])) {
@@ -838,6 +852,14 @@ class EasyDB
             return $this->getResultsStrictTyped($stmt, $fetchStyle);
         }
         if (!$this->is1DArray($params)) {
+            if ($calledWithVariadicParams) {
+                throw new \InvalidArgumentException(
+                    'Only one-dimensional arrays are allowed, please use ' .
+                    __METHOD__ .
+                    '()'
+                );
+            }
+
             throw new \InvalidArgumentException(
                 'Only one-dimensional arrays are allowed.'
             );
