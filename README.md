@@ -91,6 +91,19 @@ $db->insert('comments', [
 ]);
 ```
 
+This is equivalent to the following SQL query (assuming `$_POST['blogpostid']`
+is equal to `123`, `$_SESSION['user']` is equal to `234`, `$_POST['body']` is
+equal to `test`, and `$_POST['replyTo']` is equal to `3456`):
+
+```sql
+INSERT INTO comments (blogpostid, userid, comment, parent) VALUES (
+    123,
+    234,
+    'test',
+    3456
+);
+```
+
 #### Build an insert without executing
 
 ```php
@@ -114,10 +127,24 @@ $result = $db->q(
 
 ```php
 $db->update('comments', [
+    'column' => 'foo',
+    'otherColumn' => 123456,
     'approved' => true
 ], [
     'commentid' => $_POST['comment']
 ]);
+```
+
+This is equivalent to the following SQL query
+(assuming `$_POST['comment']` is equal to `789`):
+
+```sql
+UPDATE comments
+SET 
+  column = 'foo',
+  otherColumn = 123456,
+  approved = TRUE
+WHERE commentid = 789
 ```
 
 ### Delete a row from a database table
@@ -127,6 +154,12 @@ $db->update('comments', [
 $db->delete('comments', [
     'userid' => 3
 ]);
+```
+
+This is equivalent to the following SQL query:
+
+```sql
+DELETE FROM comments WHERE userid = 3
 ```
 
 ### Fetch a single row from a table
