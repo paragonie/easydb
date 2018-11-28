@@ -138,6 +138,26 @@ $userData = $db->row(
 );
 ```
 
+Note: This expects a variadic list of arguments, not an array. If you have
+multiple parameters, stack them like this:
+
+```php
+$userData = $db->row(
+    "SELECT * FROM users WHERE userid = ? AND other = ?",
+    $_GET['userid'],
+    $_GET['other']
+);
+```
+
+This is **wrong**:
+
+```php
+$userData = $db->row(
+    "SELECT * FROM users WHERE userid = ? AND other = ?",
+    array($userid, $other) // WRONG, should not be in an array
+);
+```
+
 ### Fetch a single column from a single row from a table
 
 ```php
@@ -145,6 +165,7 @@ $exists = $db->cell(
     "SELECT count(id) FROM users WHERE email = ?",
     $_POST['email']
 );
+
 /* OR YOU CAN CALL IT THIS WAY: */
 $exists = $db->single(
     "SELECT count(id) FROM users WHERE email = ?",
@@ -153,6 +174,29 @@ $exists = $db->single(
     )
 );
 ```
+
+Note: `cell()` expects a variadic list of arguments, not an array. If you have
+multiple parameters, stack them like this:
+
+```php
+$exists = $db->cell(
+    "SELECT count(id) FROM users WHERE email = ? AND username = ?",
+    $_POST['email'],
+    $_POST['usenrame']
+);
+```
+
+This is **wrong**:
+
+```php
+$exists = $db->cell(
+    "SELECT count(id) FROM users WHERE email = ? AND username = ?",
+    array($email, $username) // WRONG, should not be in an array
+);
+```
+
+Alternatively, you can use `single()` instead of `cell()` if you really 
+want to pass an array.
 
 ### Try to perform a transaction
 ```php
