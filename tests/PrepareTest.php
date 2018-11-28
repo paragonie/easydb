@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
+use ParagonIE\EasyDB\Exception\QueryError;
 use PDOStatement;
 
 /**
@@ -52,6 +53,12 @@ class PrepareTest extends EasyDBWriteTest
             $queryString .= ");";
 
             $this->assertInstanceOf(PDOStatement::class, $db->prepare($queryString));
+        }
+
+        try {
+            $db->prepare("\n");
+            $this->fail("EasyDB::prepare() should be failing on empty queries.");
+        } catch (QueryError $ex) {
         }
     }
 }
