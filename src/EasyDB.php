@@ -1292,9 +1292,16 @@ class EasyDB
      *
      * @param  string ...$args
      * @return \PDOStatement
+     * @throws Issues\QueryError
      */
     public function prepare(...$args): \PDOStatement
     {
+        $trimmed = trim($args[0]);
+        if (empty($trimmed)) {
+            throw new Issues\QueryError(
+                "Empty query passed to prepare()"
+            );
+        }
         return $this->pdo->prepare(...$args);
     }
 
