@@ -89,7 +89,7 @@ class EasyDB
     {
         $stmt = $this->prepare($statement);
         if (!$this->is1DArray($params)) {
-            throw new \InvalidArgumentException(
+            throw new Issues\MustBeOneDimensionalArray(
                 'Only one-dimensional arrays are allowed.'
             );
         }
@@ -131,7 +131,7 @@ class EasyDB
         } elseif (\is_array($conditions)) {
             return $this->deleteWhereArray($table, $conditions);
         } else {
-            throw new \TypeError('Conditions must be an array or EasyStatement');
+            throw new Issues\MustBeArrayOrEasyStatement('Conditions must be an array or EasyStatement');
         }
     }
 
@@ -149,7 +149,7 @@ class EasyDB
     protected function deleteWhereArray(string $table, array $conditions): int
     {
         if (empty($table)) {
-            throw new \InvalidArgumentException(
+            throw new Issues\InvalidTableName(
                 'Table name must be a non-empty string.'
             );
         }
@@ -158,7 +158,7 @@ class EasyDB
             return 0;
         }
         if (!$this->is1DArray($conditions)) {
-            throw new \InvalidArgumentException(
+            throw new Issues\MustBeOneDimensionalArray(
                 'Only one-dimensional arrays are allowed.'
             );
         }
@@ -218,7 +218,7 @@ class EasyDB
     protected function deleteWhereStatement(string $table, EasyStatement $conditions): int
     {
         if (empty($table)) {
-            throw new \InvalidArgumentException(
+            throw new Issues\InvalidTableName(
                 'Table name must be a non-empty string.'
             );
         }
@@ -275,6 +275,8 @@ class EasyDB
                 $patternWithSep = '/[^\.0-9a-zA-Z_]/';
                 $patternWithoutSep = '/[^0-9a-zA-Z_]/';
         }
+
+        // This behavior depends on whether or not separators are allowed.
         if ($this->allowSeparators) {
             $str = \preg_replace($patternWithSep, '', $string);
             if (\strpos($str, '.') !== false) {
@@ -339,7 +341,7 @@ class EasyDB
         }
         // No arrays of arrays, please
         if (!$this->is1DArray($values)) {
-            throw new \InvalidArgumentException(
+            throw new Issues\MustBeOneDimensionalArray(
                 'Only one-dimensional arrays are allowed.'
             );
         }
@@ -501,7 +503,7 @@ class EasyDB
     {
         if (!empty($map)) {
             if (!$this->is1DArray($map)) {
-                throw new \InvalidArgumentException(
+                throw new Issues\MustBeOneDimensionalArray(
                     'Only one-dimensional arrays are allowed.'
                 );
             }
@@ -617,7 +619,7 @@ class EasyDB
          */
         foreach ($maps as $map) {
             if (!$this->is1DArray($map)) {
-                throw new \InvalidArgumentException(
+                throw new Issues\MustBeOneDimensionalArray(
                     'Every map in the second argument should have the same number of columns.'
                 );
             }
@@ -682,7 +684,7 @@ class EasyDB
     {
         if (!empty($columns)) {
             if (!$this->is1DArray($columns)) {
-                throw new \InvalidArgumentException(
+                throw new Issues\MustBeOneDimensionalArray(
                     'Only one-dimensional arrays are allowed.'
                 );
             }
@@ -853,14 +855,14 @@ class EasyDB
         }
         if (!$this->is1DArray($params)) {
             if ($calledWithVariadicParams) {
-                throw new \InvalidArgumentException(
+                throw new Issues\MustBeOneDimensionalArray(
                     'Only one-dimensional arrays are allowed, please use ' .
                     __METHOD__ .
                     '()'
                 );
             }
 
-            throw new \InvalidArgumentException(
+            throw new Issues\MustBeOneDimensionalArray(
                 'Only one-dimensional arrays are allowed.'
             );
         }
@@ -884,7 +886,7 @@ class EasyDB
     public function single(string $statement, array $params = [])
     {
         if (!$this->is1DArray($params)) {
-            throw new \InvalidArgumentException(
+            throw new Issues\MustBeOneDimensionalArray(
                 'Only one-dimensional arrays are allowed.'
             );
         }
@@ -908,12 +910,17 @@ class EasyDB
      */
     public function update(string $table, array $changes, $conditions): int
     {
+        if (empty($table)) {
+            throw new Issues\InvalidTableName(
+                'Table name must be a non-empty string.'
+            );
+        }
         if ($conditions instanceof EasyStatement) {
             return $this->updateWhereStatement($table, $changes, $conditions);
         } elseif (\is_array($conditions)) {
             return $this->updateWhereArray($table, $changes, $conditions);
         } else {
-            throw new \TypeError('Conditions must be an array or instance of EasyStatement');
+            throw new Issues\MustBeArrayOrEasyStatement('Conditions must be an array or instance of EasyStatement');
         }
     }
 
@@ -938,7 +945,7 @@ class EasyDB
             return 0;
         }
         if (!$this->is1DArray($changes) || !$this->is1DArray($conditions)) {
-            throw new \InvalidArgumentException(
+            throw new Issues\MustBeOneDimensionalArray(
                 'Only one-dimensional arrays are allowed.'
             );
         }
@@ -1016,8 +1023,11 @@ class EasyDB
      * @psalm-suppress MixedArgument
      * @throws         \TypeError
      */
-    protected function updateWhereStatement(string $table, array $changes, EasyStatement $conditions): int
-    {
+    protected function updateWhereStatement(
+        string $table,
+        array $changes,
+        EasyStatement $conditions
+    ): int {
         if (empty($changes) || $conditions->count() < 1) {
             return 0;
         }
@@ -1105,7 +1115,7 @@ class EasyDB
         }
         try {
             /**
-            * @var scalar|null|array|object|resource $out
+            * @var string|int|bool|float|null|array|object|resource $out
             */
             $out = $callback($this);
             // If we started the transaction, we should commit here

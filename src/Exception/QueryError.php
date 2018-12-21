@@ -1,6 +1,8 @@
 <?php
 namespace ParagonIE\EasyDB\Exception;
 
+use ParagonIE\Corner\CornerTrait;
+
 /**
  * QueryError.
  *
@@ -8,4 +10,5 @@ namespace ParagonIE\EasyDB\Exception;
  */
 class QueryError extends \RuntimeException implements ExceptionInterface
 {
+    use CornerTrait;
 }
