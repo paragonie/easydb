@@ -149,7 +149,7 @@ class EasyDB
     protected function deleteWhereArray(string $table, array $conditions): int
     {
         if (empty($table)) {
-            throw new \InvalidArgumentException(
+            throw new Issues\InvalidTableName(
                 'Table name must be a non-empty string.'
             );
         }
@@ -218,7 +218,7 @@ class EasyDB
     protected function deleteWhereStatement(string $table, EasyStatement $conditions): int
     {
         if (empty($table)) {
-            throw new \InvalidArgumentException(
+            throw new Issues\InvalidTableName(
                 'Table name must be a non-empty string.'
             );
         }
@@ -275,6 +275,8 @@ class EasyDB
                 $patternWithSep = '/[^\.0-9a-zA-Z_]/';
                 $patternWithoutSep = '/[^0-9a-zA-Z_]/';
         }
+
+        // This behavior depends on whether or not separators are allowed.
         if ($this->allowSeparators) {
             $str = \preg_replace($patternWithSep, '', $string);
             if (\strpos($str, '.') !== false) {
@@ -908,6 +910,11 @@ class EasyDB
      */
     public function update(string $table, array $changes, $conditions): int
     {
+        if (empty($table)) {
+            throw new Issues\InvalidTableName(
+                'Table name must be a non-empty string.'
+            );
+        }
         if ($conditions instanceof EasyStatement) {
             return $this->updateWhereStatement($table, $changes, $conditions);
         } elseif (\is_array($conditions)) {
@@ -1016,8 +1023,11 @@ class EasyDB
      * @psalm-suppress MixedArgument
      * @throws         \TypeError
      */
-    protected function updateWhereStatement(string $table, array $changes, EasyStatement $conditions): int
-    {
+    protected function updateWhereStatement(
+        string $table,
+        array $changes,
+        EasyStatement $conditions
+    ): int {
         if (empty($changes) || $conditions->count() < 1) {
             return 0;
         }
@@ -1105,7 +1115,7 @@ class EasyDB
         }
         try {
             /**
-            * @var scalar|null|array|object|resource $out
+            * @var string|int|bool|float|null|array|object|resource $out
             */
             $out = $callback($this);
             // If we started the transaction, we should commit here
