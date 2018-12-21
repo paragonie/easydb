@@ -300,11 +300,14 @@ class EasyDB
             }
         }
 
-        // The first character cannot be [0-9]:
-        if (\preg_match('/^[0-9]/', $str)) {
-            throw new Issues\InvalidIdentifier(
-                'Invalid identifier: Must begin with a letter or underscore.'
-            );
+        // MySQL allows weirdly wrong column names:
+        if ($this->dbEngine !== 'mysql') {
+            // The first character cannot be [0-9]:
+            if (\preg_match('/^[0-9]/', $str)) {
+                throw new Issues\InvalidIdentifier(
+                    'Invalid identifier: Must begin with a letter or underscore.'
+                );
+            }
         }
 
         if ($quote) {
