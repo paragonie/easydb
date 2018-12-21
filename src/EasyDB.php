@@ -346,7 +346,7 @@ class EasyDB
         // Build our array
         $join = [];
         /**
-         * @var string $i
+         * @var string|int $k
          * @var string|int|bool|float|null $v
          */
         foreach ($values as $k => $v) {
