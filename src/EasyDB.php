@@ -89,7 +89,7 @@ class EasyDB
     {
         $stmt = $this->prepare($statement);
         if (!$this->is1DArray($params)) {
-            throw new \InvalidArgumentException(
+            throw new Issues\MustBeOneDimensionalArray(
                 'Only one-dimensional arrays are allowed.'
             );
         }
@@ -131,7 +131,7 @@ class EasyDB
         } elseif (\is_array($conditions)) {
             return $this->deleteWhereArray($table, $conditions);
         } else {
-            throw new \TypeError('Conditions must be an array or EasyStatement');
+            throw new Issues\MustBeArrayOrEasyStatement('Conditions must be an array or EasyStatement');
         }
     }
 
@@ -158,7 +158,7 @@ class EasyDB
             return 0;
         }
         if (!$this->is1DArray($conditions)) {
-            throw new \InvalidArgumentException(
+            throw new Issues\MustBeOneDimensionalArray(
                 'Only one-dimensional arrays are allowed.'
             );
         }
@@ -339,7 +339,7 @@ class EasyDB
         }
         // No arrays of arrays, please
         if (!$this->is1DArray($values)) {
-            throw new \InvalidArgumentException(
+            throw new Issues\MustBeOneDimensionalArray(
                 'Only one-dimensional arrays are allowed.'
             );
         }
@@ -501,7 +501,7 @@ class EasyDB
     {
         if (!empty($map)) {
             if (!$this->is1DArray($map)) {
-                throw new \InvalidArgumentException(
+                throw new Issues\MustBeOneDimensionalArray(
                     'Only one-dimensional arrays are allowed.'
                 );
             }
@@ -617,7 +617,7 @@ class EasyDB
          */
         foreach ($maps as $map) {
             if (!$this->is1DArray($map)) {
-                throw new \InvalidArgumentException(
+                throw new Issues\MustBeOneDimensionalArray(
                     'Every map in the second argument should have the same number of columns.'
                 );
             }
@@ -682,7 +682,7 @@ class EasyDB
     {
         if (!empty($columns)) {
             if (!$this->is1DArray($columns)) {
-                throw new \InvalidArgumentException(
+                throw new Issues\MustBeOneDimensionalArray(
                     'Only one-dimensional arrays are allowed.'
                 );
             }
@@ -853,14 +853,14 @@ class EasyDB
         }
         if (!$this->is1DArray($params)) {
             if ($calledWithVariadicParams) {
-                throw new \InvalidArgumentException(
+                throw new Issues\MustBeOneDimensionalArray(
                     'Only one-dimensional arrays are allowed, please use ' .
                     __METHOD__ .
                     '()'
                 );
             }
 
-            throw new \InvalidArgumentException(
+            throw new Issues\MustBeOneDimensionalArray(
                 'Only one-dimensional arrays are allowed.'
             );
         }
@@ -884,7 +884,7 @@ class EasyDB
     public function single(string $statement, array $params = [])
     {
         if (!$this->is1DArray($params)) {
-            throw new \InvalidArgumentException(
+            throw new Issues\MustBeOneDimensionalArray(
                 'Only one-dimensional arrays are allowed.'
             );
         }
@@ -913,7 +913,7 @@ class EasyDB
         } elseif (\is_array($conditions)) {
             return $this->updateWhereArray($table, $changes, $conditions);
         } else {
-            throw new \TypeError('Conditions must be an array or instance of EasyStatement');
+            throw new Issues\MustBeArrayOrEasyStatement('Conditions must be an array or instance of EasyStatement');
         }
     }
 
@@ -938,7 +938,7 @@ class EasyDB
             return 0;
         }
         if (!$this->is1DArray($changes) || !$this->is1DArray($conditions)) {
-            throw new \InvalidArgumentException(
+            throw new Issues\MustBeOneDimensionalArray(
                 'Only one-dimensional arrays are allowed.'
             );
         }
