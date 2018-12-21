@@ -44,6 +44,7 @@
     },
     "require": {
         "php": "^7",
+        "paragonie/corner": "^1|^2",
         "ext-pdo": "*"
     },
     "require-dev": {

@@ -1,6 +1,8 @@
 <?php
 namespace ParagonIE\EasyDB\Exception;
 
+use ParagonIE\Corner\CornerTrait;
+
 /**
  * ConstructorFailed.
  *
@@ -8,4 +10,5 @@ namespace ParagonIE\EasyDB\Exception;
  */
 class ConstructorFailed extends \RuntimeException implements ExceptionInterface
 {
+    use CornerTrait;
 }

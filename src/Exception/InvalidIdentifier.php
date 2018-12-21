@@ -1,6 +1,8 @@
 <?php
 namespace ParagonIE\EasyDB\Exception;
 
+use ParagonIE\Corner\CornerTrait;
+
 /**
  * InvalidIdentifier.
  *
@@ -8,4 +10,5 @@ namespace ParagonIE\EasyDB\Exception;
  */
 class InvalidIdentifier extends \InvalidArgumentException implements ExceptionInterface
 {
+    use CornerTrait;
 }
