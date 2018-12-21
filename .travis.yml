@@ -6,6 +6,7 @@ php:
     - 7.0
     - 7.1
     - 7.2
+    - 7.3
     - hhvm
     - nightly
 
@@ -19,7 +20,7 @@ install:
     - travis_retry composer install --no-interaction
 
 script:
-    - ./vendor/bin/phpcs --standard=psr2 src/
+    - ./vendor/bin/phpcs --ignore=src/Factory.php --standard=psr2 src/
     - ./vendor/bin/phpunit --coverage-text
     - ./vendor/bin/psalm
 
