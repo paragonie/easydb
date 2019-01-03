@@ -358,3 +358,8 @@ Alternatively, you can flatten your array with the [splat operator](https://secu
 
 EasyDB's `run()` method is a variadic wrapper for `safeQuery()`, so either
 solution is correct.
+
+## Support Contracts
+
+If your company uses this library in their products or services, you may be
+interested in [purchasing a support contract from Paragon Initiative Enterprises](https://paragonie.com/enterprise).
