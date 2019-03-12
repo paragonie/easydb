@@ -43,7 +43,10 @@ abstract class Factory
      */
     public static function fromArray(array $config): EasyDB {
 
-        list($dsn, $username, $password, $options) = $config;
+        $dsn      = $config[0];
+        $username = $config[1] ?? null;
+        $password = $config[2] ?? null;
+        $options  = $config[3] ?? [];
 
         $dbEngine = '';
         $post_query = null;
