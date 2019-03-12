@@ -34,18 +34,20 @@ abstract class Factory
     /**
      * Create a new EasyDB object from array of parameters
      *
-     * @param string $dsn
-     * @param string $username
-     * @param string $password
-     * @param array $options
+     * @param array $config
      * @return \ParagonIE\EasyDB\EasyDB
      * @throws Issues\ConstructorFailed
      */
-    public static function fromArray(array $config): EasyDB {
+    public static function fromArray(array $config): EasyDB
+    {
 
+        /** @var string $dsn */
         $dsn      = $config[0];
+        /** @var string|null $username */
         $username = $config[1] ?? null;
+        /** @var string|null $password */
         $password = $config[2] ?? null;
+        /** @var array $options */
         $options  = $config[3] ?? [];
 
         $dbEngine = '';
