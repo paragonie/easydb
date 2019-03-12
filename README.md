@@ -64,11 +64,11 @@ we end up repeating ourselves a lot.
 ### The EasyDB Solution
 
 ```php
-$db = \ParagonIE\EasyDB\Factory::create(
+$db = \ParagonIE\EasyDB\Factory::fromArray([
     'mysql:host=localhost;dbname=something',
     'username',
     'putastrongpasswordhere'
-);
+]);
 
 $rows = $db->run('SELECT * FROM comments WHERE blogpostid = ? ORDER BY created ASC', $_GET['blogpostid']);
 foreach ($rows as $row) {
