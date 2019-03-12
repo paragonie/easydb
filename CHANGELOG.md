@@ -1,3 +1,13 @@
+# Version 2.9.0
+
+* You can now side-step credential leakage in the `Factory` class
+  by calling `Factory::fromArray([$dsn, $username, $password, $options])`
+  instead of `Factory::create($dsn, $username, $password, $options)`.
+
+# Version 2.8.0
+
+* Our exceptions now integrate with [Corner](https://github.com/paragonie/corner).
+
 # Version 2.7.0
 
 * Changed the behavior of several public APIs to invoke
