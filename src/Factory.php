@@ -28,6 +28,23 @@ abstract class Factory
         string $password = null,
         array $options = []
     ): EasyDB {
+        return static::fromArray([$dsn, $username, $password, $options]);
+    }
+    
+    /**
+     * Create a new EasyDB object from array of parameters
+     *
+     * @param string $dsn
+     * @param string $username
+     * @param string $password
+     * @param array $options
+     * @return \ParagonIE\EasyDB\EasyDB
+     * @throws Issues\ConstructorFailed
+     */
+    public static function fromArray(array $config): EasyDB {
+
+        list($dsn, $username, $password, $options) = $config;
+
         $dbEngine = '';
         $post_query = null;
 
