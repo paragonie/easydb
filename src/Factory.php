@@ -80,26 +80,7 @@ abstract class Factory
                 break;
         }
 
-        try {
-            $pdo = new \PDO($dsn, $username, $password, $options);
-        } catch (\PDOException $e) {
-            if (\strpos((string) $e->getMessage(), 'could not find driver') !== false) {
-                throw new Issues\ConstructorFailed(
-                    'Could not create a PDO connection. Is the driver installed/enabled?'
-                );
-            }
-            
-            if (\strpos((string) $e->getMessage(), 'unknown database') !== false) {
-                throw new Issues\ConstructorFailed(
-                    'Could not create a PDO connection. Check that your database exists.'
-                );
-            }
-            
-            // Don't leak credentials directly if we can.
-            throw new Issues\ConstructorFailed(
-                'Could not create a PDO connection. Please check your username and password.'
-            );
-        }
+        $pdo = new \PDO($dsn, $username, $password, $options);
 
         if (!empty($post_query)) {
             $pdo->query($post_query);
