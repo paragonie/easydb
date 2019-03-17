@@ -84,21 +84,21 @@ abstract class Factory
             $pdo = new \PDO($dsn, $username, $password, $options);
         } catch (\PDOException $e) {
             if (\strpos((string) $e->getMessage(), 'could not find driver') !== false) {
-                throw new Issues\ConstructorFailed(
+                throw (new Issues\ConstructorFailed(
                     'Could not create a PDO connection. Is the driver installed/enabled?'
-                );
+                ))->setRealException($e);
             }
             
             if (\strpos((string) $e->getMessage(), 'unknown database') !== false) {
-                throw new Issues\ConstructorFailed(
+                throw (new Issues\ConstructorFailed(
                     'Could not create a PDO connection. Check that your database exists.'
-                );
+                ))->setRealException($e);
             }
             
             // Don't leak credentials directly if we can.
-            throw new Issues\ConstructorFailed(
+            throw (new Issues\ConstructorFailed(
                 'Could not create a PDO connection. Please check your username and password.'
-            );
+            ))->setRealException($e);
         }
 
         if (!empty($post_query)) {
