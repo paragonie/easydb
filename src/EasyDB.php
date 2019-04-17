@@ -1102,9 +1102,15 @@ class EasyDB
      * If already inside a transaction, does not start a new one.
      * Callable should accept one parameter, i.e. function (EasyDB $db) {}
      *
+     * @template T
+     *
      * @param callable $callback
      *
+     * @psalm-param callable(EasyDB):T $callback
+     *
      * @return mixed
+     *
+     * @psalm-return T
      *
      * @throws Throwable
      */
