@@ -211,13 +211,6 @@ class EasyStatement
             if (!$this->allowEmptyInStatements) {
                 throw new MustBeNonEmpty();
             }
-
-            // Add a closed failure:
-            $this->parts[] = [
-                'type' => 'OR',
-                'condition' => '1 = 0',
-                'values' => []
-            ];
             return $this;
         }
         return $this->orWith($this->unpackCondition($condition, \count($values)), ...$values);
