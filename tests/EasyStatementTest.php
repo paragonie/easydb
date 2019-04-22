@@ -53,7 +53,7 @@ class EasyStatementTest extends TestCase
                 ->orIn('user_id IN (?*)', []);
         }
 
-        $this->assertSql($statement, 'role_id IN (?, ?, ?) AND 1 = 0');
+        $this->assertSql($statement, 'role_id IN (?, ?, ?)');
         $this->assertValues($statement, [1, 2, 3]);
 
         $statement = EasyStatement::open()
