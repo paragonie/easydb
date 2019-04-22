@@ -243,6 +243,7 @@ class EasyStatement
     public function andGroup(): self
     {
         $group = new self($this);
+        $group->setEmptyInStatementsAllowed($this->allowEmptyInStatements);
 
         $this->parts[] = [
             'type' => 'AND',
@@ -262,6 +263,7 @@ class EasyStatement
     public function orGroup(): self
     {
         $group = new self($this);
+        $group->setEmptyInStatementsAllowed($this->allowEmptyInStatements);
 
         $this->parts[] = [
             'type' => 'OR',
