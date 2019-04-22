@@ -1,3 +1,9 @@
+# Version 2.10.0
+
+* You can now pull the original exception (which may leak credentials via
+  stack trace) from a `ConstructorFailed` exception by calling the new
+  `getRealException()` method.
+
 # Version 2.9.0
 
 * You can now side-step credential leakage in the `Factory` class
