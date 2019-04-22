@@ -3,6 +3,7 @@
 namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyStatement;
+use ParagonIE\EasyDB\Exception\MustBeNonEmpty;
 use PHPUnit_Framework_TestCase as TestCase;
 use RuntimeException;
 
@@ -36,6 +37,24 @@ class EasyStatementTest extends TestCase
 
         $this->assertSql($statement, 'role_id IN (?, ?, ?)');
         $this->assertValues($statement, [4, 5, 6]);
+    }
+
+    public function testEmptyIn()
+    {
+        try {
+            $statement = EasyStatement::open()
+                ->in('role_id IN (?*)', [1, 2, 3])
+                ->orIn('user_id IN (?*)', []);
+            $this->fail("Does not throw MustBeNonEmpty by default!");
+        } catch (MustBeNonEmpty $ex) {
+            $statement = EasyStatement::open()
+                ->setEmptyInStatementsAllowed(true)
+                ->in('role_id IN (?*)', [1, 2, 3])
+                ->orIn('user_id IN (?*)', []);
+        }
+
+        $this->assertSql($statement, 'role_id IN (?, ?, ?) AND 1 = 0');
+        $this->assertValues($statement, [1, 2, 3]);
     }
 
     public function testGroupingWithAnd()

@@ -2,6 +2,7 @@
 
 namespace ParagonIE\EasyDB;
 
+use ParagonIE\EasyDB\Exception\MustBeNonEmpty;
 use RuntimeException;
 
 /**
@@ -21,6 +22,11 @@ class EasyStatement
     private $parent;
 
     /**
+     * @var bool
+     */
+    private $allowEmptyInStatements = false;
+
+    /**
      * @return int
      */
     public function count(): int
@@ -36,6 +42,16 @@ class EasyStatement
     public static function open(): self
     {
         return new static();
+    }
+
+    /**
+     * @param bool $allow
+     * @return self
+     */
+    public function setEmptyInStatementsAllowed(bool $allow = false): self
+    {
+        $this->allowEmptyInStatements = $allow;
+        return $this;
     }
 
     /**
@@ -139,6 +155,7 @@ class EasyStatement
      * @param array $values
      *
      * @return self
+     * @throws MustBeNonEmpty
      * @throws \TypeError
      */
     public function in(string $condition, array $values): self
@@ -155,10 +172,24 @@ class EasyStatement
      * @param array $values
      *
      * @return self
+     * @throws MustBeNonEmpty
      * @throws \TypeError
      */
     public function andIn(string $condition, array $values): self
     {
+        if (\count($values) < 1) {
+            if (!$this->allowEmptyInStatements) {
+                throw new MustBeNonEmpty();
+            }
+
+            // Add a closed failure:
+            $this->parts[] = [
+                'type' => 'AND',
+                'condition' => '1 = 0',
+                'values' => []
+            ];
+            return $this;
+        }
         return $this->andWith($this->unpackCondition($condition, \count($values)), ...$values);
     }
 
@@ -171,10 +202,24 @@ class EasyStatement
      * @param array $values
      *
      * @return self
+     * @throws MustBeNonEmpty
      * @throws \TypeError
      */
     public function orIn(string $condition, array $values): self
     {
+        if (\count($values) < 1) {
+            if (!$this->allowEmptyInStatements) {
+                throw new MustBeNonEmpty();
+            }
+
+            // Add a closed failure:
+            $this->parts[] = [
+                'type' => 'AND',
+                'condition' => '1 = 0',
+                'values' => []
+            ];
+            return $this;
+        }
         return $this->orWith($this->unpackCondition($condition, \count($values)), ...$values);
     }
 
