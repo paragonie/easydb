@@ -55,6 +55,19 @@ class EasyStatementTest extends TestCase
 
         $this->assertSql($statement, 'role_id IN (?, ?, ?) AND 1 = 0');
         $this->assertValues($statement, [1, 2, 3]);
+
+        $statement = EasyStatement::open()
+            ->setEmptyInStatementsAllowed(true)
+            ->group()
+                ->with('user_id = ?', 100)
+                ->orWith('user_id = ?', 101)
+                ->orGroup()
+                    ->in('role_id IN (?*)', [])
+                ->endGroup()
+            ->endGroup();
+
+        $this->assertSql($statement, '(user_id = ? OR user_id = ? OR (1 = 0))');
+        $this->assertValues($statement, [100, 101]);
     }
 
     public function testGroupingWithAnd()
