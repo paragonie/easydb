@@ -214,7 +214,7 @@ class EasyStatement
 
             // Add a closed failure:
             $this->parts[] = [
-                'type' => 'AND',
+                'type' => 'OR',
                 'condition' => '1 = 0',
                 'values' => []
             ];
