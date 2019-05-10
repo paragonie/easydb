@@ -3,10 +3,8 @@ declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
-use ParagonIE\EasyDB\{
-    EasyDB,
-    Factory
-};
+use ParagonIE\EasyDB\EasyDB;
+use ParagonIE\EasyDB\Factory;
 use PHPUnit\Framework\TestCase;
 
 /**

@@ -3,10 +3,8 @@ declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Exception;
 
-use ParagonIE\Corner\{
-    CornerInterface,
-    CornerTrait
-};
+use ParagonIE\Corner\CornerInterface;
+use ParagonIE\Corner\CornerTrait;
 
 /**
  * Class InvalidTableName
