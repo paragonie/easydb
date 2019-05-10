@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files>
+  <file src="src\EasyStatement.php">
+    <DocblockTypeContradiction occurrences="2">
+      <code>\is_string($condition)</code>
+      <code>\is_string($condition)</code>
+    </DocblockTypeContradiction>
+  </file>
+</files>
