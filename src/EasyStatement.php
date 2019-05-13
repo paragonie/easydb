@@ -13,6 +13,8 @@ class EasyStatement
 {
     /**
      * @var array
+     *
+     * @psalm-var array<int, array{type:string, condition:self|string, values?:array<int, mixed>}>
      */
     private $parts = [];
 
@@ -305,6 +307,9 @@ class EasyStatement
         }
         return (string) \array_reduce(
             $this->parts,
+            /**
+             * @psalm-param array{type:string, condition:self|string, values?:array<int, mixed>} $part
+             */
             function (string $sql, array $part): string {
                 /** @var string|self $condition */
                 $condition = $part['condition'];
@@ -352,6 +357,9 @@ class EasyStatement
     {
         return (array) \array_reduce(
             $this->parts,
+            /**
+             * @psalm-param array{type:string, condition:self|string, values?:array<int, mixed>} $part
+             */
             function (array $values, array $part): array {
                 if ($this->isGroup($part['condition'])) {
                     /** @var EasyStatement $condition */
@@ -360,7 +368,10 @@ class EasyStatement
                         $values,
                         $condition->values()
                     );
+                } elseif (!isset($part['values'])) {
+                    return $values;
                 }
+
                 return \array_merge($values, $part['values']);
             },
             []

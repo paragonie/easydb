@@ -4,7 +4,7 @@ namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyStatement;
 use ParagonIE\EasyDB\Exception\MustBeNonEmpty;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase as TestCase;
 use RuntimeException;
 
 /**
