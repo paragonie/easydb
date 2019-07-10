@@ -3,6 +3,9 @@
     name="EasyDB static analysis tests."
     useDocblockTypes="true"
     totallyTyped="true"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://getpsalm.org/schema/config"
+    xsi:schemaLocation="https://getpsalm.org/schema/config"
     errorBaseline="./psalm.baseline.xml"
 >
     <projectFiles>
@@ -12,4 +15,7 @@
             <directory name="vendor" />
         </ignoreFiles>
     </projectFiles>
+    <plugins>
+        <pluginClass class="Psalm\PhpUnitPlugin\Plugin" />
+    </plugins>
 </psalm>
