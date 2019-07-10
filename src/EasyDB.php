@@ -1124,8 +1124,10 @@ class EasyDB
         }
         try {
             /**
-            * @var string|int|bool|float|null|array|object|resource $out
-            */
+             * @var scalar|array|object|resource|null $out
+             *
+             * @psalm-var T
+             */
             $out = $callback($this);
             // If we started the transaction, we should commit here
             if ($autoStartTransaction) {
