@@ -3,6 +3,7 @@
     name="EasyDB static analysis tests."
     useDocblockTypes="true"
     totallyTyped="true"
+    requireVoidReturnType="false"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config"
