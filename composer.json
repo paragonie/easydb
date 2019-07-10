@@ -42,10 +42,13 @@
             "ParagonIE\\EasyDB\\Tests\\": "tests"
         }
     },
+    "config": {
+        "sort-packages": true
+    },
     "require": {
         "php": "^7",
-        "paragonie/corner": "^1|^2",
-        "ext-pdo": "*"
+        "ext-pdo": "*",
+        "paragonie/corner": "^1|^2"
     },
     "require-dev": {
         "phpunit/phpunit": "^6",
