@@ -572,6 +572,7 @@ class EasyDB
      *
      * @param string $table - table name
      * @param array  $map   - associative array of which values should be assigned to each field
+     * @param array $on_duplicate_key_update
      *
      * @psalm-param array<string, scalar|null> $map
      * @psalm-param array<int, string> $on_duplicate_key_update
@@ -679,7 +680,8 @@ class EasyDB
      * Insert many new rows to a table in a database. using the same prepared statement
      *
      * @param          string $table - table name
-     * @param          array  $maps  - array of associative array specifying values should be assigned to each field
+     * @param          array  $maps  - array of associative array specifying values
+     *                                 should be assigned to each field
      * @return         int
      * @throws         \InvalidArgumentException
      * @throws         Issues\QueryError
@@ -798,7 +800,9 @@ class EasyDB
      *
      * @param string $table
      * @param array  $map
-     * @param null|false|array<int, string> $duplicates_mode - null for straight-forward insert, false for ignore, array for on-duplicate-key-update
+     * @param null|false|array<int, string> $duplicates_mode - null for straight-forward insert,
+     *                                                         false for ignore,
+     *                                                         array for on-duplicate-key-update
      *
      * @psalm-param array<string, scalar|null> $map
      * @psalm-param null|false|array<int, string> $duplicates_mode
