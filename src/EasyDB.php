@@ -498,6 +498,9 @@ class EasyDB
      *
      * @param  string $table - table name
      * @param  array  $map   - associative array of which values should be assigned to each field
+     *
+     * @psalm-param array<string, scalar|null> $map
+     *
      * @return int
      * @throws \InvalidArgumentException
      * @throws \TypeError
@@ -528,11 +531,92 @@ class EasyDB
     }
 
     /**
+     * Insert a row into the table, ignoring on key collisions
+     *
+     * @param string $table - table name
+     * @param array  $map   - associative array of which values should be assigned to each field
+     *
+     * @psalm-param array<string, scalar|null> $map
+     *
+     * @return int
+     *
+     * @throws \InvalidArgumentException
+     * @throws \TypeError
+     */
+    public function insertIgnore(string $table, array $map) : int
+    {
+        if (!empty($map)) {
+            if (!$this->is1DArray($map)) {
+                throw new Issues\MustBeOneDimensionalArray(
+                    'Only one-dimensional arrays are allowed.'
+                );
+            }
+        }
+
+        list($queryString, $values) = $this->buildInsertQueryBoolSafe(
+            $table,
+            $map,
+            false
+        );
+
+        return (int) $this->safeQuery(
+            (string) $queryString,
+            $values,
+            \PDO::FETCH_BOTH,
+            true
+        );
+    }
+
+    /**
+     * Insert a row into the table, ignoring on key collisions
+     *
+     * @param string $table - table name
+     * @param array  $map   - associative array of which values should be assigned to each field
+     *
+     * @psalm-param array<string, scalar|null> $map
+     * @psalm-param array<int, string> $on_duplicate_key_update
+     *
+     * @return int
+     *
+     * @throws \InvalidArgumentException
+     * @throws \TypeError
+     */
+    public function insertOnDuplicateKeyUpdate(
+        string $table,
+        array $map,
+        array $on_duplicate_key_update
+    ) : int {
+        if (!empty($map)) {
+            if (!$this->is1DArray($map)) {
+                throw new Issues\MustBeOneDimensionalArray(
+                    'Only one-dimensional arrays are allowed.'
+                );
+            }
+        }
+
+        list($queryString, $values) = $this->buildInsertQueryBoolSafe(
+            $table,
+            $map,
+            $on_duplicate_key_update
+        );
+
+        return (int) $this->safeQuery(
+            (string) $queryString,
+            $values,
+            \PDO::FETCH_BOTH,
+            true
+        );
+    }
+
+    /**
      * Insert a new record then get a particular field from the new row
      *
      * @param          string $table
      * @param          array  $map
      * @param          string $field
+     *
+     * @psalm-param array<string, scalar|null> $map
+     *
      * @return         mixed
      * @throws         \Exception
      * @psalm-suppress MixedAssignment
@@ -651,6 +735,9 @@ class EasyDB
      * @param  string $table
      * @param  array  $map
      * @param  string $sequenceName (optional)
+     *
+     * @psalm-param array<string, scalar|null> $map
+     *
      * @return string
      * @throws Issues\QueryError
      * @throws \Exception
@@ -707,16 +794,27 @@ class EasyDB
     /**
      * Get an query string for an INSERT statement.
      *
+     * @template T as array<string, scalar|null>
+     *
      * @param string $table
      * @param array  $map
+     * @param null|false|array<int, string> $duplicates_mode - null for straight-forward insert, false for ignore, array for on-duplicate-key-update
+     *
+     * @psalm-param array<string, scalar|null> $map
+     * @psalm-param null|false|array<int, string> $duplicates_mode
      *
      * @return array {0: string, 1: array}
+     *
+     * @psalm-return array{0:string, 1:array<int, scalar>}
      *
      * @throws \InvalidArgumentException
      *   If $columns is not a one-dimensional array.
      */
-    public function buildInsertQueryBoolSafe(string $table, array $map): array
-    {
+    public function buildInsertQueryBoolSafe(
+        string $table,
+        array $map,
+        $duplicates_mode = null
+    ): array {
         /** @var array<int, string> $columns */
         $columns = [];
         /** @var array<int, string> $placeholders */
@@ -725,7 +823,7 @@ class EasyDB
         $values = [];
         /**
          * @var string $key
-         * @var string|bool|null $value
+         * @var scalar|null $value
          */
         foreach ($map as $key => $value) {
             $columns[] = $key;
@@ -744,13 +842,43 @@ class EasyDB
         }
         $columns = \array_map([$this, 'escapeIdentifier'], $columns);
 
+        /**
+        * @var array<int, string>
+        */
+        $duplicates_updates = [];
+
+        if (is_array($duplicates_mode)) {
+            foreach ($duplicates_mode as $column_name) {
+                $escaped_column_name = $this->escapeIdentifier($column_name);
+
+                $duplicates_updates[] =
+                    $escaped_column_name .
+                    ' = VALUES(' .
+                    $escaped_column_name .
+                    ')';
+            }
+        }
+
         /** @var string $query */
         $query = \sprintf(
-            'INSERT INTO %s (%s) VALUES (%s)',
+            'INSERT%sINTO %s (%s) VALUES (%s)%s',
+            (false === $duplicates_mode ? ' IGNORE ' : ' '),
             $this->escapeIdentifier($table),
             \implode(', ', $columns),
-            \implode(', ', $placeholders)
+            \implode(', ', $placeholders),
+            (
+                (count($duplicates_updates) > 0)
+                    ? (
+                        ' ON DUPLICATE KEY UPDATE ' .
+                        implode(', ', $duplicates_updates)
+                    )
+                    : ''
+            )
         );
+
+        /**
+         * @psalm-var array{0:string, 1:array<int, scalar>}
+         */
         return array($query, $values);
     }
 

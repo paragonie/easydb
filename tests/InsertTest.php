@@ -94,4 +94,74 @@ class InsertTest extends EasyDBWriteTest
         $expected = '/insert into .test_table. \(.id., .col1., .col2.\) VALUES \(\?, \?, \?\)/i';
         $this->assertRegExp($expected, $statement);
     }
+
+    /**
+     * @dataProvider goodFactoryCreateArgument2EasyDBProvider
+     */
+    public function testBuildInsertIgnoreSql(callable $cb)
+    {
+        $db = $this->easyDBExpectedFromCallable($cb);
+
+        list($query) = $db->buildInsertQueryBoolSafe(
+            'test_table',
+            [
+                'foo' => 'bar',
+            ],
+            false
+        );
+
+        $this->assertRegExp(
+            '/insert ignore into .test_table. \(.foo.\) VALUES \(\?\)/i',
+            $query
+        );
+    }
+
+    /**
+     * @dataProvider goodFactoryCreateArgument2EasyDBProvider
+     */
+    public function testBuildInsertOnDuplicateKeyUpdate(callable $cb)
+    {
+        $db = $this->easyDBExpectedFromCallable($cb);
+
+        list($query) = $db->buildInsertQueryBoolSafe(
+            'test_table',
+            [
+                'foo' => 'bar',
+            ],
+            [
+                'foo',
+            ]
+        );
+
+        $this->assertRegExp(
+            '/insert into .test_table. \(.foo.\) VALUES \(\?\) ON DUPLICATE KEY UPDATE .foo. = VALUES\(.foo.\)/i',
+            $query
+        );
+    }
+
+    /**
+     * @dataProvider goodFactoryCreateArgument2EasyDBProvider
+     */
+    public function testBuildInsertOnDuplicateKeyUpdateMultiple(callable $cb)
+    {
+        $db = $this->easyDBExpectedFromCallable($cb);
+
+        list($query) = $db->buildInsertQueryBoolSafe(
+            'test_table',
+            [
+                'foo' => 'bar',
+                'bar' => 1,
+                'baz' => 2,
+            ],
+            [
+                'bar',
+                'baz',
+            ]
+        );
+
+        $this->assertRegExp(
+            '/insert into .test_table. \(.foo., .bar., .baz.\) VALUES \(\?, \?, \?\) ON DUPLICATE KEY UPDATE .bar. = VALUES\(.bar.\), .baz. = VALUES\(.baz.\)/i',
+            $query
+        );
+    }
 }
