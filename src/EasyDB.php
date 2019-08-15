@@ -1102,9 +1102,15 @@ class EasyDB
      * If already inside a transaction, does not start a new one.
      * Callable should accept one parameter, i.e. function (EasyDB $db) {}
      *
+     * @template T
+     *
      * @param callable $callback
      *
+     * @psalm-param callable(EasyDB):T $callback
+     *
      * @return mixed
+     *
+     * @psalm-return T
      *
      * @throws Throwable
      */
@@ -1118,8 +1124,10 @@ class EasyDB
         }
         try {
             /**
-            * @var string|int|bool|float|null|array|object|resource $out
-            */
+             * @var scalar|array|object|resource|null $out
+             *
+             * @psalm-var T
+             */
             $out = $callback($this);
             // If we started the transaction, we should commit here
             if ($autoStartTransaction) {

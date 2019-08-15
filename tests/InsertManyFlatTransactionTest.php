@@ -12,6 +12,8 @@ class InsertManyFlatTransactionTest extends EasyDBWriteTest
     /**
      * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
+     *
+     * @psalm-param callable():EasyDB $cb
      */
     public function testInsertMany(callable $cb)
     {

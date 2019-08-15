@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use Exception;
+use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Factory;
 
 /**
@@ -17,6 +18,9 @@ abstract class EasyDBWriteTest extends EasyDBTest
     * EasyDB data provider
     * Returns an array of callables that return instances of EasyDB
     * @return array
+    *
+    * @psalm-return array<int, array{0:callable():EasyDB}>
+    *
     * @see EasyDBTest::goodFactoryCreateArgumentProvider()
     */
     public function goodFactoryCreateArgument2EasyDBProvider()
@@ -28,7 +32,7 @@ abstract class EasyDBWriteTest extends EasyDBTest
                 $password = isset($arguments[3]) ? $arguments[3] : null;
                 $options = isset($arguments[4]) ? $arguments[4] : [];
                 return [
-                    function () use ($dsn, $username, $password, $options) {
+                    function () use ($dsn, $username, $password, $options) : EasyDB {
                         $factory = Factory::create(
                             $dsn,
                             $username,
