@@ -7,7 +7,7 @@
   collisions)
 * Added `insertOnDuplicateKeyUpdate()` (Insert a row into the table; or if
   a key collision occurs, doing an update instead)
-* [#111](https://github.com/paragonie/easydb/issue/111):
+* [#111](https://github.com/paragonie/easydb/issues/111):
   `EasyStatement`: Don't fail with empty `IN()` statements
 
 # Version 2.9.0
