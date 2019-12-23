@@ -303,7 +303,7 @@ class EasyStatement
     public function sql(): string
     {
         if (empty($this->parts)) {
-            return '1';
+            return '1 = 1';
         }
         return (string) \array_reduce(
             $this->parts,
