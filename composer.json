@@ -46,7 +46,7 @@
         "sort-packages": true
     },
     "require": {
-        "php": "^7",
+        "php": "^7|^8",
         "ext-pdo": "*",
         "paragonie/corner": "^1|^2"
     },
