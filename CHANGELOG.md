@@ -1,3 +1,11 @@
+# Version 2.11.0
+
+* [#120](https://github.com/paragonie/easydb/pull/120):
+  `EasyStatement` now defaults to `WHERE 1 = 1` instead of `WHERE 1`
+  to ensure success with PostgreSQL.
+* [#122](https://github.com/paragonie/easydb/pull/122):
+  Builds on PHP 7.4 in Travis CI, installs on PHP 8. 
+
 # Version 2.10.0
 
 * You can now pull the original exception (which may leak credentials via
