@@ -70,6 +70,8 @@ class EasyDB
      *                           from each row?
      * @param  mixed  ...$params Parameters
      * @return mixed
+     *
+     * @psalm-param scalar|null|object $params
      */
     public function col(string $statement, int $offset = 0, ...$params)
     {
@@ -84,6 +86,8 @@ class EasyDB
      * @param  int    $offset    How many columns from the left are we grabbing
      *                           from each row?
      * @return mixed
+     *
+     * @psalm-param array<array-key,scalar|null|object> $params
      */
     public function column(string $statement, array $params = [], int $offset = 0)
     {
@@ -106,6 +110,8 @@ class EasyDB
      * @param  string $statement SQL query without user data
      * @param  mixed  ...$params Parameters
      * @return mixed
+     *
+     * @psalm-param scalar|null|object ...$params
      */
     public function cell(string $statement, ...$params)
     {
@@ -116,19 +122,24 @@ class EasyDB
     /**
      * Delete rows in a database table.
      *
-     * @param          string $table      Table name
-     * @param          mixed  $conditions Defines the WHERE clause
+     * @param          string              $table      Table name
+     * @param          EasyStatement|array $conditions Defines the WHERE clause
      * @return         int
      * @throws         \InvalidArgumentException
      * @psalm-suppress MixedAssignment
      * @psalm-suppress MixedArgument
      * @throws         \TypeError
+     *
+     * @psalm-param non-empty-string $table
+     * @psalm-param EasyStatement|array<non-empty-string,scalar|null> $conditions
      */
     public function delete(string $table, $conditions): int
     {
         if ($conditions instanceof EasyStatement) {
             return $this->deleteWhereStatement($table, $conditions);
-        } elseif (\is_array($conditions)) {
+        }
+        /** @psalm-suppress RedundantCondition */
+        if (\is_array($conditions)) {
             return $this->deleteWhereArray($table, $conditions);
         } else {
             throw new Issues\MustBeArrayOrEasyStatement('Conditions must be an array or EasyStatement');
@@ -145,9 +156,13 @@ class EasyDB
      * @psalm-suppress MixedAssignment
      * @psalm-suppress MixedArgument
      * @throws         \TypeError
+     *
+     * @psalm-param non-empty-string $table
+     * @psalm-param array<non-empty-string,scalar|null> $conditions
      */
     protected function deleteWhereArray(string $table, array $conditions): int
     {
+        /** @psalm-suppress TypeDoesNotContainType */
         if (empty($table)) {
             throw new Issues\InvalidTableName(
                 'Table name must be a non-empty string.'
@@ -178,10 +193,6 @@ class EasyDB
          */
         $arr = [];
 
-        /**
-         * @var string $i
-         * @var string|int|bool|float|null $v
-         */
         foreach ($conditions as $i => $v) {
             $i = $this->escapeIdentifier($i);
             if ($v === null) {
@@ -214,9 +225,12 @@ class EasyDB
      * @psalm-suppress MixedAssignment
      * @psalm-suppress MixedArgument
      * @throws         \TypeError
+     *
+     * @psalm-param non-empty-string $table
      */
     protected function deleteWhereStatement(string $table, EasyStatement $conditions): int
     {
+        /** @psalm-suppress TypeDoesNotContainType */
         if (empty($table)) {
             throw new Issues\InvalidTableName(
                 'Table name must be a non-empty string.'
@@ -258,9 +272,12 @@ class EasyDB
      * @param  string $string Table or column name
      * @param  bool   $quote  Certain SQLs escape column names (i.e. mysql with `backticks`)
      * @return string
+     *
+     * @psalm-param non-empty-string $string
      */
     public function escapeIdentifier(string $string, bool $quote = true): string
     {
+        /** @psalm-suppress TypeDoesNotContainType */
         if (empty($string)) {
             throw new Issues\InvalidIdentifier(
                 'Invalid identifier: Must be a non-empty string.'
@@ -281,6 +298,7 @@ class EasyDB
             $str = \preg_replace($patternWithSep, '', $string);
             if (\strpos($str, '.') !== false) {
                 $pieces = \explode('.', $str);
+                /** @psalm-suppress ArgumentTypeCoercion */
                 foreach ($pieces as $i => $p) {
                     $pieces[$i] = $this->escapeIdentifier($p, $quote);
                 }
@@ -335,6 +353,8 @@ class EasyDB
      * @throws         \InvalidArgumentException
      * @psalm-suppress MixedAssignment
      * @psalm-suppress MixedArgument
+     *
+     * @psalm-param array<array-key,scalar|null> $values
      */
     public function escapeValueSet(array $values, string $type = 'string'): string
     {
@@ -350,10 +370,6 @@ class EasyDB
         }
         // Build our array
         $join = [];
-        /**
-         * @var string|int $k
-         * @var string|int|bool|float|null $v
-         */
         foreach ($values as $k => $v) {
             switch ($type) {
                 case 'int':
@@ -452,6 +468,8 @@ class EasyDB
      * @param          mixed  ...$params
      * @return         bool
      * @psalm-suppress MixedAssignment
+     *
+     * @psalm-param scalar|null|object ...$params
      */
     public function exists(string $statement, ...$params): bool
     {
@@ -466,6 +484,8 @@ class EasyDB
      * @param string $statement
      * @param mixed  ...$params
      * @return mixed
+     *
+     * @psalm-param scalar|null|object ...$params
      */
     public function first(string $statement, ...$params)
     {
@@ -499,7 +519,8 @@ class EasyDB
      * @param  string $table - table name
      * @param  array  $map   - associative array of which values should be assigned to each field
      *
-     * @psalm-param array<string, scalar|null> $map
+     * @psalm-param non-empty-string $table
+     * @psalm-param array<non-empty-string, scalar|null> $map
      *
      * @return int
      * @throws \InvalidArgumentException
@@ -536,7 +557,8 @@ class EasyDB
      * @param string $table - table name
      * @param array  $map   - associative array of which values should be assigned to each field
      *
-     * @psalm-param array<string, scalar|null> $map
+     * @psalm-param non-empty-string $table
+     * @psalm-param array<non-empty-string, scalar|null> $map
      *
      * @return int
      *
@@ -574,8 +596,9 @@ class EasyDB
      * @param array  $map   - associative array of which values should be assigned to each field
      * @param array $on_duplicate_key_update
      *
-     * @psalm-param array<string, scalar|null> $map
-     * @psalm-param array<int, string> $on_duplicate_key_update
+     * @psalm-param non-empty-string $table
+     * @psalm-param array<non-empty-string, scalar|null> $map
+     * @psalm-param array<int, non-empty-string> $on_duplicate_key_update
      *
      * @return int
      *
@@ -622,6 +645,10 @@ class EasyDB
      * @throws         \Exception
      * @psalm-suppress MixedAssignment
      * @psalm-suppress MixedArgument
+     *
+     * @psalm-param non-empty-string $table
+     * @psalm-param array<non-empty-string,scalar|null> $map
+     * @psalm-param non-empty-string $field
      */
     public function insertGet(string $table, array $map, string $field)
     {
@@ -633,10 +660,6 @@ class EasyDB
         }
         $post = [];
         $params = [];
-        /**
-         * @var string $i
-         * @var string|bool|null|int|float $v
-         */
         foreach ($map as $i => $v) {
             // Escape the identifier to prevent stupidity
             $i = $this->escapeIdentifier($i);
@@ -687,6 +710,9 @@ class EasyDB
      * @throws         Issues\QueryError
      * @psalm-suppress MixedAssignment
      * @psalm-suppress MixedArgument
+     *
+     * @psalm-param non-empty-string $table
+     * @psalm-param non-empty-array<array-key,array<non-empty-string,scalar|null|object>> $maps
      */
     public function insertMany(string $table, array $maps): int
     {
@@ -699,13 +725,7 @@ class EasyDB
                 '() must contain at least one field set!'
             );
         }
-        /**
-         * @var array $first
-         */
         $first = $maps[0];
-        /**
-         * @var array $map
-         */
         foreach ($maps as $map) {
             if (!$this->is1DArray($map)) {
                 throw new Issues\MustBeOneDimensionalArray(
@@ -738,7 +758,8 @@ class EasyDB
      * @param  array  $map
      * @param  string $sequenceName (optional)
      *
-     * @psalm-param array<string, scalar|null> $map
+     * @psalm-param non-empty-string $table
+     * @psalm-param array<non-empty-string, scalar|null> $map
      *
      * @return string
      * @throws Issues\QueryError
@@ -771,6 +792,9 @@ class EasyDB
      *
      * @throws \InvalidArgumentException
      *   If $columns is not a one-dimensional array.
+     *
+     * @psalm-param non-empty-string $table
+     * @psalm-param array<array-key,non-empty-string> $columns
      */
     public function buildInsertQuery(string $table, array $columns): string
     {
@@ -804,8 +828,9 @@ class EasyDB
      *                                                         false for ignore,
      *                                                         array for on-duplicate-key-update
      *
-     * @psalm-param array<string, scalar|null> $map
-     * @psalm-param null|false|array<int, string> $duplicates_mode
+     * @psalm-param non-empty-string $table
+     * @psalm-param array<non-empty-string, scalar|null> $map
+     * @psalm-param null|false|array<int, non-empty-string> $duplicates_mode
      *
      * @return array {0: string, 1: array}
      *
@@ -819,14 +844,14 @@ class EasyDB
         array $map,
         $duplicates_mode = null
     ): array {
-        /** @var array<int, string> $columns */
+        /** @var array<int, non-empty-string> $columns */
         $columns = [];
         /** @var array<int, string> $placeholders */
         $placeholders = [];
         /** @var array $values */
         $values = [];
         /**
-         * @var string $key
+         * @var non-empty-string $key
          * @var scalar|null $value
          */
         foreach ($map as $key => $value) {
@@ -1017,6 +1042,8 @@ class EasyDB
      * @return mixed
      * @throws \InvalidArgumentException
      * @throws Issues\QueryError
+     *
+     * @psalm-param array<array-key,scalar|null|object> $params
      */
     public function single(string $statement, array $params = [])
     {
@@ -1042,9 +1069,14 @@ class EasyDB
      * @throws Issues\QueryError
      *
      * @throws \TypeError
+     *
+     * @psalm-param non-empty-string $table
+     * @psalm-param array<non-empty-string,scalar|null> $changes
+     * @psalm-param EasyStatement|array<non-empty-string,scalar|null> $conditions
      */
     public function update(string $table, array $changes, $conditions): int
     {
+        /** @psalm-suppress TypeDoesNotContainType */
         if (empty($table)) {
             throw new Issues\InvalidTableName(
                 'Table name must be a non-empty string.'
@@ -1052,7 +1084,9 @@ class EasyDB
         }
         if ($conditions instanceof EasyStatement) {
             return $this->updateWhereStatement($table, $changes, $conditions);
-        } elseif (\is_array($conditions)) {
+        }
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
+        if (\is_array($conditions)) {
             return $this->updateWhereArray($table, $changes, $conditions);
         } else {
             throw new Issues\MustBeArrayOrEasyStatement('Conditions must be an array or instance of EasyStatement');
@@ -1073,6 +1107,10 @@ class EasyDB
      * @psalm-suppress MixedAssignment
      * @psalm-suppress MixedArgument
      * @throws         \TypeError
+     *
+     * @psalm-param non-empty-string $table
+     * @psalm-param array<non-empty-string,scalar|null> $changes
+     * @psalm-param array<non-empty-string,scalar|null> $conditions
      */
     protected function updateWhereArray(string $table, array $changes, array $conditions): int
     {
@@ -1098,10 +1136,6 @@ class EasyDB
          * @var array $pre
          */
         $pre = [];
-        /**
-         * @var string $i
-         * @var string|int|bool|float|null $v
-         */
         foreach ($changes as $i => $v) {
             $i = $this->escapeIdentifier($i);
             if ($v === null) {
@@ -1118,10 +1152,6 @@ class EasyDB
 
         // The last set (post WHERE)
         $post = [];
-        /**
-         * @var string $i
-         * @var string|int|bool|float|null $v
-         */
         foreach ($conditions as $i => $v) {
             $i = $this->escapeIdentifier($i);
             if ($v === null) {
@@ -1157,6 +1187,9 @@ class EasyDB
      * @psalm-suppress MixedAssignment
      * @psalm-suppress MixedArgument
      * @throws         \TypeError
+     *
+     * @psalm-param non-empty-string $table
+     * @psalm-param array<non-empty-string,scalar|null> $changes
      */
     protected function updateWhereStatement(
         string $table,
@@ -1171,10 +1204,6 @@ class EasyDB
 
         // The first set (pre WHERE)
         $pre = [];
-        /**
-         * @var string $i
-         * @var string|int|bool|float|null $v
-         */
         foreach ($changes as $i => $v) {
             $i = $this->escapeIdentifier($i);
             if ($v === null) {
@@ -1220,6 +1249,8 @@ class EasyDB
      *
      * @param  array $params
      * @return bool
+     *
+     * @psalm-assert-if-true array<array-key,scalar|null|object> $params
      */
     public function is1DArray(array $params): bool
     {
