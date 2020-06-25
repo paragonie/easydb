@@ -65,6 +65,8 @@ class EasyDB
     /**
      * Variadic version of $this->column()
      *
+     * @psalm-taint-sink sql $statement
+     *
      * @param  string $statement SQL query without user data
      * @param  int    $offset    How many columns from the left are we grabbing
      *                           from each row?
@@ -78,6 +80,8 @@ class EasyDB
 
     /**
      * Fetch a column
+     *
+     * @psalm-taint-sink sql $statement
      *
      * @param  string $statement SQL query without user data
      * @param  array  $params    Parameters
@@ -103,6 +107,8 @@ class EasyDB
     /**
      * Variadic version of $this->single()
      *
+     * @psalm-taint-sink sql $statement
+     *
      * @param  string $statement SQL query without user data
      * @param  mixed  ...$params Parameters
      * @return mixed
@@ -115,6 +121,8 @@ class EasyDB
 
     /**
      * Delete rows in a database table.
+     *
+     * @psalm-taint-source input $table
      *
      * @param          string $table      Table name
      * @param          mixed  $conditions Defines the WHERE clause
@@ -137,6 +145,8 @@ class EasyDB
 
     /**
      * Delete rows in a database table.
+     *
+     * @psalm-taint-source input $table
      *
      * @param          string $table      Table name
      * @param          array  $conditions Defines the WHERE clause
@@ -207,6 +217,8 @@ class EasyDB
     /**
      * Delete rows in a database table.
      *
+     * @psalm-taint-source input $table
+     *
      * @param          string        $table      Table name
      * @param          EasyStatement $conditions Defines the WHERE clause
      * @return         int
@@ -254,6 +266,8 @@ class EasyDB
      * Make sure only valid characters make it in column/table names
      *
      * @ref https://stackoverflow.com/questions/10573922/what-does-the-sql-standard-say-about-usage-of-backtick
+     *
+     * @psalm-taint-source input $string
      *
      * @param  string $string Table or column name
      * @param  bool   $quote  Certain SQLs escape column names (i.e. mysql with `backticks`)
@@ -425,6 +439,8 @@ class EasyDB
      *
      * WARNING: This function always escapes wildcards using backslash!
      *
+     * @psalm-taint-source input $value
+     *
      * @param  string $value
      * @return string
      */
@@ -448,6 +464,8 @@ class EasyDB
     /**
      * Use with SELECT COUNT queries to determine if a record exists.
      *
+     * @psalm-taint-sink sql $statement
+     *
      * @param          string $statement
      * @param          mixed  ...$params
      * @return         bool
@@ -463,6 +481,8 @@ class EasyDB
     }
 
     /**
+     * @psalm-taint-sink sql $statement
+     *
      * @param string $statement
      * @param mixed  ...$params
      * @return mixed
@@ -495,6 +515,8 @@ class EasyDB
 
     /**
      * Insert a new row to a table in a database.
+     *
+     * @psalm-taint-source input $table
      *
      * @param  string $table - table name
      * @param  array  $map   - associative array of which values should be assigned to each field
@@ -533,6 +555,8 @@ class EasyDB
     /**
      * Insert a row into the table, ignoring on key collisions
      *
+     * @psalm-taint-source input $table
+     *
      * @param string $table - table name
      * @param array  $map   - associative array of which values should be assigned to each field
      *
@@ -569,6 +593,8 @@ class EasyDB
 
     /**
      * Insert a row into the table, ignoring on key collisions
+     *
+     * @psalm-taint-source input $table
      *
      * @param string $table - table name
      * @param array  $map   - associative array of which values should be assigned to each field
@@ -611,6 +637,8 @@ class EasyDB
 
     /**
      * Insert a new record then get a particular field from the new row
+     *
+     * @psalm-taint-source input $table
      *
      * @param          string $table
      * @param          array  $map
@@ -679,6 +707,8 @@ class EasyDB
     /**
      * Insert many new rows to a table in a database. using the same prepared statement
      *
+     * @psalm-taint-source input $table
+     *
      * @param          string $table - table name
      * @param          array  $maps  - array of associative array specifying values
      *                                 should be assigned to each field
@@ -734,6 +764,8 @@ class EasyDB
      *
      * Do not use this with the pgsql driver. It is extremely unreliable.
      *
+     * @psalm-taint-source input $table
+     *
      * @param  string $table
      * @param  array  $map
      * @param  string $sequenceName (optional)
@@ -763,6 +795,8 @@ class EasyDB
 
     /**
      * Get an query string for an INSERT statement.
+     *
+     * @psalm-taint-source input $table
      *
      * @param string $table
      * @param array  $columns list of columns that will be inserted
@@ -795,6 +829,8 @@ class EasyDB
 
     /**
      * Get an query string for an INSERT statement.
+     *
+     * @psalm-taint-source input $table
      *
      * @template T as array<string, scalar|null>
      *
@@ -889,6 +925,8 @@ class EasyDB
     /**
      * Variadic shorthand for $this->safeQuery()
      *
+     * @psalm-taint-sink sql $statement
+     *
      * @param  string $statement SQL query without user data
      * @param  mixed  ...$params Parameters
      * @return mixed
@@ -911,6 +949,8 @@ class EasyDB
 
     /**
      * Similar to $this->q() except it only returns a single row
+     *
+     * @psalm-taint-sink sql $statement
      *
      * @param  string $statement SQL query without user data
      * @param  mixed  ...$params Parameters
@@ -938,6 +978,8 @@ class EasyDB
     /**
      * Variadic shorthand for $this->safeQuery()
      *
+     * @psalm-taint-sink sql $statement
+     *
      * @param  string $statement SQL query without user data
      * @param  mixed  ...$params Parameters
      * @return mixed - If successful, a 2D array
@@ -950,6 +992,8 @@ class EasyDB
 
     /**
      * Perform a Parametrized Query
+     *
+     * @psalm-taint-sink sql $statement
      *
      * @param  string $statement         The query string (hopefully untainted
      *                                  by user input)
@@ -1012,6 +1056,8 @@ class EasyDB
     /**
      * Fetch a single result -- useful for SELECT COUNT() queries
      *
+     * @psalm-taint-sink sql $statement
+     *
      * @param  string $statement
      * @param  array  $params
      * @return mixed
@@ -1032,6 +1078,8 @@ class EasyDB
 
     /**
      * Update a row in a database table.
+     *
+     * @psalm-taint-source input $table
      *
      * @param  string $table      Table name
      * @param  array  $changes    Associative array of which values should be
@@ -1061,6 +1109,8 @@ class EasyDB
 
     /**
      * Update a row in a database table.
+     *
+     * @psalm-taint-source input $table
      *
      * @param  string $table      Table name
      * @param  array  $changes    Associative array of which values should be
@@ -1145,6 +1195,8 @@ class EasyDB
 
     /**
      * Update a row in a database table.
+     *
+     * @psalm-taint-source input $table
      *
      * @param  string        $table      Table name
      * @param  array         $changes    Associative array of which values
@@ -1442,6 +1494,8 @@ class EasyDB
 
     /**
      * Prepares a statement for execution and returns a statement object
+     *
+     * @psalm-taint-sink sql $args[0]
      *
      * @param  string ...$args
      * @return \PDOStatement

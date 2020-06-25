@@ -15,6 +15,8 @@ abstract class Factory
     /**
      * Create a new EasyDB object based on PDO constructors
      *
+     * @psalm-taint-sink user_secret $password
+     *
      * @param string $dsn
      * @param string $username
      * @param string $password
