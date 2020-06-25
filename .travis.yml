@@ -3,7 +3,7 @@ language: php
 sudo: false
 
 env:
-    - psalm="yes"
+    - psalm="yes" psalmflags="--taint-analysis"
 
 php:
     - 7.1
@@ -27,7 +27,7 @@ install:
 
 script:
     - ./vendor/bin/phpunit --coverage-text
-    - - if [[ "$coverage" = "yes" ]]; then ./vendor/bin/psalm; fi
+    - - if [[ "$coverage" = "yes" ]]; then ./vendor/bin/psalm $psalmflags; fi
 
 cache:
     directories:
