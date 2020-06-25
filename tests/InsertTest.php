@@ -92,7 +92,7 @@ class InsertTest extends EasyDBWriteTest
         $db = $this->easyDBExpectedFromCallable($cb);
         $statement = $db->buildInsertQuery('test_table', ['id', 'col1', 'col2']);
         $expected = '/insert into .test_table. \(.id., .col1., .col2.\) VALUES \(\?, \?, \?\)/i';
-        $this->assertRegExp($expected, $statement);
+        $this->conditionallyAssertMatchesRegularExpression($expected, $statement);
     }
 
     /**
@@ -110,7 +110,7 @@ class InsertTest extends EasyDBWriteTest
             false
         );
 
-        $this->assertRegExp(
+        $this->conditionallyAssertMatchesRegularExpression(
             '/insert ignore into .test_table. \(.foo.\) VALUES \(\?\)/i',
             $query
         );
@@ -133,7 +133,7 @@ class InsertTest extends EasyDBWriteTest
             ]
         );
 
-        $this->assertRegExp(
+        $this->conditionallyAssertMatchesRegularExpression(
             '/insert into .test_table. \(.foo.\) VALUES \(\?\) ON DUPLICATE KEY UPDATE .foo. = VALUES\(.foo.\)/i',
             $query
         );
@@ -159,9 +159,20 @@ class InsertTest extends EasyDBWriteTest
             ]
         );
 
-        $this->assertRegExp(
+        $this->conditionallyAssertMatchesRegularExpression(
             '/insert into .test_table. \(.foo., .bar., .baz.\) VALUES \(\?, \?, \?\) ON DUPLICATE KEY UPDATE .bar. = VALUES\(.bar.\), .baz. = VALUES\(.baz.\)/i',
             $query
         );
+    }
+
+    protected function conditionallyAssertMatchesRegularExpression(
+        $regex,
+        $value
+    ) {
+        if (method_exists($this, 'assertMatchesRegularExpression')) {
+            $this->assertMatchesRegularExpression($regex, $value);
+        } else {
+            $this->assertRegExp($regex, $value);
+        }
     }
 }
