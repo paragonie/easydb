@@ -694,6 +694,8 @@ class EasyDB
             default:
                 $limiter = '';
         }
+
+        /** @psalm-taint-escape sql */
         $query = 'SELECT ' .
                 $this->escapeIdentifier($field) .
             ' FROM ' .
@@ -1218,6 +1220,8 @@ class EasyDB
         if (empty($changes) || $conditions->count() < 1) {
             return 0;
         }
+
+        /** @psalm-taint-escape sql */
         $queryString = 'UPDATE ' . $this->escapeIdentifier($table) . ' SET ';
         $params = [];
 
