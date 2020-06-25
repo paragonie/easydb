@@ -2,8 +2,10 @@ language: php
 
 sudo: false
 
+env:
+    - psalm="yes"
+
 php:
-    - 7.0
     - 7.1
     - 7.2
     - 7.3
@@ -15,13 +17,17 @@ matrix:
     allow_failures:
         - php: hhvm
         - php: nightly
+    include:
+        - php: 7.0
+          env:
+            - psalm="no"
 
 install:
     - travis_retry composer install --no-interaction
 
 script:
     - ./vendor/bin/phpunit --coverage-text
-    - ./vendor/bin/psalm
+    - - if [[ "$coverage" = "yes" ]]; then ./vendor/bin/psalm; fi
 
 cache:
     directories:
