@@ -11,7 +11,7 @@
          processIsolation="false"
          stopOnError="false"
          stopOnFailure="false"
-         syntaxCheck="true">
+>
     <testsuite name="paragonie/easydb Test Suite">
         <directory suffix="Test.php">./tests</directory>
     </testsuite>
