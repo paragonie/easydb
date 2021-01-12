@@ -17,6 +17,7 @@ matrix:
         - php: nightly
 
 install:
+    - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.0" ]]; then composer self-update --1; fi
     - travis_retry composer install --no-interaction
 
 script:
