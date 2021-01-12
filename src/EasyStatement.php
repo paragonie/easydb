@@ -306,7 +306,7 @@ class EasyStatement
         if (empty($this->parts)) {
             return '1 = 1';
         }
-        return (string) \array_reduce(
+        return \array_reduce(
             $this->parts,
             /**
              * @psalm-param array{type:string, condition:self|string, values?:array<int, mixed>} $part
@@ -356,7 +356,7 @@ class EasyStatement
      */
     public function values(): array
     {
-        return (array) \array_reduce(
+        return \array_reduce(
             $this->parts,
             /**
              * @psalm-param array{type:string, condition:self|string, values?:array<int, mixed>} $part

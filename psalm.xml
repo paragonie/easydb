@@ -15,6 +15,7 @@
         <pluginClass class="Psalm\PhpUnitPlugin\Plugin" />
     </plugins>
     <issueHandlers>
-        <RedundantCast errorLevel="info" />
+        <DocblockTypeContradiction errorLevel="info" />
+        <RedundantCastGivenDocblockType errorLevel="info" />
     </issueHandlers>
 </psalm>

@@ -14,6 +14,8 @@ class InsertManyFlatTransactionTest extends EasyDBWriteTest
      * @param callable $cb
      *
      * @psalm-param callable():EasyDB $cb
+     * @psalm-suppress MissingReturnType
+     * @psalm-suppress ReservedWord
      */
     public function testInsertMany(callable $cb)
     {
@@ -22,6 +24,7 @@ class InsertManyFlatTransactionTest extends EasyDBWriteTest
         $expectedCount = $db->tryFlatTransaction(function (EasyDB $db) : int {
             return (int) $db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename');
         });
+        /** @psalm-suppress MissingClosureReturnType */
         $callbackWillThrow = function (EasyDB $mightNotBeTheOtherDb) {
             $mightNotBeTheOtherDb->insertMany('irrelevant_but_valid_tablename', [['foo' => '3'], ['foo' => '4']]);
 

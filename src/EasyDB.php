@@ -966,6 +966,7 @@ class EasyDB
      * @throws \InvalidArgumentException
      * @throws Issues\QueryError
      * @throws \TypeError
+     * @psalm-suppress RedundantCast
      */
     public function safeQuery(
         string $statement,
@@ -1290,6 +1291,7 @@ class EasyDB
      *
      * @param  mixed $v
      * @return string
+     * @psalm-suppress RedundantCast
      */
     protected function getValueType($v = null): string
     {
@@ -1454,6 +1456,7 @@ class EasyDB
      * @param  string|array ...$args
      * @return \PDOStatement
      * @throws Issues\QueryError
+     * @psalm-suppress PossiblyInvalidArgument
      */
     public function prepare(...$args): \PDOStatement
     {
