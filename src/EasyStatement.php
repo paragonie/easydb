@@ -79,6 +79,7 @@ class EasyStatement
      *
      * @return self
      * @throws \TypeError
+     * @psalm-suppress DocblockTypeContradiction
      * @psalm-suppress RedundantConditionGivenDocblockType
      */
     public function andWith($condition, ...$values): self
@@ -86,6 +87,7 @@ class EasyStatement
         if ($condition instanceof EasyStatement) {
             $condition = '(' . $condition . ')';
         }
+        /** @psalm-suppress DocblockTypeContradiction */
         if (!\is_string($condition)) {
             throw new \TypeError('An EasyStatement or string is expected for argument 1');
         }
@@ -119,6 +121,7 @@ class EasyStatement
      *
      * @return self
      * @throws \TypeError
+     * @psalm-suppress DocblockTypeContradiction
      * @psalm-suppress RedundantConditionGivenDocblockType
      */
     public function orWith($condition, ...$values): self
@@ -300,6 +303,7 @@ class EasyStatement
      * Compile the current statement into PDO-ready SQL.
      *
      * @return string
+     * @psalm-suppress RedundantCastGivenDocblockType
      */
     public function sql(): string
     {

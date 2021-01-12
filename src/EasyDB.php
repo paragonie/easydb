@@ -506,6 +506,7 @@ class EasyDB
      * @return int
      * @throws \InvalidArgumentException
      * @throws \TypeError
+     * @psalm-suppress RedundantCastGivenDocblockType
      */
     public function insert(string $table, array $map): int
     {
@@ -544,6 +545,7 @@ class EasyDB
      *
      * @throws \InvalidArgumentException
      * @throws \TypeError
+     * @psalm-suppress RedundantCastGivenDocblockType
      */
     public function insertIgnore(string $table, array $map) : int
     {
@@ -583,6 +585,7 @@ class EasyDB
      *
      * @throws \InvalidArgumentException
      * @throws \TypeError
+     * @psalm-suppress RedundantCastGivenDocblockType
      */
     public function insertOnDuplicateKeyUpdate(
         string $table,
