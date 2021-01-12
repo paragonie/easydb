@@ -94,10 +94,12 @@ class EasyDB
             );
         }
         $stmt->execute($params);
-        return $stmt->fetchAll(
+        $results = $stmt->fetchAll(
             \PDO::FETCH_COLUMN,
             $offset
         );
+        $stmt->closeCursor();
+        return $results;
     }
 
     /**
@@ -726,6 +728,7 @@ class EasyDB
             $stmt->execute(\array_values($params));
             $count += $stmt->rowCount();
         }
+        $stmt->closeCursor();
         return $count;
     }
 
@@ -1006,7 +1009,9 @@ class EasyDB
         if ($returnNumAffected) {
             return (int) $stmt->rowCount();
         }
-        return $this->getResultsStrictTyped($stmt, $fetchStyle);
+        $result = $this->getResultsStrictTyped($stmt, $fetchStyle);
+        $stmt->closeCursor();
+        return $result;
     }
 
     /**
@@ -1027,7 +1032,9 @@ class EasyDB
         }
         $stmt = $this->prepare($statement);
         $stmt->execute($params);
-        return $stmt->fetchColumn(0);
+        $result = $stmt->fetchColumn(0);
+        $stmt->closeCursor();
+        return$result;
     }
 
     /**
