@@ -1,23 +1,21 @@
 <?xml version="1.0"?>
 <psalm
-    name="EasyDB static analysis tests."
-    useDocblockTypes="true"
-    totallyTyped="true"
-    requireVoidReturnType="false"
+    resolveFromConfigFile="true"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
-    xsi:schemaLocation="https://getpsalm.org/schema/config"
-    errorBaseline="./psalm.baseline.xml"
+    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
 >
     <projectFiles>
         <directory name="src" />
         <file name="tests/InsertManyFlatTransactionTest.php" />
         <ignoreFiles>
             <directory name="vendor" />
-            <directory name="tests" />
         </ignoreFiles>
     </projectFiles>
     <plugins>
         <pluginClass class="Psalm\PhpUnitPlugin\Plugin" />
     </plugins>
+    <issueHandlers>
+        <RedundantCast errorLevel="info" />
+    </issueHandlers>
 </psalm>

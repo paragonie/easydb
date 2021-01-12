@@ -1451,7 +1451,7 @@ class EasyDB
     /**
      * Prepares a statement for execution and returns a statement object
      *
-     * @param  string ...$args
+     * @param  string|array ...$args
      * @return \PDOStatement
      * @throws Issues\QueryError
      */
@@ -1480,12 +1480,13 @@ class EasyDB
     /**
      * Quotes a string for use in a query
      *
-     * @param  string ...$args
+     * @param string $string
+     * @param int $type
      * @return string
      */
-    public function quote(...$args): string
+    public function quote(string $string, int $type = \PDO::PARAM_STR): string
     {
-        return $this->pdo->quote(...$args);
+        return $this->pdo->quote($string, $type);
     }
 
     /**
