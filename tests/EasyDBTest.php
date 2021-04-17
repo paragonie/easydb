@@ -134,4 +134,17 @@ abstract class EasyDBTest extends PHPUnit_Framework_TestCase
             []
         );
     }
+
+    public function assertEasydbRegExp($match, $str)
+    {
+        if (method_exists($this, 'assertMatchesRegularExpression')) {
+            $this->assertMatchesRegularExpression($match, $str);
+            return;
+        }
+        if (method_exists($this, 'assertRegExp')) {
+            $this->assertRegExp($match, $str);
+            return;
+        }
+        $this->assertIsInt(preg_match($match, $str));
+    }
 }

@@ -1,6 +1,6 @@
 # EasyDB - Simple Database Abstraction Layer
 
-[![Build Status](https://travis-ci.org/paragonie/easydb.svg?branch=master)](https://travis-ci.org/paragonie/easydb)
+[![Build Status](https://github.com/paragonie/easydb/actions/workflows/ci.yml/badge.svg)](https://github.com/paragonie/easydb/actions)
 [![Latest Stable Version](https://poser.pugx.org/paragonie/easydb/v/stable)](https://packagist.org/packages/paragonie/easydb)
 [![Latest Unstable Version](https://poser.pugx.org/paragonie/easydb/v/unstable)](https://packagist.org/packages/paragonie/easydb)
 [![License](https://poser.pugx.org/paragonie/easydb/license)](https://packagist.org/packages/paragonie/easydb)

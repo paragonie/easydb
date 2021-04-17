@@ -771,6 +771,7 @@ class EasyDB
      *
      * @throws \InvalidArgumentException
      *   If $columns is not a one-dimensional array.
+     * @psalm-suppress MixedArgument
      */
     public function buildInsertQuery(string $table, array $columns): string
     {
@@ -1446,6 +1447,7 @@ class EasyDB
      * @param  string ...$args
      * @return \PDOStatement
      * @throws Issues\QueryError
+     * @psalm-suppress InvalidArgument
      */
     public function prepare(...$args): \PDOStatement
     {
@@ -1474,6 +1476,7 @@ class EasyDB
      *
      * @param  string ...$args
      * @return string
+     * @psalm-suppress InvalidArgument
      */
     public function quote(...$args): string
     {
