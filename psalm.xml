@@ -3,19 +3,22 @@
     name="EasyDB static analysis tests."
     useDocblockTypes="true"
     totallyTyped="true"
-    requireVoidReturnType="false"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns="https://getpsalm.org/schema/config"
-    xsi:schemaLocation="https://getpsalm.org/schema/config"
-    errorBaseline="./psalm.baseline.xml"
 >
     <projectFiles>
         <directory name="src" />
         <file name="tests/InsertManyFlatTransactionTest.php" />
         <ignoreFiles>
+            <directory name="tests" />
             <directory name="vendor" />
         </ignoreFiles>
     </projectFiles>
+    <issueHandlers>
+        <RedundantCast errorLevel="info" />
+        <DocblockTypeContradiction errorLevel="info" />
+        <PropertyTypeCoercion errorLevel="info" />
+        <UnnecessaryVarAnnotation errorLevel="suppress" />
+        <UnusedVariable errorLevel="info" />
+    </issueHandlers>
     <plugins>
         <pluginClass class="Psalm\PhpUnitPlugin\Plugin" />
     </plugins>

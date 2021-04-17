@@ -40,6 +40,7 @@ class EasyStatement
      * Open a new statement.
      *
      * @return self
+     * @psalm-suppress UnsafeInstantiation
      */
     public static function open(): self
     {

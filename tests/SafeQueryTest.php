@@ -30,12 +30,12 @@ class SafeQueryTest extends RunTest
         $db = Factory::create($dsn, $username, $password, $options);
         $args = [1, 2, 3, 4];
         $results = $db->run('SELECT ? AS foo, ? AS bar UNION SELECT ? AS foo, ? AS bar', ...$args);
-        $this->assertInternalType('array', $results);
+        $this->assertIsArray($results);
 
         $expectedResult = [['foo' => 1, 'bar' => 2], ['foo' => 3, 'bar' => 4]];
 
         foreach ($results as $i => $result) {
-            $this->assertInternalType('array', $result);
+            $this->assertIsArray($result);
             $this->assertEquals(array_diff_assoc($result, $expectedResult[$i]), []);
         }
 
