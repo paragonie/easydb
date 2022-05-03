@@ -21,17 +21,19 @@ class EasyPlaceholder
      * Use custom mask for set value in INSERT or UPDATE
      *
      * @param string $mask
-     * @param array $values
+     * @param scalar|array|null ...$values
+     *
+     * @throws MustBeNonEmpty
      */
     public function __construct(string $mask, ...$values)
     {
         $values = array_reduce($values, function ($values, $value) use (&$mask) {
-            if(!is_array($value)) {
+            if (!is_array($value)) {
                 $values []= $value;
                 return $values;
             }
             $start_pos = strpos($mask, '?*');
-            if($start_pos === false) {
+            if ($start_pos === false) {
                 throw new Issues\QueryError("Mask don't have \"?*\"");
             }
             if (\count($value) < 1) {
@@ -47,11 +49,17 @@ class EasyPlaceholder
         $this->values = $values;
     }
 
+    /**
+     * @return string
+     */
     public function mask(): string
     {
         return $this->mask;
     }
 
+    /**
+     * @return array
+     */
     public function values(): array
     {
         return $this->values;
