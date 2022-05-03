@@ -499,7 +499,7 @@ class EasyDB
      * @param  string $table - table name
      * @param  array  $map   - associative array of which values should be assigned to each field
      *
-     * @psalm-param array<string, scalar|null> $map
+     * @psalm-param array<string, scalar|EasyPlaceholder|null> $map
      *
      * @return int
      * @throws \InvalidArgumentException
@@ -536,7 +536,7 @@ class EasyDB
      * @param string $table - table name
      * @param array  $map   - associative array of which values should be assigned to each field
      *
-     * @psalm-param array<string, scalar|null> $map
+     * @psalm-param array<string, scalar|EasyPlaceholder|null> $map
      *
      * @return int
      *
@@ -574,7 +574,7 @@ class EasyDB
      * @param array  $map   - associative array of which values should be assigned to each field
      * @param array $on_duplicate_key_update
      *
-     * @psalm-param array<string, scalar|null> $map
+     * @psalm-param array<string, scalar|EasyPlaceholder|null> $map
      * @psalm-param array<int, string> $on_duplicate_key_update
      *
      * @return int
@@ -805,7 +805,7 @@ class EasyDB
      *                                                         false for ignore,
      *                                                         array for on-duplicate-key-update
      *
-     * @psalm-param array<string, scalar|null> $map
+     * @psalm-param array<string, scalar|EasyPlaceholder|null> $map
      * @psalm-param null|false|array<int, string> $duplicates_mode
      *
      * @return array {0: string, 1: array}
@@ -828,7 +828,7 @@ class EasyDB
         $values = [];
         /**
          * @var string $key
-         * @var scalar|null $value
+         * @var scalar|EasyPlaceholder|null $value
          */
         foreach ($map as $key => $value) {
             $columns[] = $key;
@@ -840,6 +840,9 @@ class EasyDB
                 } else {
                     $placeholders[] = $value ? 'TRUE' : 'FALSE';
                 }
+            } elseif ($value instanceof EasyPlaceholder) {
+                $placeholders[] = $value->mask();
+                $values = array_merge($values, $value->values());
             } else {
                 $placeholders[] = '?';
                 $values[] = $value;
@@ -1101,7 +1104,7 @@ class EasyDB
         $pre = [];
         /**
          * @var string $i
-         * @var string|int|bool|float|null $v
+         * @var string|int|bool|float|EasyPlaceholder|null $v
          */
         foreach ($changes as $i => $v) {
             $i = $this->escapeIdentifier($i);
@@ -1109,6 +1112,9 @@ class EasyDB
                 $pre []= " {$i} = NULL";
             } elseif (\is_bool($v)) {
                 $pre []= $this->makeBooleanArgument($i, $v);
+            } elseif ($v instanceof EasyPlaceholder) {
+                $pre []= " {$i} = ".$v->mask();
+                $params = array_merge($params, $v->values());
             } else {
                 $pre []= " {$i} = ?";
                 $params[] = $v;
@@ -1174,7 +1180,7 @@ class EasyDB
         $pre = [];
         /**
          * @var string $i
-         * @var string|int|bool|float|null $v
+         * @var string|int|bool|float|EasyPlaceholder|null $v
          */
         foreach ($changes as $i => $v) {
             $i = $this->escapeIdentifier($i);
@@ -1182,6 +1188,9 @@ class EasyDB
                 $pre []= " {$i} = NULL";
             } elseif (\is_bool($v)) {
                 $pre []= $this->makeBooleanArgument($i, $v);
+            } elseif ($v instanceof EasyPlaceholder) {
+                $pre []= " {$i} = ".$v->mask();
+                $params = array_merge($params, $v->values());
             } else {
                 $pre []= " {$i} = ?";
                 $params[] = $v;
