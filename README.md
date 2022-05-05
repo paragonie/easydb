@@ -306,7 +306,7 @@ $db->insert('user_auth', [
     'user_id' => 1,
     'timestamp' => new EasyPlaceholder('NOW()'),
     'expired' => new EasyPlaceholder('TIMESTAMPADD(HOUR, 2, NOW())'),
-    'location' => new EasyPlaceholder("ST_GeomFromText('POINT(? ?)')", 50.4019514, 30.3926105)
+    'location' => new EasyPlaceholder("ST_GeomFromText(CONCAT('POINT(', ?, ' ', ?, ')'))", 50.4019514, 30.3926105)
 ])
 
 $db->update('user_auth', [
