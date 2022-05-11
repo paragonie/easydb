@@ -27,6 +27,7 @@ abstract class Factory
      * @param ?string $username
      * @param ?string $password
      * @param array $options
+     * @return EasyDB
      *
      * @throws ConstructorFailed
      *
