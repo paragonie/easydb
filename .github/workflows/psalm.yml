@@ -30,3 +30,6 @@ jobs:
 
       - name: Static Analysis
         run: psalm
+
+      - name: Taint Analysis
+        run: psalm --taint-analysis
