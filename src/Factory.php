@@ -21,6 +21,8 @@ abstract class Factory
      * @param array $options
      * @return \ParagonIE\EasyDB\EasyDB
      * @throws Issues\ConstructorFailed
+     *
+     * @psalm-taint-sink user_secret $password
      */
     public static function create(
         string $dsn,

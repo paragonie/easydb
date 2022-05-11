@@ -89,6 +89,8 @@ class EasyDB
      *                           from each row?
      * @param  scalar|null|object ...$params Parameters
      * @return array|false
+     *
+     * @psalm-taint-sink sql $statement
      */
     public function col(string $statement, int $offset = 0, ...$params): array|bool
     {
@@ -103,6 +105,8 @@ class EasyDB
      * @param  int    $offset    How many columns from the left are we grabbing
      *                           from each row?
      * @return array|false
+     *
+     * @psalm-taint-sink sql $statement
      */
     public function column(string $statement, array $params = [], int $offset = 0): array|bool
     {
@@ -125,6 +129,8 @@ class EasyDB
      * @param  string $statement SQL query without user data
      * @param  scalar|null|object ...$params Parameters
      * @return scalar|null
+     *
+     * @psalm-taint-sink sql $statement
      */
     public function cell(
         string $statement,
@@ -142,6 +148,8 @@ class EasyDB
      * @return array[] - If successful, a 2D array
      *
      * @throws TypeError
+     *
+     * @psalm-taint-sink sql $statement
      */
     public function csv(string $statement, float|bool|int|string|null|object ...$params): array
     {
@@ -171,7 +179,10 @@ class EasyDB
      * @param  string $table                   Table name
      * @param  EasyStatement|array $conditions Defines the WHERE clause
      * @return int
+     *
      * @throws TypeError
+     *
+     * @psalm-taint-source input $table
      */
     public function delete(string $table, EasyStatement|array $conditions): int
     {
@@ -191,6 +202,8 @@ class EasyDB
      * @throws InvalidTableName
      * @throws MustBeOneDimensionalArray
      * @throws TypeError
+     *
+     * @psalm-taint-source input $table
      */
     protected function deleteWhereArray(string $table, array $conditions): int
     {
@@ -208,6 +221,8 @@ class EasyDB
                 'Only one-dimensional arrays are allowed.'
             );
         }
+
+        /** @psalm-taint-escape sql */
         $queryString = 'DELETE FROM ' . $this->escapeIdentifier($table) . ' WHERE ';
 
         // Simple array for joining the strings together
@@ -218,6 +233,7 @@ class EasyDB
          * @var string|int|bool|float|null $v
          */
         foreach ($conditions as $i => $v) {
+            /** @psalm-taint-escape sql */
             $i = $this->escapeIdentifier($i);
             if ($v === null) {
                 $placeholders [] = " {$i} IS NULL ";
@@ -247,6 +263,8 @@ class EasyDB
      * @return int
      *
      * @throws InvalidTableName
+     *
+     * @psalm-taint-source input $table
      */
     protected function deleteWhereStatement(string $table, EasyStatement $conditions): int
     {
@@ -259,6 +277,7 @@ class EasyDB
             // Don't allow foot-bullets
             return 0;
         }
+        /** @psalm-taint-escape sql */
         $queryString = 'DELETE FROM ' . $this->escapeIdentifier($table) . ' WHERE ' . $conditions;
         $params = [];
 
@@ -287,6 +306,8 @@ class EasyDB
      * @return string
      *
      * @throws InvalidIdentifier
+     *
+     * @psalm-taint-source input $string
      */
     public function escapeIdentifier(string $string, bool $quote = true): string
     {
@@ -311,6 +332,7 @@ class EasyDB
             if (str_contains($str, '.')) {
                 $pieces = explode('.', $str);
                 foreach ($pieces as $i => $p) {
+                    /** @psalm-taint-escape sql */
                     $pieces[$i] = $this->escapeIdentifier($p, $quote);
                 }
                 return implode('.', $pieces);
@@ -361,6 +383,8 @@ class EasyDB
      *
      * @throws InvalidArgumentException
      * @throws MustBeOneDimensionalArray
+     *
+     * @psalm-taint-source input $values
      */
     public function escapeValueSet(array $values, string $type = 'string'): string
     {
@@ -453,6 +477,8 @@ class EasyDB
      *
      * @param  string $value
      * @return string
+     *
+     * @psalm-taint-source input $value
      */
     public function escapeLikeValue(string $value): string
     {
@@ -477,6 +503,8 @@ class EasyDB
      * @param          string $statement
      * @param          mixed  ...$params
      * @return         bool
+     *
+     * @psalm-taint-sink sql $statement
      */
     public function exists(string $statement, ...$params): bool
     {
@@ -488,6 +516,8 @@ class EasyDB
      * @param string $statement
      * @param scalar|null|object ...$params
      * @return array|false
+     *
+     * @psalm-taint-sink sql $statement
      */
     public function first(string $statement, ...$params): array|bool
     {
@@ -525,6 +555,8 @@ class EasyDB
      * @throws MustBeOneDimensionalArray
      *
      * @psalm-param array<string, scalar|EasyPlaceholder|null> $map
+     *
+     * @psalm-taint-source input $table
      */
     public function insert(string $table, array $map): int
     {
@@ -561,6 +593,8 @@ class EasyDB
      * @throws MustBeOneDimensionalArray
      *
      * @psalm-param array<string, scalar|EasyPlaceholder|null> $map
+     *
+     * @psalm-taint-source input $table
      */
     public function insertIgnore(string $table, array $map): int
     {
@@ -598,6 +632,8 @@ class EasyDB
      *
      * @psalm-param array<string, scalar|EasyPlaceholder|null> $map
      * @psalm-param array<int, string> $on_duplicate_key_update
+     *
+     * @psalm-taint-source input $table
      */
     public function insertOnDuplicateKeyUpdate(
         string $table,
@@ -637,6 +673,9 @@ class EasyDB
      * @throws InvalidArgumentException
      *
      * @psalm-param array<string, scalar|null> $map
+     *
+     * @psalm-taint-source input $table
+     * @psalm-taint-source input $field
      */
     public function insertGet(
         string $table,
@@ -657,6 +696,7 @@ class EasyDB
          */
         foreach ($map as $i => $v) {
             // Escape the identifier to prevent stupidity
+            /** @psalm-taint-escape sql */
             $i = $this->escapeIdentifier($i);
             if ($v === null) {
                 $post []= " {$i} IS NULL ";
@@ -679,6 +719,7 @@ class EasyDB
                 ' DESC OFFSET 0 LIMIT 1 ',
             default => '',
         };
+        /** @psalm-taint-escape sql */
         $query = 'SELECT ' .
                 $this->escapeIdentifier($field) .
             ' FROM ' .
@@ -700,6 +741,8 @@ class EasyDB
      * @throws InvalidArgumentException
      * @throws MustBeOneDimensionalArray
      * @throws QueryError
+     *
+     * @psalm-taint-source input $table
      */
     public function insertMany(string $table, array $maps): int
     {
@@ -759,6 +802,8 @@ class EasyDB
      * @throws QueryError
      *
      * @psalm-param array<string, scalar|null> $map
+     *
+     * @psalm-taint-source input $table
      */
     public function insertReturnId(string $table, array $map, string $sequenceName = ''): string
     {
@@ -786,7 +831,8 @@ class EasyDB
      *
      * @throws MustBeOneDimensionalArray
      *   If $columns is not a one-dimensional array.
-     * @psalm-suppress MixedArgument
+     *
+     * @psalm-taint-source input $table
      */
     public function buildInsertQuery(string $table, array $columns): string
     {
@@ -910,6 +956,8 @@ class EasyDB
      * @return mixed
      *
      * @throws TypeError
+     *
+     * @psalm-taint-sink sql $statement
      */
     public function q(string $statement, ...$params): array
     {
@@ -934,6 +982,8 @@ class EasyDB
      * @return array
      *
      * @throws TypeError
+     *
+     * @psalm-taint-sink sql $statement
      */
     public function row(string $statement, ...$params): array
     {
@@ -959,6 +1009,8 @@ class EasyDB
      * @param  string $statement SQL query without user data
      * @param  scalar|null  ...$params Parameters
      * @return array
+     *
+     * @psalm-taint-sink sql $statement
      */
     public function run(string $statement, ...$params): array
     {
@@ -991,6 +1043,8 @@ class EasyDB
      * @throws MustBeOneDimensionalArray
      * @throws QueryError
      * @throws TypeError
+     *
+     * @psalm-taint-sink sql $statement
      */
     public function safeQuery(
         string $statement,
@@ -1070,6 +1124,8 @@ class EasyDB
      *
      * @throws QueryError
      * @throws InvalidTableName
+     *
+     * @psalm-taint-source input $table
      */
     public function update(
         string $table,
@@ -1095,6 +1151,8 @@ class EasyDB
      *                            assigned to each field
      * @param  array  $conditions WHERE clause
      * @return int
+     *
+     * @psalm-taint-source input $table
      */
     protected function updateWhereArray(string $table, array $changes, array $conditions): int
     {
@@ -1106,6 +1164,7 @@ class EasyDB
                 'Only one-dimensional arrays are allowed.'
             );
         }
+        /** @psalm-taint-escape sql */
         $queryString = 'UPDATE ' . $this->escapeIdentifier($table) . ' SET ';
         $params = [];
 
@@ -1116,6 +1175,7 @@ class EasyDB
          * @var string|int|bool|float|EasyPlaceholder|null $v
          */
         foreach ($changes as $i => $v) {
+            /** @psalm-taint-escape sql */
             $i = $this->escapeIdentifier($i);
             if ($v === null) {
                 $pre []= " {$i} = NULL";
@@ -1139,6 +1199,7 @@ class EasyDB
          * @var string|int|bool|float|null $v
          */
         foreach ($conditions as $i => $v) {
+            /** @psalm-taint-escape sql */
             $i = $this->escapeIdentifier($i);
             if ($v === null) {
                 $post []= " {$i} IS NULL";
@@ -1168,6 +1229,7 @@ class EasyDB
      * @param  EasyStatement $conditions WHERE clause
      * @return int
      *
+     * @psalm-taint-source input $table
      */
     protected function updateWhereStatement(
         string $table,
@@ -1177,6 +1239,7 @@ class EasyDB
         if (empty($changes) || $conditions->count() < 1) {
             return 0;
         }
+        /** @psalm-taint-escape sql */
         $queryString = 'UPDATE ' . $this->escapeIdentifier($table) . ' SET ';
         $params = [];
 
@@ -1187,6 +1250,7 @@ class EasyDB
          * @var string|int|bool|float|EasyPlaceholder|null $v
          */
         foreach ($changes as $i => $v) {
+            /** @psalm-taint-escape sql */
             $i = $this->escapeIdentifier($i);
             if ($v === null) {
                 $pre []= " {$i} = NULL";
@@ -1458,6 +1522,8 @@ class EasyDB
 
     /**
      * Prepares a statement for execution and returns a statement object
+     *
+     * @psalm-taint-sink sql $args[0]
      *
      * @param  mixed ...$args
      * @return PDOStatement

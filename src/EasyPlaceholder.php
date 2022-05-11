@@ -32,6 +32,8 @@ class EasyPlaceholder
      * @param scalar|array|null ...$values
      *
      * @throws MustBeNonEmpty
+     *
+     * @psalm-taint-source input $mask
      */
     public function __construct(string $mask, ...$values)
     {
