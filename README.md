@@ -29,7 +29,7 @@ First, [get Composer](https://getcomposer.org/download/), if you don't already u
 Next, run the following command:
 
 ```bash
-/path/to/your/local/composer.phar require paragonie/easydb:^2
+/path/to/your/local/composer.phar require paragonie/easydb:^3
 ```
 
 If you've installed Composer in `/usr/bin`, you can replace
