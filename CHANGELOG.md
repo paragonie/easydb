@@ -1,3 +1,12 @@
+# Version 3.0.0
+
+* [#141](https://github.com/paragonie/easydb/pull/141):
+  Increased minimum PHP Version to 8.0
+  * Lots of code refactoring went into this, including strict-typing with PHP 8's
+    new support for Union Types.
+* [#142](https://github.com/paragonie/easydb/pull/142):
+  Added support for Psalm Security Analysis
+
 # Version 2.12.0
 
 * Migrated from Travis CI to GitHub Actions
