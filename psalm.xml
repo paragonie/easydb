@@ -2,7 +2,6 @@
 <psalm
     name="EasyDB static analysis tests."
     useDocblockTypes="true"
-    totallyTyped="true"
 >
     <projectFiles>
         <directory name="src" />
