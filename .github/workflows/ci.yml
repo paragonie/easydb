@@ -26,9 +26,6 @@ jobs:
       - name: Install dependencies
         run: composer self-update --2.2 && composer install
 
-      - name: Modernize dependencies
-        run: composer require --dev "phpunit/phpunit:>=4"
-
       - name: PHPUnit tests
         uses: php-actions/phpunit@v2
         timeout-minutes: 30
@@ -58,17 +55,8 @@ jobs:
       - name: Install dependencies
         run: composer install
 
-      - name: Modernize dependencies
-        run: composer require --dev "phpunit/phpunit:>=4"
-
       - name: PHPUnit tests
         uses: php-actions/phpunit@v2
         timeout-minutes: 30
         with:
           memory_limit: 256M
-
-      - name: Install Psalm
-        run: composer require --dev vimeo/psalm:^4
-
-      - name: Static Analysis
-        run: vendor/bin/psalm
