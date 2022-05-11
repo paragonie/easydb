@@ -1085,19 +1085,10 @@ class EasyDB
                 'Only one-dimensional arrays are allowed.'
             );
         }
-        /**
-         * @var string $queryString
-         */
         $queryString = 'UPDATE ' . $this->escapeIdentifier($table) . ' SET ';
-        /**
-         * @var array $params
-         */
         $params = [];
 
         // The first set (pre WHERE)
-        /**
-         * @var array $pre
-         */
         $pre = [];
         /**
          * @var string $i
