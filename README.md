@@ -301,19 +301,41 @@ echo $statement; /* (subtotal > ? AND taxes > ?) OR (cost > ? AND cancelled = 1)
 ```
 
 ### Insert and Update with custom placeholder
+
+Since Version 2.12.0, EasyDB supports placeholders for calling stored procedures and SQL functions
+when inserting or updating data.
+
+The `EasyPlaceholder` class is constructed in the same fashion as other EasyDB methods: The first
+argument, the "mask", must be a string. The mask may contain `?` placeholders, and any subsequent 
+arguments will fill in for the `?` placeholders when the query is executed.
+
 ```php
 $db->insert('user_auth', [
     'user_id' => 1,
     'timestamp' => new EasyPlaceholder('NOW()'),
     'expired' => new EasyPlaceholder('TIMESTAMPADD(HOUR, 2, NOW())'),
-    'location' => new EasyPlaceholder("ST_GeomFromText(CONCAT('POINT(', ?, ' ', ?, ')'))", 50.4019514, 30.3926105)
-])
+    'location' => new EasyPlaceholder(
+        "ST_GeomFromText(CONCAT('POINT(', ?, ' ', ?, ')'))",
+        50.4019514,
+        30.3926105
+    )
+]);
 
-$db->update('user_auth', [
-    'last_update' => new EasyPlaceholder('NOW()'),
-])
+$db->update(
+    'user_auth', 
+    [
+        'last_update' => new EasyPlaceholder('NOW()'),
+    ], 
+    [
+        'user_id' => 1
+    ]
+);
 ```
-`EasyPlaceholder` can use in `insert()`, `insertIgnore()`, `insertOnDuplicateKeyUpdate()`, `update()`.
+
+> Security warning: Do not concatenate user input into the first parameter.
+
+`EasyPlaceholder` can be used in `insert()`, `insertIgnore()`, `insertOnDuplicateKeyUpdate()`,
+and `update()`.
 
 ## What if I need PDO for something specific?
 

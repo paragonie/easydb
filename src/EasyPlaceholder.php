@@ -3,7 +3,14 @@
 namespace ParagonIE\EasyDB;
 
 use \ParagonIE\EasyDB\Exception as Issues;
-use ParagonIE\EasyDB\Exception\MustBeNonEmpty;
+use \ParagonIE\EasyDB\Exception\MustBeNonEmpty;
+use function
+    array_merge,
+    array_reduce,
+    is_array,
+    strpos,
+    substr,
+    str_repeat;
 
 /**
  * Class EasyPlaceholder
@@ -14,7 +21,9 @@ use ParagonIE\EasyDB\Exception\MustBeNonEmpty;
  */
 class EasyPlaceholder
 {
+    /** @var string $mask */
     protected $mask;
+    /** @var scalar[] $values */
     protected $values;
 
     /**
@@ -58,11 +67,10 @@ class EasyPlaceholder
     }
 
     /**
-     * @return array
+     * @return array<array-key, scalar>
      */
     public function values(): array
     {
         return $this->values;
     }
-
 }
