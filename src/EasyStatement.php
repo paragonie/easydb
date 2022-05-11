@@ -100,6 +100,8 @@ class EasyStatement
      * @param mixed ...$values
      *
      * @return self
+     *
+     * @psalm-taint-source input $condition
      */
     public function andWithString(string $condition, ...$values): self
     {
@@ -118,6 +120,8 @@ class EasyStatement
      * @param string|self $condition
      * @param mixed ...$values
      * @return self
+     *
+     * @psalm-taint-source input $condition
      */
     public function orWith(EasyStatement|string $condition, ...$values): self
     {
@@ -138,6 +142,8 @@ class EasyStatement
      * @param mixed ...$values
      *
      * @return self
+     *
+     * @psalm-taint-source input $condition
      */
     public function orWithString(string $condition, ...$values): self
     {
@@ -158,6 +164,8 @@ class EasyStatement
      *
      * @return self
      * @throws MustBeNonEmpty
+     *
+     * @psalm-taint-source input $condition
      */
     public function in(string $condition, array $values): self
     {
@@ -177,6 +185,8 @@ class EasyStatement
      * @throws MustBeNonEmpty
      * @throws RuntimeException
      * @throws TypeError
+     *
+     * @psalm-taint-source input $condition
      */
     public function andIn(string $condition, array $values): self
     {
@@ -213,6 +223,8 @@ class EasyStatement
      * @return self
      *
      * @throws MustBeNonEmpty
+     *
+     * @psalm-taint-source input $condition
      */
     public function orIn(string $condition, array $values): self
     {
@@ -352,6 +364,7 @@ class EasyStatement
                     };
                 }
 
+                /** @psalm-taint-sink sql */
                 return trim($sql . ' ' . $statement);
             },
             ''
@@ -434,6 +447,8 @@ class EasyStatement
      * @param int $count
      *
      * @return string
+     *
+     * @psalm-taint-source input $condition
      */
     private function unpackCondition(string $condition, int $count): string
     {
