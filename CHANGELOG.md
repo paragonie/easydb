@@ -1,3 +1,12 @@
+# Version 2.12.0
+
+* Migrated from Travis CI to GitHub Actions
+* [#136](https://github.com/paragonie/easydb/pull/136):
+  Added `EasyPlaceholder` for calling SQL functions on insert/update queries
+* [#137](https://github.com/paragonie/easydb/pull/137):
+  Added `csv()` method to satisfy feature request [#100](https://github.com/paragonie/easydb/issues/100)
+* Miscellaneous boyscouting
+
 # Version 2.11.0
 
 * [#120](https://github.com/paragonie/easydb/pull/120):
