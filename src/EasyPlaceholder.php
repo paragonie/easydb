@@ -21,10 +21,9 @@ use function
  */
 class EasyPlaceholder
 {
-    /** @var string $mask */
-    protected $mask;
-    /** @var scalar[] $values */
-    protected $values;
+    protected string $mask;
+    /** @var array<array-key, scalar> $values */
+    protected array $values = [];
 
     /**
      * Use custom mask for set value in INSERT or UPDATE
@@ -67,7 +66,7 @@ class EasyPlaceholder
     }
 
     /**
-     * @return array<array-key, scalar>
+     * @return array
      */
     public function values(): array
     {

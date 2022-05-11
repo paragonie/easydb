@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace ParagonIE\EasyDB;
 
-use \ParagonIE\EasyDB\Exception as Issues;
-use \Throwable;
+use PDO;
+use ParagonIE\EasyDB\Exception as Issues;
+use Throwable;
 
 /**
  * Class EasyDB
@@ -15,49 +16,33 @@ class EasyDB
 {
     const DEFAULT_FETCH_STYLE = 0x31420000;
 
-    /**
-     * @var string
-     */
-    protected $dbEngine = '';
-
-    /**
-     * @var \PDO
-     */
-    protected $pdo;
-
-    /**
-     * @var array
-     */
-    protected $options = [];
-
-    /**
-     * @var bool
-     */
-    protected $allowSeparators = false;
+    protected string $dbEngine = '';
+    protected PDO $pdo;
+    protected array $options = [];
+    protected bool $allowSeparators = false;
 
     /**
      * Dependency-Injectable constructor
      *
-     * @param \PDO   $pdo
+     * @param PDO    $pdo
      * @param string $dbEngine
      * @param array  $options  Extra options
      */
-    public function __construct(\PDO $pdo, string $dbEngine = '', array $options = [])
+    public function __construct(PDO $pdo, string $dbEngine = '', array $options = [])
     {
         $this->pdo = $pdo;
         $this->pdo->setAttribute(
-            \PDO::ATTR_EMULATE_PREPARES,
+            PDO::ATTR_EMULATE_PREPARES,
             false
         );
         $this->pdo->setAttribute(
-            \PDO::ATTR_ERRMODE,
-            \PDO::ERRMODE_EXCEPTION
+            PDO::ATTR_ERRMODE,
+            PDO::ERRMODE_EXCEPTION
         );
 
         if (empty($dbEngine)) {
-            $dbEngine = (string) $this->pdo->getAttribute(\PDO::ATTR_DRIVER_NAME);
+            $dbEngine = (string) $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
         }
-
         $this->dbEngine = $dbEngine;
         $this->options = $options;
     }
@@ -71,7 +56,7 @@ class EasyDB
      * @param  scalar|null|object ...$params Parameters
      * @return array|false
      */
-    public function col(string $statement, int $offset = 0, ...$params)
+    public function col(string $statement, int $offset = 0, ...$params): array|bool
     {
         return $this->column($statement, $params, $offset);
     }
@@ -85,7 +70,7 @@ class EasyDB
      *                           from each row?
      * @return array|false
      */
-    public function column(string $statement, array $params = [], int $offset = 0)
+    public function column(string $statement, array $params = [], int $offset = 0): array|bool
     {
         $stmt = $this->prepare($statement);
         if (!$this->is1DArray($params)) {
@@ -107,8 +92,10 @@ class EasyDB
      * @param  scalar|null|object ...$params Parameters
      * @return scalar|null
      */
-    public function cell(string $statement, ...$params)
-    {
+    public function cell(
+        string $statement,
+        float|object|bool|int|string|null ...$params
+    ): float|bool|int|string|null {
         return $this->single($statement, $params);
     }
 
@@ -122,7 +109,7 @@ class EasyDB
      *
      * @throws \TypeError
      */
-    public function csv(string $statement, ...$params)
+    public function csv(string $statement, float|bool|int|string|null|object ...$params): array
     {
         /** @var array<int, array<string, scalar>> $results */
         $results = $this->safeQuery(
@@ -137,9 +124,9 @@ class EasyDB
             return [[]];
         }
         $mapping = [];
-        array_push($mapping, array_keys($results[0]));
+        \array_push($mapping, \array_keys($results[0]));
         foreach ($results as $row) {
-            array_push($mapping, array_values($row));
+            \array_push($mapping, \array_values($row));
         }
         return $mapping;
     }
@@ -151,22 +138,14 @@ class EasyDB
      * @param          EasyStatement|array $conditions Defines the WHERE clause
      * @return         int
      *
-     * @throws         \InvalidArgumentException
      * @throws         \TypeError
-     *
-     * @psalm-suppress MixedAssignment
-     * @psalm-suppress MixedArgument
-     * @psalm-suppress RedundantConditionGivenDocblockType
      */
-    public function delete(string $table, $conditions): int
+    public function delete(string $table, EasyStatement|array $conditions): int
     {
         if ($conditions instanceof EasyStatement) {
             return $this->deleteWhereStatement($table, $conditions);
-        } elseif (\is_array($conditions)) {
-            return $this->deleteWhereArray($table, $conditions);
-        } else {
-            throw new Issues\MustBeArrayOrEasyStatement('Conditions must be an array or EasyStatement');
         }
+        return $this->deleteWhereArray($table, $conditions);
     }
 
     /**
@@ -237,8 +216,6 @@ class EasyDB
      *
      * @throws         \InvalidArgumentException
      * @throws         \TypeError
-     * @psalm-suppress MixedAssignment
-     * @psalm-suppress MixedArgument
      */
     protected function deleteWhereStatement(string $table, EasyStatement $conditions): int
     {
@@ -253,6 +230,7 @@ class EasyDB
         }
         $queryString = 'DELETE FROM ' . $this->escapeIdentifier($table) . ' WHERE ' . $conditions;
         $params = [];
+
         /**
          * @var ?scalar $v
          */
@@ -297,7 +275,7 @@ class EasyDB
         // This behavior depends on whether or not separators are allowed.
         if ($this->allowSeparators) {
             $str = \preg_replace($patternWithSep, '', $string);
-            if (\strpos($str, '.') !== false) {
+            if (\str_contains($str, '.')) {
                 $pieces = \explode('.', $str);
                 foreach ($pieces as $i => $p) {
                     $pieces[$i] = $this->escapeIdentifier($p, $quote);
@@ -329,14 +307,11 @@ class EasyDB
         }
 
         if ($quote) {
-            switch ($this->dbEngine) {
-                case 'mssql':
-                    return '[' . $str . ']';
-                case 'mysql':
-                    return '`' . $str . '`';
-                default:
-                    return '"' . $str . '"';
-            }
+            return match ($this->dbEngine) {
+                'mssql' => '[' . $str . ']',
+                'mysql' => '`' . $str . '`',
+                default => '"' . $str . '"',
+            };
         }
         return $str;
     }
@@ -352,8 +327,6 @@ class EasyDB
      * @return         string
      *
      * @throws         \InvalidArgumentException
-     * @psalm-suppress MixedAssignment
-     * @psalm-suppress MixedArgument
      */
     public function escapeValueSet(array $values, string $type = 'string'): string
     {
@@ -470,13 +443,9 @@ class EasyDB
      * @param          string $statement
      * @param          mixed  ...$params
      * @return         bool
-     * @psalm-suppress MixedAssignment
      */
     public function exists(string $statement, ...$params): bool
     {
-        /**
-         * @var ?scalar $result
-         */
         $result = $this->single($statement, $params);
         return !empty($result);
     }
@@ -486,7 +455,7 @@ class EasyDB
      * @param scalar|null|object ...$params
      * @return array|false
      */
-    public function first(string $statement, ...$params)
+    public function first(string $statement, ...$params): array|bool
     {
         return $this->column($statement, $params, 0);
     }
@@ -505,9 +474,9 @@ class EasyDB
      * Return a copy of the PDO object (to prevent it from being modified
      * to disable safety/security features).
      *
-     * @return \PDO
+     * @return PDO
      */
-    public function getPdo(): \PDO
+    public function getPdo(): PDO
     {
         return $this->pdo;
     }
@@ -561,7 +530,7 @@ class EasyDB
      *
      * @psalm-param array<string, scalar|EasyPlaceholder|null> $map
      */
-    public function insertIgnore(string $table, array $map) : int
+    public function insertIgnore(string $table, array $map): int
     {
         if (!empty($map)) {
             if (!$this->is1DArray($map)) {
@@ -604,7 +573,7 @@ class EasyDB
         string $table,
         array $map,
         array $on_duplicate_key_update
-    ) : int {
+    ): int {
         if (!empty($map)) {
             if (!$this->is1DArray($map)) {
                 throw new Issues\MustBeOneDimensionalArray(
@@ -633,15 +602,13 @@ class EasyDB
      * @param          string $table
      * @param          array  $map
      * @param          string $field
-     * @return         mixed
+     * @return         ?scalar
      *
      * @throws         \Exception
-     * @psalm-suppress MixedAssignment
-     * @psalm-suppress MixedArgument
      *
      * @psalm-param array<string, scalar|null> $map
      */
-    public function insertGet(string $table, array $map, string $field)
+    public function insertGet(string $table, array $map, string $field): string|int|float|bool|null
     {
         if (empty($map)) {
             throw new \Exception('An empty array is not allowed for insertGet()');
@@ -670,20 +637,15 @@ class EasyDB
         }
         $conditions = \implode(' AND ', $post);
         // We want the latest value:
-        switch ($this->dbEngine) {
-            case 'mysql':
-                $limiter = ' ORDER BY ' .
+        $limiter = match ($this->dbEngine) {
+            'mysql' => ' ORDER BY ' .
                 $this->escapeIdentifier($field) .
-                ' DESC LIMIT 0, 1 ';
-                break;
-            case 'pgsql':
-                $limiter = ' ORDER BY ' .
+                ' DESC LIMIT 0, 1 ',
+            'pgsql' => ' ORDER BY ' .
                 $this->escapeIdentifier($field) .
-                ' DESC OFFSET 0 LIMIT 1 ';
-                break;
-            default:
-                $limiter = '';
-        }
+                ' DESC OFFSET 0 LIMIT 1 ',
+            default => '',
+        };
         $query = 'SELECT ' .
                 $this->escapeIdentifier($field) .
             ' FROM ' .
@@ -704,8 +666,6 @@ class EasyDB
      *
      * @throws         \InvalidArgumentException
      * @throws         Issues\QueryError
-     * @psalm-suppress MixedAssignment
-     * @psalm-suppress MixedArgument
      */
     public function insertMany(string $table, array $maps): int
     {
@@ -718,10 +678,12 @@ class EasyDB
                 '() must contain at least one field set!'
             );
         }
+
         /**
          * @var array $first
          */
         $first = $maps[0];
+
         /**
          * @var array $map
          */
@@ -738,6 +700,7 @@ class EasyDB
         // Now let's run a query with the parameters
         $stmt = $this->prepare($queryString);
         $count = 0;
+
         /**
          * @var array $params
          */
@@ -763,7 +726,7 @@ class EasyDB
      *
      * @psalm-param array<string, scalar|null> $map
      */
-    public function insertReturnId(string $table, array $map, string $sequenceName = '')
+    public function insertReturnId(string $table, array $map, string $sequenceName = ''): string
     {
         if ($this->dbEngine === 'pgsql') {
             throw new \Exception(
@@ -781,7 +744,7 @@ class EasyDB
     }
 
     /**
-     * Get an query string for an INSERT statement.
+     * Get a query string for an INSERT statement.
      *
      * @param string $table
      * @param array  $columns list of columns that will be inserted
@@ -819,7 +782,7 @@ class EasyDB
      *
      * @param string $table
      * @param array  $map
-     * @param null|false|array<int, string> $duplicates_mode - null for straight-forward insert,
+     * @param bool|array<int, string>|null $duplicates_mode - null for straight-forward insert,
      *                                                         false for ignore,
      *                                                         array for on-duplicate-key-update
      * @return array {0: string, 1: array}
@@ -835,7 +798,7 @@ class EasyDB
     public function buildInsertQueryBoolSafe(
         string $table,
         array $map,
-        $duplicates_mode = null
+        array|bool $duplicates_mode = null
     ): array {
         /** @var array<int, string> $columns */
         $columns = [];
@@ -932,11 +895,11 @@ class EasyDB
      * Similar to $this->q() except it only returns a single row
      *
      * @param  string $statement SQL query without user data
-     * @param  mixed  ...$params Parameters
-     * @return mixed
+     * @param  string|int|float|bool|null  ...$params Parameters
+     * @return array
      * @throws \TypeError
      */
-    public function row(string $statement, ...$params)
+    public function row(string $statement, ...$params): array
     {
         /**
          * @var array|int $result
@@ -959,19 +922,23 @@ class EasyDB
      *
      * @param  string $statement SQL query without user data
      * @param  scalar|null  ...$params Parameters
-     * @return array|bool|int|object
+     * @return array
      *
      * @throws \TypeError
      */
-    public function run(string $statement, ...$params)
+    public function run(string $statement, ...$params): array
     {
-        return $this->safeQuery(
+        $results = $this->safeQuery(
             $statement,
             $params,
             self::DEFAULT_FETCH_STYLE,
             false,
             true
         );
+        if (!is_array($results)) {
+            return [];
+        }
+        return $results;
     }
 
     /**
@@ -996,7 +963,7 @@ class EasyDB
         int $fetchStyle = self::DEFAULT_FETCH_STYLE,
         bool $returnNumAffected = false,
         bool $calledWithVariadicParams = false
-    ) {
+    ): array|int|object {
         if ($fetchStyle === self::DEFAULT_FETCH_STYLE) {
             if (isset($this->options[\PDO::ATTR_DEFAULT_FETCH_MODE])) {
                 /**
@@ -1041,11 +1008,12 @@ class EasyDB
      *
      * @param  string $statement
      * @param  array  $params
-     * @return mixed
+     * @return string|int|float|bool|null
+     *
      * @throws \InvalidArgumentException
      * @throws Issues\QueryError
      */
-    public function single(string $statement, array $params = [])
+    public function single(string $statement, array $params = []): string|int|float|bool|null
     {
         if (!$this->is1DArray($params)) {
             throw new Issues\MustBeOneDimensionalArray(
@@ -1063,17 +1031,18 @@ class EasyDB
      * @param  string $table      Table name
      * @param  array  $changes    Associative array of which values should be
      *                             assigned to each field
-     * @param  EasyStatement|array $conditions WHERE clause
+     * @param array|EasyStatement $conditions WHERE clause
      * @return int
      *
      * @throws \InvalidArgumentException
      * @throws Issues\QueryError
      * @throws \TypeError
-     *
-     * @psalm-suppress RedundantConditionGivenDocblockType
      */
-    public function update(string $table, array $changes, $conditions): int
-    {
+    public function update(
+        string $table,
+        array $changes,
+        EasyStatement|array $conditions
+    ): int {
         if (empty($table)) {
             throw new Issues\InvalidTableName(
                 'Table name must be a non-empty string.'
@@ -1081,11 +1050,8 @@ class EasyDB
         }
         if ($conditions instanceof EasyStatement) {
             return $this->updateWhereStatement($table, $changes, $conditions);
-        } elseif (\is_array($conditions)) {
-            return $this->updateWhereArray($table, $changes, $conditions);
-        } else {
-            throw new Issues\MustBeArrayOrEasyStatement('Conditions must be an array or instance of EasyStatement');
         }
+        return $this->updateWhereArray($table, $changes, $conditions);
     }
 
     /**
@@ -1100,9 +1066,6 @@ class EasyDB
      * @throws \InvalidArgumentException
      * @throws Issues\QueryError
      * @throws \TypeError
-     *
-     * @psalm-suppress MixedAssignment
-     * @psalm-suppress MixedArgument
      */
     protected function updateWhereArray(string $table, array $changes, array $conditions): int
     {
@@ -1179,9 +1142,6 @@ class EasyDB
      * @throws \InvalidArgumentException
      * @throws Issues\QueryError
      * @throws \TypeError
-     *
-     * @psalm-suppress MixedAssignment
-     * @psalm-suppress MixedArgument
      */
     protected function updateWhereStatement(
         string $table,
@@ -1268,13 +1228,13 @@ class EasyDB
      *
      * @psalm-param callable(EasyDB):T $callback
      *
-     * @return mixed
+     * @return string|int|bool|array|object|float|null
      *
      * @psalm-return T
      *
      * @throws Throwable
      */
-    public function tryFlatTransaction(callable $callback)
+    public function tryFlatTransaction(callable $callback): string|int|bool|array|null|object|float
     {
         $autoStartTransaction = $this->inTransaction() === false;
 
@@ -1306,12 +1266,12 @@ class EasyDB
     }
 
     /**
-     * Get the type of a variable.
+     * Get the specific type of the given variable.
      *
-     * @param  mixed $v
+     * @param mixed|null $v
      * @return string
      */
-    protected function getValueType($v = null): string
+    protected function getValueType(mixed $v = null): string
     {
         if (\is_scalar($v) || \is_array($v)) {
             return (string) \gettype($v);
@@ -1328,10 +1288,13 @@ class EasyDB
      * @param  \PDOStatement $stmt
      * @param  int           $fetchStyle
      * @return array|object
+     *
      * @throws \TypeError
      */
-    protected function getResultsStrictTyped(\PDOStatement $stmt, int $fetchStyle = \PDO::FETCH_ASSOC)
-    {
+    protected function getResultsStrictTyped(
+        \PDOStatement $stmt,
+        int $fetchStyle = \PDO::FETCH_ASSOC
+    ): object|array {
         /**
          * @var array|object|bool $results
          */
@@ -1399,7 +1362,7 @@ class EasyDB
      *
      * @return mixed
      */
-    public function errorCode()
+    public function errorCode(): mixed
     {
         return $this->pdo->errorCode();
     }
@@ -1432,7 +1395,7 @@ class EasyDB
      * @param  int ...$args
      * @return mixed
      */
-    public function getAttribute(...$args)
+    public function getAttribute(...$args): mixed
     {
         return $this->pdo->getAttribute(...$args);
     }
@@ -1524,11 +1487,12 @@ class EasyDB
      * Set an attribute
      *
      * @param  int   $attr
-     * @param  mixed $value
+     * @param  string|bool|int|float $value
      * @return bool
+     *
      * @throws \Exception
      */
-    public function setAttribute(int $attr, $value): bool
+    public function setAttribute(int $attr, string|bool|int|float $value): bool
     {
         if ($attr === \PDO::ATTR_EMULATE_PREPARES) {
             if ($value !== false) {
