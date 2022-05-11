@@ -1065,10 +1065,12 @@ class EasyDB
      *                             assigned to each field
      * @param  EasyStatement|array $conditions WHERE clause
      * @return int
+     *
      * @throws \InvalidArgumentException
      * @throws Issues\QueryError
-     *
      * @throws \TypeError
+     *
+     * @psalm-suppress RedundantConditionGivenDocblockType
      */
     public function update(string $table, array $changes, $conditions): int
     {
