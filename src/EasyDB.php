@@ -112,6 +112,36 @@ class EasyDB
         return $this->single($statement, $params);
     }
 
+    /**
+     * Alternative to run() that returns the keys as the first row, then
+     * the values in all subsequent rows.
+     *
+     * @param  string $statement SQL query without user data
+     * @param  mixed  ...$params Parameters
+     * @return array - If successful, a 2D array
+     * @throws \TypeError
+     */
+    public function csv(string $statement, ...$params)
+    {
+        /** @var array<int, array<string, scalar>> $results */
+        $results = $this->safeQuery(
+            $statement,
+            $params,
+            self::DEFAULT_FETCH_STYLE,
+            false,
+            true
+        );
+        if (empty($results)) {
+            /* Array containing an array of empty keys and no subsequent rows */
+            return [[]];
+        }
+        $mapping = [];
+        array_push($mapping, array_keys($results[0]));
+        foreach ($results as $row) {
+            array_push($mapping, array_values($row));
+        }
+        return $mapping;
+    }
 
     /**
      * Delete rows in a database table.
