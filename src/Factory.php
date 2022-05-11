@@ -3,7 +3,15 @@ declare(strict_types=1);
 
 namespace ParagonIE\EasyDB;
 
-use \ParagonIE\EasyDB\Exception as Issues;
+use ParagonIE\EasyDB\Exception\{
+    ConstructorFailed
+};
+use PDO;
+use PDOException;
+use function
+    explode,
+    is_string,
+    str_contains;
 
 /**
  * Class Factory
@@ -16,11 +24,11 @@ abstract class Factory
      * Create a new EasyDB object based on PDO constructors
      *
      * @param string $dsn
-     * @param string $username
-     * @param string $password
+     * @param ?string $username
+     * @param ?string $password
      * @param array $options
-     * @return \ParagonIE\EasyDB\EasyDB
-     * @throws Issues\ConstructorFailed
+     *
+     * @throws ConstructorFailed
      *
      * @psalm-taint-sink user_secret $password
      */
@@ -37,12 +45,12 @@ abstract class Factory
      * Create a new EasyDB object from array of parameters
      *
      * @param array $config
-     * @return \ParagonIE\EasyDB\EasyDB
-     * @throws Issues\ConstructorFailed
+     * @return EasyDB
+     *
+     * @throws ConstructorFailed
      */
     public static function fromArray(array $config): EasyDB
     {
-
         /** @var string $dsn */
         $dsn      = $config[0];
         /** @var string|null $username */
@@ -55,25 +63,24 @@ abstract class Factory
         $dbEngine = '';
         $post_query = null;
 
-        if (!\is_string($username)) {
+        if (!is_string($username)) {
             $username = '';
         }
-        if (!\is_string($password)) {
+        if (!is_string($password)) {
             $password = '';
         }
 
         // Let's grab the DB engine
-        if (strpos($dsn, ':') !== false) {
+        if (str_contains($dsn, ':')) {
             $dbEngine = explode(':', $dsn)[0];
         }
 
-        /** @var string $post_query */
         $post_query = '';
 
         // If no charset is specified, default to UTF-8
         switch ($dbEngine) {
             case 'mysql':
-                if (\strpos($dsn, ';charset=') === false) {
+                if (!str_contains($dsn, ';charset=')) {
                     $dsn .= ';charset=utf8mb4';
                 }
                 break;
@@ -83,22 +90,22 @@ abstract class Factory
         }
 
         try {
-            $pdo = new \PDO($dsn, $username, $password, $options);
-        } catch (\PDOException $e) {
-            if (\strpos((string) $e->getMessage(), 'could not find driver') !== false) {
-                throw (new Issues\ConstructorFailed(
+            $pdo = new PDO($dsn, $username, $password, $options);
+        } catch (PDOException $e) {
+            if (str_contains($e->getMessage(), 'could not find driver')) {
+                throw (new ConstructorFailed(
                     'Could not create a PDO connection. Is the driver installed/enabled?'
                 ))->setRealException($e);
             }
             
-            if (\strpos((string) $e->getMessage(), 'unknown database') !== false) {
-                throw (new Issues\ConstructorFailed(
+            if (str_contains($e->getMessage(), 'unknown database')) {
+                throw (new ConstructorFailed(
                     'Could not create a PDO connection. Check that your database exists.'
                 ))->setRealException($e);
             }
             
             // Don't leak credentials directly if we can.
-            throw (new Issues\ConstructorFailed(
+            throw (new ConstructorFailed(
                 'Could not create a PDO connection. Please check your username and password.'
             ))->setRealException($e);
         }
