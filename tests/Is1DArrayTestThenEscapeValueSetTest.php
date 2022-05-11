@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
+use ParagonIE\EasyDB\Exception\MustBeOneDimensionalArray;
 
 /**
  * Class EasyDBTest
@@ -225,7 +226,7 @@ class EscapeValueSetTest extends EasyDBTest
     public function testEscapeValueSetFailsIs1DArray(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(MustBeOneDimensionalArray::class);
         $db->escapeValueSet([[1]]);
     }
 

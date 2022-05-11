@@ -2,8 +2,8 @@
 
 namespace ParagonIE\EasyDB;
 
-use \ParagonIE\EasyDB\Exception as Issues;
-use \ParagonIE\EasyDB\Exception\MustBeNonEmpty;
+use ParagonIE\EasyDB\Exception\MustBeNonEmpty;
+use ParagonIE\EasyDB\Exception\EasyDBException;
 use function
     array_merge,
     array_reduce,
@@ -42,9 +42,9 @@ class EasyPlaceholder
             }
             $start_pos = strpos($mask, '?*');
             if ($start_pos === false) {
-                throw new Issues\QueryError("Mask don't have \"?*\"");
+                throw new EasyDBException("Mask don't have \"?*\"");
             }
-            if (\count($value) < 1) {
+            if (count($value) < 1) {
                 throw new MustBeNonEmpty();
             }
             $mask = substr($mask, 0, $start_pos)

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyDB;
+use ParagonIE\EasyDB\Exception\MustBeOneDimensionalArray;
 use ParagonIE\EasyDB\Factory;
 
 class SafeQueryTest extends RunTest
@@ -39,7 +40,7 @@ class SafeQueryTest extends RunTest
             $this->assertEquals(array_diff_assoc($result, $expectedResult[$i]), []);
         }
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(MustBeOneDimensionalArray::class);
         $this->expectExceptionMessage(
             'Only one-dimensional arrays are allowed, please use ' .
             EasyDB::class .

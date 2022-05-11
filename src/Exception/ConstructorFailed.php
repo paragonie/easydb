@@ -2,33 +2,26 @@
 namespace ParagonIE\EasyDB\Exception;
 
 use ParagonIE\Corner\CornerTrait;
+use PDOException;
 
 /**
  * ConstructorFailed.
  *
  * @package ParagonIE\EasyDB
  */
-class ConstructorFailed extends \RuntimeException implements ExceptionInterface
+class ConstructorFailed extends EasyDBException
 {
     use CornerTrait;
 
-    /** @var \PDOException|null $realException */
-    private $realException = null;
+    private ?PDOException $realException = null;
 
-    /**
-     * @param \PDOException $ex
-     * @return ConstructorFailed
-     */
-    public function setRealException(\PDOException $ex): self
+    public function setRealException(PDOException $ex): self
     {
         $this->realException = $ex;
         return $this;
     }
 
-    /**
-     * @return \PDOException|null
-     */
-    public function getRealException()
+    public function getRealException(): ?PDOException
     {
         return $this->realException;
     }

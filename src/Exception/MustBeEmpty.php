@@ -5,7 +5,7 @@ namespace ParagonIE\EasyDB\Exception;
 use ParagonIE\Corner\CornerInterface;
 use ParagonIE\Corner\CornerTrait;
 
-class MustBeEmpty extends \Exception implements CornerInterface
+class MustBeEmpty extends EasyDBException
 {
     use CornerTrait;
 

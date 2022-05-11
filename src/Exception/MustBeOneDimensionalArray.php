@@ -10,7 +10,7 @@ use Throwable;
  * Class MustBeOneDimensionalArray
  * @package ParagonIE\EasyDB\Exception
  */
-class MustBeOneDimensionalArray extends \InvalidArgumentException implements CornerInterface
+class MustBeOneDimensionalArray extends EasyDBException
 {
     use CornerTrait;
 

@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
+use ParagonIE\EasyDB\Exception\InvalidIdentifier;
+use ParagonIE\EasyDB\Exception\MustBeOneDimensionalArray;
 use PDOException;
 
 class InsertManyTest extends EasyDBWriteTest
@@ -38,7 +40,7 @@ class InsertManyTest extends EasyDBWriteTest
     public function testInsertManyArgTableThrowsException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidIdentifier::class);
         $db->insertMany('', [['foo' => 1], ['foo' => 2]]);
     }
 
@@ -49,7 +51,7 @@ class InsertManyTest extends EasyDBWriteTest
     public function testInsertManyArgMapKeysThrowsException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidIdentifier::class);
         $db->insertMany('irrelevant_but_valid_tablename', [['1foo' => 1]]);
     }
 
@@ -60,7 +62,7 @@ class InsertManyTest extends EasyDBWriteTest
     public function testInsertManyArgMapIs1DArrayThrowsException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(MustBeOneDimensionalArray::class);
         $db->insertMany('irrelevant_but_valid_tablename', [['foo' => [1]]]);
     }
 

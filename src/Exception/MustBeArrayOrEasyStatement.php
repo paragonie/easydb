@@ -9,7 +9,7 @@ use ParagonIE\Corner\CornerTrait;
  * Class MustBeArrayOrEasyStatement
  * @package ParagonIE\EasyDB\Exception
  */
-class MustBeArrayOrEasyStatement extends \TypeError implements CornerInterface
+class MustBeArrayOrEasyStatement extends EasyDBException
 {
     use CornerTrait;
 

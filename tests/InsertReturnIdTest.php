@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
+use ParagonIE\EasyDB\Exception\InvalidIdentifier;
+use ParagonIE\EasyDB\Exception\MustBeOneDimensionalArray;
 
 class InsertReturnIdTest extends InsertTest
 {
@@ -15,7 +17,7 @@ class InsertReturnIdTest extends InsertTest
     public function testInsertReturnIdTableNameThrowsException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidIdentifier::class);
         $db->insertReturnId('', ['foo' => 1], 'foo');
     }
 
@@ -26,7 +28,7 @@ class InsertReturnIdTest extends InsertTest
     public function testInsertReturnIdMapArgThrowsException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(MustBeOneDimensionalArray::class);
         $db->insertReturnId('irrelevant_but_valid_tablename', [[1]], 'foo');
     }
 
@@ -37,7 +39,7 @@ class InsertReturnIdTest extends InsertTest
     public function testInsertReturnIdMapArgKeysThrowsException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidIdentifier::class);
         $db->insertReturnId('irrelevant_but_valid_tablename', ['1foo' => 1], '1foo');
     }
 

@@ -4,11 +4,11 @@ namespace ParagonIE\EasyDB\Exception;
 use ParagonIE\Corner\CornerTrait;
 
 /**
- * InvalidIdentifier.
+ * QueryError.
  *
  * @package ParagonIE\EasyDB
  */
-class InvalidIdentifier extends EasyDBException
+class EasyDBException extends \RuntimeException implements ExceptionInterface
 {
     use CornerTrait;
 }

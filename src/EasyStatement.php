@@ -2,10 +2,22 @@
 
 namespace ParagonIE\EasyDB;
 
-use ParagonIE\EasyDB\Exception\MustBeEmpty;
-use ParagonIE\EasyDB\Exception\MustBeNonEmpty;
+use ParagonIE\EasyDB\Exception\{
+    MustBeEmpty,
+    MustBeNonEmpty
+};
 use RuntimeException;
 use TypeError;
+use function
+    array_merge,
+    array_reduce,
+    count,
+    is_object,
+    is_string,
+    sprintf,
+    str_repeat,
+    str_replace,
+    trim;
 
 /**
  * Class EasyStatement
@@ -24,7 +36,7 @@ class EasyStatement
 
     public function count(): int
     {
-        return \count($this->parts);
+        return count($this->parts);
     }
 
     /**
@@ -146,7 +158,6 @@ class EasyStatement
      *
      * @return self
      * @throws MustBeNonEmpty
-     * @throws \TypeError
      */
     public function in(string $condition, array $values): self
     {
@@ -169,7 +180,7 @@ class EasyStatement
      */
     public function andIn(string $condition, array $values): self
     {
-        if (\count($values) < 1) {
+        if (count($values) < 1) {
             if (!$this->allowEmptyInStatements) {
                 throw new MustBeNonEmpty();
             }
@@ -184,7 +195,7 @@ class EasyStatement
         }
         try {
             return $this->andWith(
-                $this->unpackCondition($condition, \count($values)),
+                $this->unpackCondition($condition, count($values)),
                 ...$values
             );
         } catch (MustBeEmpty $ex) {
@@ -199,14 +210,13 @@ class EasyStatement
      *
      * @param string $condition
      * @param array $values
-     *
      * @return self
+     *
      * @throws MustBeNonEmpty
-     * @throws \TypeError
      */
     public function orIn(string $condition, array $values): self
     {
-        if (\count($values) < 1) {
+        if (count($values) < 1) {
             if (!$this->allowEmptyInStatements) {
                 throw new MustBeNonEmpty();
             }
@@ -214,7 +224,7 @@ class EasyStatement
         }
         try {
             return $this->orWith(
-                $this->unpackCondition($condition, \count($values)),
+                $this->unpackCondition($condition, count($values)),
                 ...$values
             );
         } catch (MustBeEmpty $ex) {
@@ -309,7 +319,7 @@ class EasyStatement
         if (empty($this->parts)) {
             return '1 = 1';
         }
-        return \array_reduce(
+        return array_reduce(
             $this->parts,
             /**
              * @psalm-param array{type:string, condition:self|string, values?:array<int, mixed>} $part
@@ -320,7 +330,7 @@ class EasyStatement
 
                 if ($this->isGroup($condition)) {
                     // (...)
-                    if (\is_string($condition)) {
+                    if (is_string($condition)) {
                         $statement = '(' . $condition . ')';
                     } else {
                         $statement = '(' . $condition->sql() . ')';
@@ -337,12 +347,12 @@ class EasyStatement
                     $statement = match ($part['type']) {
                         'AND', 'OR' => $part['type'] . ' ' . $statement,
                         default => throw new RuntimeException(
-                            \sprintf('Invalid joiner %s', $part['type'])
+                            sprintf('Invalid joiner %s', $part['type'])
                         ),
                     };
                 }
 
-                return \trim($sql . ' ' . $statement);
+                return trim($sql . ' ' . $statement);
             },
             ''
         );
@@ -355,7 +365,7 @@ class EasyStatement
      */
     public function values(): array
     {
-        return (array) \array_reduce(
+        return (array) array_reduce(
             $this->parts,
             /**
              * @psalm-param array{type:string, condition:self|string, values?:array<int, mixed>} $part
@@ -364,7 +374,7 @@ class EasyStatement
                 if ($this->isGroup($part['condition'])) {
                     /** @var EasyStatement $condition */
                     $condition = $part['condition'];
-                    return \array_merge(
+                    return array_merge(
                         $values,
                         $condition->values()
                     );
@@ -372,7 +382,7 @@ class EasyStatement
                     return $values;
                 }
 
-                return \array_merge($values, $part['values']);
+                return array_merge($values, $part['values']);
             },
             []
         );
@@ -408,7 +418,7 @@ class EasyStatement
      */
     protected function isGroup(mixed $condition): bool
     {
-        if (!\is_object($condition)) {
+        if (!is_object($condition)) {
             return false;
         }
 
@@ -428,7 +438,7 @@ class EasyStatement
     private function unpackCondition(string $condition, int $count): string
     {
         // Replace a grouped placeholder with an matching count of placeholders.
-        $params = '?' . \str_repeat(', ?', $count - 1);
-        return \str_replace('?*', $params, $condition);
+        $params = '?' . str_repeat(', ?', $count - 1);
+        return str_replace('?*', $params, $condition);
     }
 }

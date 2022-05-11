@@ -9,7 +9,7 @@ use ParagonIE\Corner\CornerTrait;
  * Class MustBeNonEmpty
  * @package ParagonIE\EasyDB\Exception
  */
-class MustBeNonEmpty extends \Exception implements CornerInterface
+class MustBeNonEmpty extends EasyDBException
 {
     use CornerTrait;
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
+use ParagonIE\EasyDB\Exception\MustBeOneDimensionalArray;
 use ParagonIE\EasyDB\Factory;
 
 class Is1DArrayTest extends EasyDBTest
@@ -38,7 +39,7 @@ class Is1DArrayTest extends EasyDBTest
     public function testColumnThrowsException($expectedDriver, $dsn, $username = null, $password = null, $options = [])
     {
         $db = Factory::create($dsn, $username, $password, $options);
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(MustBeOneDimensionalArray::class);
         $db->column('SELECT "column"', [[1]]);
     }
 
@@ -58,7 +59,7 @@ class Is1DArrayTest extends EasyDBTest
         $options = []
     ) {
         $db = Factory::create($dsn, $username, $password, $options);
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(MustBeOneDimensionalArray::class);
         $db->safeQuery('SELECT ?', [[1]]);
     }
 
@@ -73,7 +74,7 @@ class Is1DArrayTest extends EasyDBTest
     public function testSingleThrowsException($expectedDriver, $dsn, $username = null, $password = null, $options = [])
     {
         $db = Factory::create($dsn, $username, $password, $options);
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(MustBeOneDimensionalArray::class);
         $db->single('SELECT "column"', [[1]]);
     }
 }

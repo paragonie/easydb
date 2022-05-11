@@ -10,7 +10,7 @@ use ParagonIE\Corner\CornerTrait;
  * Class InvalidTableName
  * @package ParagonIE\EasyDB\Exception
  */
-class InvalidTableName extends \InvalidArgumentException implements CornerInterface
+class InvalidTableName extends EasyDBException
 {
     use CornerTrait;
 }

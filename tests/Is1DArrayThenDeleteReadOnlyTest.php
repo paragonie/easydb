@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
+use ParagonIE\EasyDB\Exception\InvalidIdentifier;
+use ParagonIE\EasyDB\Exception\InvalidTableName;
+use ParagonIE\EasyDB\Exception\MustBeOneDimensionalArray;
 
 class Is1DArrayThenDeleteReadOnlyTest extends EasyDBTest
 {
@@ -16,7 +19,7 @@ class Is1DArrayThenDeleteReadOnlyTest extends EasyDBTest
     public function testDeleteThrowsException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(MustBeOneDimensionalArray::class);
         $db->delete('irrelevant_but_valid_tablename', [[1]]);
     }
 
@@ -27,7 +30,7 @@ class Is1DArrayThenDeleteReadOnlyTest extends EasyDBTest
     public function testDeleteTableNameEmptyThrowsException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidTableName::class);
         $db->delete('', ['foo' => 'bar']);
     }
 
@@ -38,7 +41,7 @@ class Is1DArrayThenDeleteReadOnlyTest extends EasyDBTest
     public function testDeleteTableNameInvalidThrowsException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidIdentifier::class);
         $db->delete('1foo', ['foo' => 'bar']);
     }
 

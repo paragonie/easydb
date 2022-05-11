@@ -5,6 +5,9 @@ namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
 use ParagonIE\EasyDB\EasyStatement;
+use ParagonIE\EasyDB\Exception\InvalidIdentifier;
+use ParagonIE\EasyDB\Exception\InvalidTableName;
+use ParagonIE\EasyDB\Exception\MustBeOneDimensionalArray;
 
 class UpdateTest extends EasyDBWriteTest
 {
@@ -42,7 +45,7 @@ class UpdateTest extends EasyDBWriteTest
     public function testUpdateArgChangesThrowsException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(MustBeOneDimensionalArray::class);
         $db->update('irrelevant_but_valid_tablename', [[1]], ['TRUE' => true]);
     }
 
@@ -53,7 +56,7 @@ class UpdateTest extends EasyDBWriteTest
     public function testUpdateArgConditionsThrowsException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(MustBeOneDimensionalArray::class);
         $db->update('irrelevant_but_valid_tablename', ['1=1'], [[1]]);
     }
 
@@ -64,7 +67,7 @@ class UpdateTest extends EasyDBWriteTest
     public function testUpdateTableNameThrowsException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidTableName::class);
         $db->update('', ['foo' => 'bar'], ['TRUE' => true]);
     }
 
@@ -75,7 +78,7 @@ class UpdateTest extends EasyDBWriteTest
     public function testUpdateArgChangesKeyThrowsException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidIdentifier::class);
         $db->update('irrelevant_but_valid_tablename', ['1foo' => 1], ['TRUE' => true]);
     }
 
@@ -86,7 +89,7 @@ class UpdateTest extends EasyDBWriteTest
     public function testUpdateArgConditionsKeyThrowsException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidIdentifier::class);
         $db->update('irrelevant_but_valid_tablename', ['foo' => 1], ['1foo' => true]);
     }
 

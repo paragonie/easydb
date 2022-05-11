@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
+use ParagonIE\EasyDB\Exception\InvalidIdentifier;
+use ParagonIE\EasyDB\Exception\InvalidTableName;
+use ParagonIE\EasyDB\Exception\MustBeOneDimensionalArray;
 use PDOException;
 
 class InsertTest extends EasyDBWriteTest
@@ -27,7 +30,7 @@ class InsertTest extends EasyDBWriteTest
     public function testInsertTableNameThrowsException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidIdentifier::class);
         $db->insert('', ['foo' => 1]);
     }
 
@@ -38,7 +41,7 @@ class InsertTest extends EasyDBWriteTest
     public function testInsertMapArgThrowsException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(MustBeOneDimensionalArray::class);
         $db->insert('irrelevant_but_valid_tablename', [[1]]);
     }
 
@@ -49,7 +52,7 @@ class InsertTest extends EasyDBWriteTest
     public function testInsertMapArgKeysThrowsException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidIdentifier::class);
         $db->insert('irrelevant_but_valid_tablename', ['1foo' => 1]);
     }
 
