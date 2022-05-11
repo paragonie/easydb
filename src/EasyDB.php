@@ -123,6 +123,7 @@ class EasyDB
      */
     public function csv(string $statement, ...$params)
     {
+        /** @var array<int, array<string, scalar>> $results */
         $results = $this->safeQuery(
             $statement,
             $params,
