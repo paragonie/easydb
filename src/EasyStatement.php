@@ -2,8 +2,10 @@
 
 namespace ParagonIE\EasyDB;
 
+use ParagonIE\EasyDB\Exception\MustBeEmpty;
 use ParagonIE\EasyDB\Exception\MustBeNonEmpty;
 use RuntimeException;
+use TypeError;
 
 /**
  * Class EasyStatement
@@ -12,25 +14,14 @@ use RuntimeException;
 class EasyStatement
 {
     /**
-     * @var array
-     *
-     * @psalm-var array<int, array{type:string, condition:self|string, values?:array<int, mixed>}>
+     * @var array<int, array{type:string, condition:self|string, values?:array<int, mixed>}> $parts
      */
-    private $parts = [];
+    private array $parts = [];
 
-    /**
-     * @var EasyStatement|null
-     */
-    private $parent;
+    private ?EasyStatement $parent;
 
-    /**
-     * @var bool
-     */
-    private $allowEmptyInStatements = false;
+    private bool $allowEmptyInStatements = false;
 
-    /**
-     * @return int
-     */
     public function count(): int
     {
         return \count($this->parts);
@@ -60,13 +51,11 @@ class EasyStatement
     /**
      * Alias for andWith().
      *
-     * @param string $condition
+     * @param EasyStatement|string $condition
      * @param mixed ...$values
-     *
      * @return self
-     * @throws \TypeError
      */
-    public function with(string $condition, ...$values): self
+    public function with(EasyStatement|string $condition, ...$values): self
     {
         return $this->andWith($condition, ...$values);
     }
@@ -76,18 +65,18 @@ class EasyStatement
      *
      * @param string|self $condition
      * @param mixed ...$values
-     *
      * @return self
-     * @throws \TypeError
-     * @psalm-suppress RedundantConditionGivenDocblockType
+     *
+     * @throws MustBeEmpty
      */
-    public function andWith($condition, ...$values): self
+    public function andWith(EasyStatement|string $condition, ...$values): self
     {
         if ($condition instanceof EasyStatement) {
+            if (!empty($values)) {
+                throw new MustBeEmpty("EasyStatement provided; must be only argument.");
+            }
+            $values = $condition->values();
             $condition = '(' . $condition . ')';
-        }
-        if (!\is_string($condition)) {
-            throw new \TypeError('An EasyStatement or string is expected for argument 1');
         }
         return $this->andWithString($condition, ...$values);
     }
@@ -116,18 +105,16 @@ class EasyStatement
      *
      * @param string|self $condition
      * @param mixed ...$values
-     *
      * @return self
-     * @throws \TypeError
-     * @psalm-suppress RedundantConditionGivenDocblockType
      */
-    public function orWith($condition, ...$values): self
+    public function orWith(EasyStatement|string $condition, ...$values): self
     {
         if ($condition instanceof EasyStatement) {
+            if (!empty($values)) {
+                throw new MustBeEmpty("EasyStatement provided; must be only argument.");
+            }
+            $values = $condition->values();
             $condition = '(' . $condition . ')';
-        }
-        if (!\is_string($condition)) {
-            throw new \TypeError('An EasyStatement or string is expected for argument 1');
         }
         return $this->orWithString($condition, ...$values);
     }
@@ -175,8 +162,10 @@ class EasyStatement
      * @param array $values
      *
      * @return self
+     *
      * @throws MustBeNonEmpty
-     * @throws \TypeError
+     * @throws RuntimeException
+     * @throws TypeError
      */
     public function andIn(string $condition, array $values): self
     {
@@ -193,7 +182,14 @@ class EasyStatement
             ];
             return $this;
         }
-        return $this->andWith($this->unpackCondition($condition, \count($values)), ...$values);
+        try {
+            return $this->andWith(
+                $this->unpackCondition($condition, \count($values)),
+                ...$values
+            );
+        } catch (MustBeEmpty $ex) {
+            throw new RuntimeException("Invalid state reached", 0, $ex);
+        }
     }
 
     /**
@@ -216,7 +212,14 @@ class EasyStatement
             }
             return $this;
         }
-        return $this->orWith($this->unpackCondition($condition, \count($values)), ...$values);
+        try {
+            return $this->orWith(
+                $this->unpackCondition($condition, \count($values)),
+                ...$values
+            );
+        } catch (MustBeEmpty $ex) {
+            throw new RuntimeException("Invalid state reached", 0, $ex);
+        }
     }
 
     /**
@@ -306,7 +309,7 @@ class EasyStatement
         if (empty($this->parts)) {
             return '1 = 1';
         }
-        return (string) \array_reduce(
+        return \array_reduce(
             $this->parts,
             /**
              * @psalm-param array{type:string, condition:self|string, values?:array<int, mixed>} $part
@@ -331,16 +334,12 @@ class EasyStatement
                 $part['type'] = (string) $part['type'];
 
                 if ($sql) {
-                    switch ($part['type']) {
-                        case 'AND':
-                        case 'OR':
-                            $statement = $part['type'] . ' ' . $statement;
-                            break;
-                        default:
-                            throw new RuntimeException(
-                                \sprintf('Invalid joiner %s', $part['type'])
-                            );
-                    }
+                    $statement = match ($part['type']) {
+                        'AND', 'OR' => $part['type'] . ' ' . $statement,
+                        default => throw new RuntimeException(
+                            \sprintf('Invalid joiner %s', $part['type'])
+                        ),
+                    };
                 }
 
                 return \trim($sql . ' ' . $statement);
@@ -350,7 +349,7 @@ class EasyStatement
     }
 
     /**
-     * Get all of the parameters attached to this statement.
+     * Get the parameters attached to this statement.
      *
      * @return array
      */
@@ -407,7 +406,7 @@ class EasyStatement
      *
      * @return bool
      */
-    protected function isGroup($condition): bool
+    protected function isGroup(mixed $condition): bool
     {
         if (!\is_object($condition)) {
             return false;
