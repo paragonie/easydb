@@ -357,6 +357,19 @@ $easy = new \ParagonIE\EasyDB\EasyDB($pdo, 'mysql');
 vendor/bin/phpunit
 ```
 
+## Using Psalm's Security Analysis with EasyDB
+
+First, make sure you've [read the Psalm documentation](https://psalm.dev/docs/security_analysis/).
+
+EasyDB's API exposes several taint sinks. Next, run the following command on your codebase
+that uses EasyDB to identify sources of SQL injection risk.
+
+```terminal
+vendor/bin/psalm --taint-analysis
+```
+
+This will expose where you're passing tainted data to EasyDB in a potentially unsafe way.
+
 ## Troubleshooting Common Issues
 
 ### Only one-dimensional arrays are allowed
