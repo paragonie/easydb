@@ -1,3 +1,10 @@
+# Version 3.0.1
+
+* [#143](https://github.com/paragonie/easydb/issues/143):
+  Don't assume the array passed to insertMany() is indexed at 0.
+* Fixed the type declaration of the `$duplicates_mode` parameter to be nullable in
+  `buildInsertQueryBoolSafe()`.
+
 # Version 3.0.0
 
 * [#141](https://github.com/paragonie/easydb/pull/141):
