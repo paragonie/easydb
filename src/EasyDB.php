@@ -756,10 +756,13 @@ class EasyDB
             );
         }
 
+        $mapsKeys = array_keys($maps);
+        /** @var array-key $firstKey */
+        $firstKey = array_shift($mapsKeys);
         /**
          * @var array $first
          */
-        $first = $maps[0];
+        $first = $maps[$firstKey];
 
         /**
          * @var array $map
