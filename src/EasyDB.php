@@ -881,7 +881,7 @@ class EasyDB
     public function buildInsertQueryBoolSafe(
         string $table,
         array $map,
-        array|bool $duplicates_mode = null
+        array|bool|null $duplicates_mode = null
     ): array {
         /** @var array<int, string> $columns */
         $columns = [];
