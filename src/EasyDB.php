@@ -982,13 +982,13 @@ class EasyDB
      *
      * @param  string $statement SQL query without user data
      * @param  string|int|float|bool|null  ...$params Parameters
-     * @return array
+     * @return array|null
      *
      * @throws TypeError
      *
      * @psalm-taint-sink sql $statement
      */
-    public function row(string $statement, ...$params): array
+    public function row(string $statement, ...$params): ?array
     {
         /**
          * @var array|int $result
