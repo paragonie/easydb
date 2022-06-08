@@ -1003,6 +1003,7 @@ class EasyDB
         if (is_array($result)) {
             $first = array_shift($result);
             if (!is_array($first)) {
+                /* Do not TypeError on empty results */
                 return [];
             }
             return $first;

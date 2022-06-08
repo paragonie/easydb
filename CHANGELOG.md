@@ -1,3 +1,9 @@
+# Version 3.0.2
+
+* Guarantee that `EasyDB::row()` always returns an `array` instead of throwing
+  a `TypeError` when encountering `null`.
+  See also: [#144](https://github.com/paragonie/easydb/pull/144).
+
 # Version 3.0.1
 
 * [#143](https://github.com/paragonie/easydb/issues/143):
