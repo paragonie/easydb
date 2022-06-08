@@ -1001,7 +1001,11 @@ class EasyDB
             true
         );
         if (is_array($result)) {
-            return array_shift($result);
+            $first = array_shift($result);
+            if (!is_array($first)) {
+                return [];
+            }
+            return $first;
         }
         return [];
     }
