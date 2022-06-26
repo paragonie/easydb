@@ -672,7 +672,7 @@ class EasyDB
      *
      * @throws InvalidArgumentException
      *
-     * @psalm-param array<string, scalar|null> $map
+     * @psalm-param array<string, scalar|EasyPlaceholder|null> $map
      *
      * @psalm-taint-source input $table
      * @psalm-taint-source input $field
@@ -804,7 +804,7 @@ class EasyDB
      * @throws EasyDBException
      * @throws QueryError
      *
-     * @psalm-param array<string, scalar|null> $map
+     * @psalm-param array<string, scalar|EasyPlaceholder|null> $map
      *
      * @psalm-taint-source input $table
      */
