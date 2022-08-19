@@ -66,6 +66,7 @@ class EasyStatement
      * @param EasyStatement|string $condition
      * @param mixed ...$values
      * @return self
+     * @psalm-taint-sink sql $condition
      */
     public function with(EasyStatement|string $condition, ...$values): self
     {
@@ -78,6 +79,8 @@ class EasyStatement
      * @param string|self $condition
      * @param mixed ...$values
      * @return self
+     *
+     * @psalm-taint-sink sql $condition
      *
      * @throws MustBeEmpty
      */
@@ -101,7 +104,7 @@ class EasyStatement
      *
      * @return self
      *
-     * @psalm-taint-source input $condition
+     * @psalm-taint-sink sql $condition
      */
     public function andWithString(string $condition, ...$values): self
     {
@@ -121,7 +124,7 @@ class EasyStatement
      * @param mixed ...$values
      * @return self
      *
-     * @psalm-taint-source input $condition
+     * @psalm-taint-sink sql $condition
      */
     public function orWith(EasyStatement|string $condition, ...$values): self
     {
@@ -143,7 +146,7 @@ class EasyStatement
      *
      * @return self
      *
-     * @psalm-taint-source input $condition
+     * @psalm-taint-sink sql $condition
      */
     public function orWithString(string $condition, ...$values): self
     {
@@ -165,7 +168,7 @@ class EasyStatement
      * @return self
      * @throws MustBeNonEmpty
      *
-     * @psalm-taint-source input $condition
+     * @psalm-taint-sink sql $condition
      */
     public function in(string $condition, array $values): self
     {
@@ -186,7 +189,7 @@ class EasyStatement
      * @throws RuntimeException
      * @throws TypeError
      *
-     * @psalm-taint-source input $condition
+     * @psalm-taint-sink sql $condition
      */
     public function andIn(string $condition, array $values): self
     {
@@ -224,7 +227,7 @@ class EasyStatement
      *
      * @throws MustBeNonEmpty
      *
-     * @psalm-taint-source input $condition
+     * @psalm-taint-sink sql $condition
      */
     public function orIn(string $condition, array $values): self
     {
@@ -448,7 +451,7 @@ class EasyStatement
      *
      * @return string
      *
-     * @psalm-taint-source input $condition
+     * @psalm-taint-sink sql $condition
      */
     private function unpackCondition(string $condition, int $count): string
     {

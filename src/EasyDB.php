@@ -181,8 +181,6 @@ class EasyDB
      * @return int
      *
      * @throws TypeError
-     *
-     * @psalm-taint-source input $table
      */
     public function delete(string $table, EasyStatement|array $conditions): int
     {
@@ -202,8 +200,6 @@ class EasyDB
      * @throws InvalidTableName
      * @throws MustBeOneDimensionalArray
      * @throws TypeError
-     *
-     * @psalm-taint-source input $table
      */
     protected function deleteWhereArray(string $table, array $conditions): int
     {
@@ -263,8 +259,6 @@ class EasyDB
      * @return int
      *
      * @throws InvalidTableName
-     *
-     * @psalm-taint-source input $table
      */
     protected function deleteWhereStatement(string $table, EasyStatement $conditions): int
     {
@@ -306,8 +300,6 @@ class EasyDB
      * @return string
      *
      * @throws InvalidIdentifier
-     *
-     * @psalm-taint-source input $string
      */
     public function escapeIdentifier(string $string, bool $quote = true): string
     {
@@ -383,8 +375,6 @@ class EasyDB
      *
      * @throws InvalidArgumentException
      * @throws MustBeOneDimensionalArray
-     *
-     * @psalm-taint-source input $values
      */
     public function escapeValueSet(array $values, string $type = 'string'): string
     {
@@ -477,8 +467,6 @@ class EasyDB
      *
      * @param  string $value
      * @return string
-     *
-     * @psalm-taint-source input $value
      */
     public function escapeLikeValue(string $value): string
     {
@@ -555,8 +543,6 @@ class EasyDB
      * @throws MustBeOneDimensionalArray
      *
      * @psalm-param array<string, scalar|EasyPlaceholder|null> $map
-     *
-     * @psalm-taint-source input $table
      */
     public function insert(string $table, array $map): int
     {
@@ -593,8 +579,6 @@ class EasyDB
      * @throws MustBeOneDimensionalArray
      *
      * @psalm-param array<string, scalar|EasyPlaceholder|null> $map
-     *
-     * @psalm-taint-source input $table
      */
     public function insertIgnore(string $table, array $map): int
     {
@@ -632,8 +616,6 @@ class EasyDB
      *
      * @psalm-param array<string, scalar|EasyPlaceholder|null> $map
      * @psalm-param array<int, string> $on_duplicate_key_update
-     *
-     * @psalm-taint-source input $table
      */
     public function insertOnDuplicateKeyUpdate(
         string $table,
@@ -673,9 +655,6 @@ class EasyDB
      * @throws InvalidArgumentException
      *
      * @psalm-param array<string, scalar|EasyPlaceholder|null> $map
-     *
-     * @psalm-taint-source input $table
-     * @psalm-taint-source input $field
      */
     public function insertGet(
         string $table,
@@ -741,8 +720,6 @@ class EasyDB
      * @throws InvalidArgumentException
      * @throws MustBeOneDimensionalArray
      * @throws QueryError
-     *
-     * @psalm-taint-source input $table
      */
     public function insertMany(string $table, array $maps): int
     {
@@ -805,8 +782,6 @@ class EasyDB
      * @throws QueryError
      *
      * @psalm-param array<string, scalar|EasyPlaceholder|null> $map
-     *
-     * @psalm-taint-source input $table
      */
     public function insertReturnId(string $table, array $map, string $sequenceName = ''): string
     {
@@ -834,8 +809,6 @@ class EasyDB
      *
      * @throws MustBeOneDimensionalArray
      *   If $columns is not a one-dimensional array.
-     *
-     * @psalm-taint-source input $table
      */
     public function buildInsertQuery(string $table, array $columns): string
     {
@@ -1132,8 +1105,6 @@ class EasyDB
      *
      * @throws QueryError
      * @throws InvalidTableName
-     *
-     * @psalm-taint-source input $table
      */
     public function update(
         string $table,
@@ -1159,8 +1130,6 @@ class EasyDB
      *                            assigned to each field
      * @param  array  $conditions WHERE clause
      * @return int
-     *
-     * @psalm-taint-source input $table
      */
     protected function updateWhereArray(string $table, array $changes, array $conditions): int
     {
@@ -1236,8 +1205,6 @@ class EasyDB
      *                                   should be assigned to each field
      * @param  EasyStatement $conditions WHERE clause
      * @return int
-     *
-     * @psalm-taint-source input $table
      */
     protected function updateWhereStatement(
         string $table,
@@ -1480,6 +1447,8 @@ class EasyDB
      *
      * @param  string ...$args
      * @return int
+     *
+     * @psalm-taint-sink sql
      */
     public function exec(...$args): int
     {
@@ -1537,6 +1506,7 @@ class EasyDB
      * @return PDOStatement
      *
      * @throws QueryError
+     * @psalm-taint-sink sql $args
      */
     public function prepare(mixed ...$args): PDOStatement
     {
@@ -1554,6 +1524,7 @@ class EasyDB
      *
      * @param  string ...$args
      * @return PDOStatement
+     * @psalm-taint-sink sql $args
      */
     public function query(...$args): PDOStatement
     {
