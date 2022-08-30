@@ -33,7 +33,7 @@ class EasyPlaceholder
      *
      * @throws MustBeNonEmpty
      *
-     * @psalm-taint-source input $mask
+     * @psalm-taint-sink sql $mask
      */
     public function __construct(string $mask, ...$values)
     {
