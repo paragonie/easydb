@@ -420,7 +420,7 @@ class EasyStatement
      * EasyStatement constructor.
      * @param EasyStatement|null $parent
      */
-    protected function __construct(EasyStatement $parent = null)
+    protected function __construct(?EasyStatement $parent = null)
     {
         $this->parent = $parent;
     }

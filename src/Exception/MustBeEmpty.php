@@ -4,12 +4,13 @@ namespace ParagonIE\EasyDB\Exception;
 
 use ParagonIE\Corner\CornerInterface;
 use ParagonIE\Corner\CornerTrait;
+use Throwable;
 
 class MustBeEmpty extends EasyDBException
 {
     use CornerTrait;
 
-    public function __construct(string $message = "", int $code = 0, \Throwable $previous = null)
+    public function __construct(string $message = "", int $code = 0, ?Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
         $this->supportLink = 'https://github.com/paragonie/easydb';

@@ -35,8 +35,8 @@ abstract class Factory
      */
     public static function create(
         string $dsn,
-        string $username = null,
-        string $password = null,
+        ?string $username = null,
+        ?string $password = null,
         array $options = []
     ): EasyDB {
         return static::fromArray([$dsn, $username, $password, $options]);
