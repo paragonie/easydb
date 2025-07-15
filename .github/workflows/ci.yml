@@ -27,6 +27,3 @@ jobs:
 
       - name: PHPUnit tests
         run: composer test
-        timeout-minutes: 30
-        with:
-          memory_limit: 256M
