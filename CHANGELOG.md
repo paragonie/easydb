@@ -1,3 +1,9 @@
+# Version 3.0.3
+
+* Psalm: accept EasyPlaceholder by @kamil-tekiela in [#147](https://github.com/paragonie/easydb/pull/147)
+* Remove (and replace when needed) @psalm-taint-source annotations by @LeSuisse in [#149](https://github.com/paragonie/easydb/pull/149)
+* Mark nullable parameters as nullable by @gijsdev in [#156](https://github.com/paragonie/easydb/pull/156)
+
 # Version 3.0.2
 
 * Guarantee that `EasyDB::row()` always returns an `array` instead of throwing
