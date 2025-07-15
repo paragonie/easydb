@@ -17,6 +17,7 @@
         <PropertyTypeCoercion errorLevel="info" />
         <UnnecessaryVarAnnotation errorLevel="suppress" />
         <UnusedVariable errorLevel="info" />
+        <InvalidCast errorLevel="info" />
     </issueHandlers>
     <plugins>
         <pluginClass class="Psalm\PhpUnitPlugin\Plugin" />
