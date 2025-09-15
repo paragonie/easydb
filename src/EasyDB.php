@@ -1046,9 +1046,10 @@ class EasyDB
         }
 
         if (empty($params)) {
-            $stmt = $this->pdo->query($statement);
+            $stmt = $this->prepare($statement);
+            $stmt->execute($params);
             if ($returnNumAffected) {
-                return (int) $stmt->rowCount();
+                return $stmt->rowCount();
             }
             return $this->getResultsStrictTyped($stmt, $fetchStyle);
         }
