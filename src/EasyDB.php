@@ -157,7 +157,7 @@ class EasyDB
         $results = $this->safeQuery(
             $statement,
             $params,
-            self::DEFAULT_FETCH_STYLE,
+            \PDO::FETCH_ASSOC,
             false,
             true
         );
