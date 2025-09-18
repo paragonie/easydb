@@ -1,3 +1,9 @@
+# Version 3.0.4
+
+* Use prepare/statement also when there is no parameters by @jeanmonod in https://github.com/paragonie/easydb/pull/159
+* Ignore tests and workflows with "export-ignore" on .gitattributes by @erikn69 in https://github.com/paragonie/easydb/pull/161
+* Fix csv() when using non-default fetch style by @alffonsse in https://github.com/paragonie/easydb/pull/160 
+
 # Version 3.0.3
 
 * Psalm: accept EasyPlaceholder by @kamil-tekiela in [#147](https://github.com/paragonie/easydb/pull/147)
