@@ -1,3 +1,11 @@
+# Version 3.1.0
+
+* Calling `insertReturnId()` no longer unavoidably throws on PostgreSQL. Now, it only throws if you don't specify a
+  sequence name (optional third parameter).
+* The README documentation now covers `insertReturnId()`
+* Improved test coverage in [#162](https://github.com/paragonie/easydb/pull/162), which includes integration tests with
+  MySQL, SQLite, and PostgreSQL.
+
 # Version 3.0.4
 
 * Use prepare/statement also when there is no parameters by @jeanmonod in https://github.com/paragonie/easydb/pull/159
