@@ -28,7 +28,7 @@ jobs:
         uses: "ramsey/composer-install@v3"
 
       - name: Static Analysis
-        run: psalm
+        run: vendor/bin/psalm
 
       - name: Taint Analysis
-        run: psalm --taint-analysis
+        run: vendor/bin/psalm --taint-analysis
