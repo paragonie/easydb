@@ -46,7 +46,7 @@ jobs:
         run: composer install
 
       - name: Run tests
-        run: vendor/bin/phpunit tests/Driver/${{ matrix.driver }}Test.php
+        run: vendor/bin/phpunit tests/Driver/
         env:
           MYSQL_HOST: 127.0.0.1
           MYSQL_DB: easydb
