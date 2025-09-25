@@ -28,7 +28,7 @@ jobs:
         uses: "ramsey/composer-install@v3"
 
       - name: Add plugin
-        run: compose require --dev psalm/plugin-phpunit
+        run: composer require --dev psalm/plugin-phpunit
 
       - name: Static Analysis
         run: vendor/bin/psalm
