@@ -106,6 +106,20 @@ INSERT INTO comments (blogpostid, userid, comment, parent) VALUES (
 );
 ```
 
+#### Insert a row and return the new record ID
+
+Most of the time, you can get away with this:
+
+```php
+$newRecordId = $db->insertReturnId($table, $fields);
+```
+
+However, PostgreSQL requires you to specify the sequence name.
+
+```php
+$newRecordId = $db->insertReturnId($table, $fields, $sequeence);
+```
+
 #### Build an insert without executing
 
 ```php
