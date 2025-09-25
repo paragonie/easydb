@@ -1,6 +1,8 @@
 # EasyDB - Simple Database Abstraction Layer
 
 [![Build Status](https://github.com/paragonie/easydb/actions/workflows/ci.yml/badge.svg)](https://github.com/paragonie/easydb/actions)
+[![Static Analysis](https://github.com/paragonie/easydb/actions/workflows/psalm.yml/badge.svg)](https://github.com/paragonie/easydb/actions)
+[![Driver Integration Tests](https://github.com/paragonie/easydb/actions/workflows/integration.yml/badge.svg)](https://github.com/paragonie/easydb/actions)
 [![Latest Stable Version](https://poser.pugx.org/paragonie/easydb/v/stable)](https://packagist.org/packages/paragonie/easydb)
 [![Latest Unstable Version](https://poser.pugx.org/paragonie/easydb/v/unstable)](https://packagist.org/packages/paragonie/easydb)
 [![License](https://poser.pugx.org/paragonie/easydb/license)](https://packagist.org/packages/paragonie/easydb)
