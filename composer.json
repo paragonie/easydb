@@ -43,7 +43,11 @@
         }
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "process-timeout": 0,
+        "allow-plugins": {
+            "infection/extension-installer": true
+        }
     },
     "require": {
         "php": "^8",
@@ -51,12 +55,14 @@
         "paragonie/corner": "^2"
     },
     "require-dev": {
+        "infection/infection": "^0",
         "phpunit/phpunit": "^9|^10|^11",
         "psalm/plugin-phpunit": "<1",
         "squizlabs/php_codesniffer": "^3",
         "vimeo/psalm": "^6"
     },
     "scripts": {
+        "mutation-test": "infection",
         "taint": "psalm --taint-analysis",
         "test": "phpunit && psalm",
         "check-style": "phpcs -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src tests",
