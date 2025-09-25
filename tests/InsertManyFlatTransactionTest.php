@@ -5,11 +5,13 @@ namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
 use ParagonIE\EasyDB\EasyDB;
+use ParagonIE\EasyDB\Factory;
 use PDOException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(EasyDB::class)]
+#[CoversClass(Factory::class)]
 class InsertManyFlatTransactionTest extends EasyDBWriteTestCase
 {
     /**

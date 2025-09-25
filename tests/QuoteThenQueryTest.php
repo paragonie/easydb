@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyDB;
+use ParagonIE\EasyDB\Factory;
 use PDOStatement;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -13,6 +14,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  * @package ParagonIE\EasyDB\Tests
  */
 #[CoversClass(EasyDB::class)]
+#[CoversClass(Factory::class)]
 class QuoteThenQueryTest extends EasyDBWriteTestCase
 {
 

@@ -6,6 +6,7 @@ namespace ParagonIE\EasyDB\Tests;
 use InvalidArgumentException;
 use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Exception\MustBeOneDimensionalArray;
+use ParagonIE\EasyDB\Factory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -14,6 +15,8 @@ use PHPUnit\Framework\Attributes\DataProvider;
  * @package ParagonIE\EasyDB\Tests
  */
 #[CoversClass(EasyDB::class)]
+#[CoversClass(Factory::class)]
+#[CoversClass(MustBeOneDimensionalArray::class)]
 class EscapeValueSetTest extends EasyDBTestCase
 {
 

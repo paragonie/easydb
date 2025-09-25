@@ -12,6 +12,7 @@ use RuntimeException;
  * @package ParagonIE\EasyDB\Tests
  */
 #[CoversClass(EasyStatement::class)]
+#[CoversClass(MustBeNonEmpty::class)]
 class EasyStatementTest extends TestCase
 {
     public function testBasicAndOr(): void

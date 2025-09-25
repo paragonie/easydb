@@ -12,6 +12,7 @@ use PHPUnit\Framework\TestCase;
  * Class FactoryTest
  * @package ParagonIE\EasyDB\Tests
  */
+#[CoversClass(EasyDB::class)]
 #[CoversClass(Factory::class)]
 class FactoryTest extends TestCase
 {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyDB;
+use ParagonIE\EasyDB\Factory;
 use PDO;
 use PDOException;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -11,6 +12,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionClass;
 
 #[CoversClass(EasyDB::class)]
+#[CoversClass(Factory::class)]
 class GetAttributeTest extends EasyDBTestCase
 {
 

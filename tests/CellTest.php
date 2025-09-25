@@ -4,10 +4,12 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyDB;
+use ParagonIE\EasyDB\Factory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(EasyDB::class)]
+#[CoversClass(Factory::class)]
 class CellTest extends ColTest
 {
     public static function goodColArguments(): array
@@ -60,6 +62,6 @@ class CellTest extends ColTest
 
         $result = $this->getResultForMethod($db, $statement, $offset, $params);
 
-        $this->assertEquals(array_diff_assoc([$result], [$expectedResult[0]]), []);
+        $this->assertEquals([], array_diff_assoc([$result], [$expectedResult[0]]));
     }
 }

@@ -10,6 +10,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(EasyDB::class)]
+#[CoversClass(Factory::class)]
+#[CoversClass(ConstructorFailed::class)]
 class ConstructorFailedTest extends EasyDBTestCase
 {
 
