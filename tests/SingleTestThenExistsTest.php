@@ -4,9 +4,12 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyDB;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-class SingleTestThenExistsTest extends EasyDBWriteTest
+
+#[CoversClass(EasyDB::class)]
+class SingleTestThenExistsTest extends EasyDBWriteTestCase
 {
     protected function getResultForMethod(EasyDB $db, $statement, $params)
     {

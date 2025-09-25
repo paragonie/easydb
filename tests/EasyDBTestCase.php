@@ -5,12 +5,14 @@ namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Factory;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase as PHPUnit_Framework_TestCase;
 
 /**
  * Class EasyDBTestCase
  * @package ParagonIE\EasyDB\Tests
  */
+#[CoversClass(EasyDB::class)]
 abstract class EasyDBTestCase extends PHPUnit_Framework_TestCase
 {
 
@@ -95,7 +97,7 @@ abstract class EasyDBTestCase extends PHPUnit_Framework_TestCase
     }
 
     /**
-    * Remaps EasyDBWriteTest::goodFactoryCreateArgument2EasyDBProvider()
+    * Remaps EasyDBWriteTestCase::goodFactoryCreateArgument2EasyDBProvider()
     */
     public static function goodFactoryCreateArgument2EasyDBQuoteProvider(): array
     {

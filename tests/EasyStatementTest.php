@@ -4,12 +4,14 @@ namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyStatement;
 use ParagonIE\EasyDB\Exception\MustBeNonEmpty;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase as TestCase;
 use RuntimeException;
 
 /**
  * @package ParagonIE\EasyDB\Tests
  */
+#[CoversClass(EasyStatement::class)]
 class EasyStatementTest extends TestCase
 {
     public function testBasicAndOr(): void

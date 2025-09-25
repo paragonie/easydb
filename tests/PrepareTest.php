@@ -3,20 +3,25 @@ declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
+use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Exception\QueryError;
 use PDOStatement;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Class ExecTest
  * @package ParagonIE\EasyDB\Tests
  */
-class PrepareTest extends EasyDBWriteTest
+#[CoversClass(EasyDB::class)]
+class PrepareTest extends EasyDBWriteTestCase
 {
     /**
      * @dataProvider goodFactoryCreateArgument2EasyDBInsertManyProvider
      * @param callable $cb
      * @param array $maps
      */
+    #[DataProvider("goodFactoryCreateArgument2EasyDBInsertManyProvider")]
     public function testQuery(callable $cb, array $maps): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);

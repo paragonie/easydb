@@ -6,10 +6,11 @@ namespace ParagonIE\EasyDB\Tests;
 use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Exception as Issues;
 use PHPUnit\Framework\AssertionFailedError;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit_Framework_Error;
 use TypeError;
 
+#[CoversClass(EasyDB::class)]
 class EscapeIdentifierTest extends EasyDBTestCase
 {
 

@@ -4,11 +4,14 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
+use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Exception\InvalidIdentifier;
 use ParagonIE\EasyDB\Exception\InvalidTableName;
 use ParagonIE\EasyDB\Exception\MustBeOneDimensionalArray;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
+#[CoversClass(EasyDB::class)]
 class Is1DArrayThenDeleteReadOnlyTest extends EasyDBTestCase
 {
 

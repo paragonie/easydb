@@ -4,8 +4,10 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyDB;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
+#[CoversClass(EasyDB::class)]
 class RowTest extends SafeQueryTest
 {
     protected function getResultForMethod(EasyDB $db, $statement, $offset, $params)

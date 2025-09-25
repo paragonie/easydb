@@ -5,8 +5,10 @@ namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyDB;
 use PDO;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
+#[CoversClass(EasyDB::class)]
 class EscapeLikeTest extends EasyDBTestCase
 {
     public static function dataValues(): array

@@ -4,18 +4,21 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
+use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Exception\MustBeOneDimensionalArray;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Class EasyDBTestCase
  * @package ParagonIE\EasyDB\Tests
  */
+#[CoversClass(EasyDB::class)]
 class EscapeValueSetTest extends EasyDBTestCase
 {
 
     /**
-    * Remaps EasyDBWriteTest::goodFactoryCreateArgument2EasyDBProvider()
+    * Remaps EasyDBWriteTestCase::goodFactoryCreateArgument2EasyDBProvider()
     */
     public static function goodFactoryCreateArgument2EasyDBEscapeValueSetProvider(): array
     {
@@ -132,7 +135,7 @@ class EscapeValueSetTest extends EasyDBTestCase
     }
 
     /**
-    * Remaps EasyDBWriteTest::goodFactoryCreateArgument2EasyDBProvider()
+    * Remaps EasyDBWriteTestCase::goodFactoryCreateArgument2EasyDBProvider()
     */
     public static function badFactoryCreateArgument2EasyDBEscapeValueSetProvider(): array
     {

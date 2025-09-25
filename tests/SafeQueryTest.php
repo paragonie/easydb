@@ -6,8 +6,10 @@ namespace ParagonIE\EasyDB\Tests;
 use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Exception\MustBeOneDimensionalArray;
 use ParagonIE\EasyDB\Factory;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
+#[CoversClass(EasyDB::class)]
 class SafeQueryTest extends RunTest
 {
     protected function getResultForMethod(EasyDB $db, $statement, $offset, $params)
@@ -28,7 +30,7 @@ class SafeQueryTest extends RunTest
         $dsn,
         $username = null,
         $password = null,
-        $options = []
+        array $options = []
     ) {
         $db = Factory::create($dsn, $username, $password, $options);
         $args = [1, 2, 3, 4];

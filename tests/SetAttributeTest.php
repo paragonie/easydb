@@ -7,8 +7,10 @@ use Exception;
 use ParagonIE\EasyDB\EasyDB;
 use PDO;
 use PDOException;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
+#[CoversClass(EasyDB::class)]
 class SetAttributeTest extends GetAttributeTest
 {
 

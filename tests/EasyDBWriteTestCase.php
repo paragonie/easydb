@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
-use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
+use Throwable;
 use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Factory;
 
@@ -11,7 +12,8 @@ use ParagonIE\EasyDB\Factory;
  * Class EasyDBTestCase
  * @package ParagonIE\EasyDB\Tests
  */
-abstract class EasyDBWriteTest extends EasyDBTestCase
+#[CoversClass(EasyDB::class)]
+abstract class EasyDBWriteTestCase extends EasyDBTestCase
 {
 
     /**
@@ -46,7 +48,7 @@ abstract class EasyDBWriteTest extends EasyDBTestCase
                             $factory->run(
                                 'CREATE TABLE table_with_bool (foo char(36) PRIMARY KEY, bar BOOLEAN)'
                             );
-                        } catch (Exception $e) {
+                        } catch (Throwable $e) {
                             $this->markTestSkipped($e->getMessage());
                         }
                         return $factory;
@@ -58,7 +60,7 @@ abstract class EasyDBWriteTest extends EasyDBTestCase
     }
 
     /**
-    * Remaps EasyDBWriteTest::goodFactoryCreateArgument2EasyDBProvider()
+    * Remaps EasyDBWriteTestCase::goodFactoryCreateArgument2EasyDBProvider()
     */
     public static function goodFactoryCreateArgument2EasyDBInsertManyProvider(): array
     {

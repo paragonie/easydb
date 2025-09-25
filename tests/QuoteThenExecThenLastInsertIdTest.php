@@ -3,13 +3,16 @@ declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
+use ParagonIE\EasyDB\EasyDB;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Class ExecTest
  * @package ParagonIE\EasyDB\Tests
  */
-class QuoteThenExecThenLastInsertIdTest extends EasyDBWriteTest
+#[CoversClass(EasyDB::class)]
+class QuoteThenExecThenLastInsertIdTest extends EasyDBWriteTestCase
 {
 
     /**

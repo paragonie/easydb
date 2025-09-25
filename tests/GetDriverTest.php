@@ -3,8 +3,12 @@ declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
+use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Factory;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
+#[CoversClass(EasyDB::class)]
 class GetDriverTest extends EasyDBTestCase
 {
     /**
@@ -16,6 +20,7 @@ class GetDriverTest extends EasyDBTestCase
      *
      * @dataProvider goodFactoryCreateArgumentProvider
      */
+    #[DataProvider("goodFactoryCreateArgumentProvider")]
     public function testGetDriver(
         string $expectedDriver,
         string $dsn,

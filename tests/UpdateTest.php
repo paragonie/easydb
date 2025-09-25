@@ -4,13 +4,16 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
+use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\EasyStatement;
 use ParagonIE\EasyDB\Exception\InvalidIdentifier;
 use ParagonIE\EasyDB\Exception\InvalidTableName;
 use ParagonIE\EasyDB\Exception\MustBeOneDimensionalArray;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-class UpdateTest extends EasyDBWriteTest
+#[CoversClass(EasyDB::class)]
+class UpdateTest extends EasyDBWriteTestCase
 {
 
     /**
@@ -148,29 +151,29 @@ class UpdateTest extends EasyDBWriteTest
         $db = $this->easyDBExpectedFromCallable($cb);
         $db->insertMany('irrelevant_but_valid_tablename', [['foo' => '1'], ['foo' => '2']]);
         $this->assertEquals(
-            $db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename'),
-            2
+            2,
+            $db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename')
         );
         $this->assertEquals(
-            $db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename WHERE foo = ?', [1]),
-            1
+            1,
+            $db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename WHERE foo = ?', [1])
         );
         $this->assertEquals(
-            $db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename WHERE foo = ?', [2]),
-            1
+            1,
+            $db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename WHERE foo = ?', [2])
         );
         $this->assertEquals(
-            $db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename WHERE foo = ?', [3]),
-            0
+            0,
+            $db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename WHERE foo = ?', [3])
         );
         $db->update('irrelevant_but_valid_tablename', ['foo' => 3], ['foo' => 2]);
         $this->assertEquals(
-            $db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename WHERE foo = ?', [2]),
-            0
+            0,
+            $db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename WHERE foo = ?', [2])
         );
         $this->assertEquals(
-            $db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename WHERE foo = ?', [3]),
-            1
+            1,
+            $db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename WHERE foo = ?', [3])
         );
     }
 }

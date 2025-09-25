@@ -4,19 +4,23 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
+use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Exception\InvalidIdentifier;
 use ParagonIE\EasyDB\Exception\InvalidTableName;
 use ParagonIE\EasyDB\Exception\MustBeOneDimensionalArray;
 use PDOException;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-class InsertTest extends EasyDBWriteTest
+#[CoversClass(EasyDB::class)]
+class InsertTest extends EasyDBWriteTestCase
 {
 
     /**
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
     public function testInsertNoFieldsThrowsException(callable $cb): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);

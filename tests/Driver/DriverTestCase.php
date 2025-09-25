@@ -6,45 +6,30 @@ use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Exception\ConstructorFailed;
 use ParagonIE\EasyDB\Factory;
 use PDOException;
+use PHPUnit\Framework\Attributes\AfterClass;
 use PHPUnit\Framework\TestCase;
 
 abstract class DriverTestCase extends TestCase
 {
-    /** @var ?EasyDB $db */
     protected ?EasyDB $db = null;
 
-    /**
-     * @return string
-     */
     abstract protected function getDsn(): string;
 
-    /**
-     * @return string|null
-     */
     protected function getUsername(): ?string
     {
         return null;
     }
 
-    /**
-     * @return string|null
-     */
     protected function getPassword(): ?string
     {
         return null;
     }
 
-    /**
-     * @return array
-     */
     protected function getOptions(): array
     {
         return [];
     }
 
-    /**
-     * @before
-     */
     public function setUp(): void
     {
         try {
@@ -110,9 +95,7 @@ abstract class DriverTestCase extends TestCase
         }
     }
 
-    /**
-     * @after
-     */
+    #[AfterClass]
     public function tearDown(): void
     {
         if (!($this->db instanceof EasyDB)) {

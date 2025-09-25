@@ -4,10 +4,13 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
+use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Exception\InvalidIdentifier;
 use ParagonIE\EasyDB\Exception\MustBeOneDimensionalArray;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
+#[CoversClass(EasyDB::class)]
 class InsertGetTest extends InsertTest
 {
 
@@ -56,8 +59,8 @@ class InsertGetTest extends InsertTest
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $this->assertEquals(
-            $db->insertGet('irrelevant_but_valid_tablename', ['foo' => 'bar'], 'bar'),
-            'bar'
+            'bar',
+            $db->insertGet('irrelevant_but_valid_tablename', ['foo' => 'bar'], 'bar')
         );
     }
     /**
@@ -70,8 +73,8 @@ class InsertGetTest extends InsertTest
         $db = $this->easyDBExpectedFromCallable($cb);
         $this->expectException(\Exception::class);
         $this->assertEquals(
-            $db->insertGet('irrelevant_but_valid_tablename', [], 'bar'),
-            'bar'
+            'bar',
+            $db->insertGet('irrelevant_but_valid_tablename', [], 'bar')
         );
     }
 }
