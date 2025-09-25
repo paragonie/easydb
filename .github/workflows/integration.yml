@@ -1,0 +1,58 @@
+name: Integration Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        driver: [ sqlite, mysql, pgsql ]
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: easydb
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: easydb
+          POSTGRES_USER: root
+        ports:
+          - 5432:5432
+        options: --health-cmd="pg_isready" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: pdo, pdo_mysql, pdo_pgsql, pdo_sqlite
+
+      - name: Install dependencies
+        run: composer install
+
+      - name: Run tests
+        run: vendor/bin/phpunit tests/Driver/${{ matrix.driver }}Test.php
+        env:
+          MYSQL_HOST: 127.0.0.1
+          MYSQL_DB: easydb
+          MYSQL_USER: root
+          MYSQL_PASS: password
+          PGSQL_HOST: 127.0.0.1
+          PGSQL_DB: easydb
+          PGSQL_USER: root
+          PGSQL_PASS: password
