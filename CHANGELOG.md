@@ -6,6 +6,8 @@
 * Improved test coverage in [#162](https://github.com/paragonie/easydb/pull/162), which includes integration tests with
   Firebird, MySQL, SQLite, Microsoft SQL Server, and PostgreSQL.
 * We also now test with PHP 8.5 in CI.
+* Updated the unit tests to support modern PHPUnit.
+* Added mutation testing to CI.
 
 # Version 3.0.4
 
