@@ -49,6 +49,7 @@ class CellTest extends ColTest
     }
 
     /**
+     * @dataProvider goodColArgumentsProvider
      * @param callable $cb
      * @param string $statement
      * @param int $offset
