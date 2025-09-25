@@ -4,7 +4,8 @@
   sequence name (optional third parameter).
 * The README documentation now covers `insertReturnId()`
 * Improved test coverage in [#162](https://github.com/paragonie/easydb/pull/162), which includes integration tests with
-  MySQL, SQLite, and PostgreSQL.
+  Firebird, MySQL, SQLite, Microsoft SQL Server, and PostgreSQL.
+* We also now test with PHP 8.5 in CI.
 
 # Version 3.0.4
 
