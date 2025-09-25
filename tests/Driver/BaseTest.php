@@ -54,7 +54,11 @@ abstract class BaseTest extends TestCase
                 $this->getPassword(),
                 $this->getOptions()
             );
-            $this->db->run('DROP TABLE IF EXISTS users');
+            if ($this->db->getDriver() === 'firebird') {
+                $this->db->run('DROP TABLE users');
+            } else {
+                $this->db->run('DROP TABLE IF EXISTS users');
+            }
             if ($this->db->getDriver() === 'pgsql') {
                 $this->db->run(
                     'CREATE TABLE users (
@@ -70,6 +74,24 @@ abstract class BaseTest extends TestCase
                     userid INTEGER PRIMARY KEY AUTO_INCREMENT,
                     username TEXT,
                     email TEXT,
+                    is_admin INTEGER DEFAULT 0
+                )'
+                );
+            } elseif ($this->db->getDriver() === 'sqlsrv') {
+                $this->db->run(
+                    'CREATE TABLE users (
+                    userid INT IDENTITY(1,1) PRIMARY KEY,
+                    username VARCHAR(255),
+                    email VARCHAR(255),
+                    is_admin INT DEFAULT 0
+                )'
+                );
+            } elseif ($this->db->getDriver() === 'firebird') {
+                $this->db->run(
+                    'CREATE TABLE users (
+                    userid INTEGER PRIMARY KEY,
+                    username VARCHAR(255),
+                    email VARCHAR(255),
                     is_admin INTEGER DEFAULT 0
                 )'
                 );
@@ -127,14 +149,19 @@ abstract class BaseTest extends TestCase
 
     public function testInsertReturnID(): void
     {
+        if ($this->db->getDriver() === 'sqlsrv') {
+            $this->markTestSkipped('sqlsrv does not support insertReturnId');
+        }
         if ($this->db->getDriver() === 'pgsql') {
             $sequence = 'users_userid_seq';
+        } elseif ($this->db->getDriver() === 'firebird') {
+            $sequence = 'userid';
         } else {
             $sequence = '';
         }
         $id = $this->db->insertReturnId('users', [
             'username' => 'testuserreturnid',
-            'email' => 'returnid@mysql.com'
+            'email' => 'returnid@example.com'
         ], $sequence);
         $this->assertTrue($id > 0, 'Invalid result from insertReturnId()');
     }

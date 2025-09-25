@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        driver: [ sqlite, mysql, pgsql ]
+        driver: [ sqlite, mysql, pgsql, sqlsrv, firebird ]
 
     services:
       mysql:
@@ -33,6 +33,21 @@ jobs:
           - 5432:5432
         options: --health-cmd="pg_isready" --health-interval=10s --health-timeout=5s --health-retries=3
 
+      mssql:
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        env:
+          ACCEPT_EULA: "Y"
+          SA_PASSWORD: "Password123"
+        ports:
+          - 1433:1433
+
+      firebird:
+        image: jacobalberty/firebird:3.0
+        env:
+          ISC_PASSWORD: "masterkey"
+        ports:
+          - 3050:3050
+
     steps:
       - uses: actions/checkout@v3
 
@@ -40,7 +55,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.4'
-          extensions: pdo, pdo_mysql, pdo_pgsql, pdo_sqlite
+          extensions: pdo, pdo_mysql, pdo_pgsql, pdo_sqlite, pdo_sqlsrv, pdo_firebird
 
       - name: Install dependencies
         run: composer install
@@ -56,3 +71,11 @@ jobs:
           PGSQL_DB: easydb
           PGSQL_USER: root
           PGSQL_PASS: password
+          MSSQL_HOST: 127.0.0.1
+          MSSQL_DB: easydb
+          MSSQL_USER: sa
+          MSSQL_PASS: "Password123"
+          FIREBIRD_HOST: 127.0.0.1
+          FIREBIRD_DB: /firebird/data/easydb.fdb
+          FIREBIRD_USER: SYSDBA
+          FIREBIRD_PASS: masterkey

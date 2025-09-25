@@ -2,16 +2,16 @@
 declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests\Driver;
 
-class FirebirdTest extends BaseTest
+class SqlSrvTest extends BaseTest
 {
     /**
      * @return string
      */
     protected function getDsn(): string
     {
-        $host = \getenv('FIREBIRD_HOST') ?: '127.0.0.1';
-        $db = \getenv('FIREBIRD_DB') ?: '/var/lib/firebird/3.0/data/easydb.fdb';
-        return "firebird:dbname={$host}:{$db}";
+        $host = \getenv('MSSQL_HOST') ?: '127.0.0.1';
+        $db = \getenv('MSSQL_DB') ?: 'easydb';
+        return "sqlsrv:Server={$host};Database={$db}";
     }
 
     /**
@@ -19,7 +19,7 @@ class FirebirdTest extends BaseTest
      */
     protected function getUsername(): string
     {
-        return \getenv('FIREBIRD_USER') ?: 'SYSDBA';
+        return \getenv('MSSQL_USER') ?: 'sa';
     }
 
     /**
@@ -27,6 +27,6 @@ class FirebirdTest extends BaseTest
      */
     protected function getPassword(): string
     {
-        return \getenv('FIREBIRD_PASS') ?: 'masterkey';
+        return \getenv('MSSQL_PASS') ?: '';
     }
 }
