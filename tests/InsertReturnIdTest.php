@@ -4,9 +4,16 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
+use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Exception\InvalidIdentifier;
 use ParagonIE\EasyDB\Exception\MustBeOneDimensionalArray;
+use ParagonIE\EasyDB\Factory;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
+#[CoversClass(EasyDB::class)]
+#[CoversClass(Factory::class)]
+#[CoversClass(MustBeOneDimensionalArray::class)]
 class InsertReturnIdTest extends InsertTest
 {
 
@@ -14,6 +21,7 @@ class InsertReturnIdTest extends InsertTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
     public function testInsertReturnIdTableNameThrowsException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
@@ -25,6 +33,7 @@ class InsertReturnIdTest extends InsertTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
     public function testInsertReturnIdMapArgThrowsException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
@@ -36,6 +45,7 @@ class InsertReturnIdTest extends InsertTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
     public function testInsertReturnIdMapArgKeysThrowsException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
@@ -47,22 +57,25 @@ class InsertReturnIdTest extends InsertTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
     public function testInsertReturnId(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $this->assertEquals(
-            $db->insertReturnId('irrelevant_but_valid_tablename', ['foo' => 'bar']),
-            '1'
+            '1',
+            $db->insertReturnId('irrelevant_but_valid_tablename', ['foo' => 'bar'])
         );
         $this->assertEquals(
-            $db->insertReturnId('irrelevant_but_valid_tablename', ['foo' => 'bar2']),
-            '2'
+            '2',
+            $db->insertReturnId('irrelevant_but_valid_tablename', ['foo' => 'bar2'])
         );
     }
+
     /**
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
     public function testInsertReturnIdException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);

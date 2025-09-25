@@ -5,9 +5,14 @@ namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
 use ParagonIE\EasyDB\EasyDB;
+use ParagonIE\EasyDB\Factory;
 use PDOException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-class InsertManyFlatTransactionTest extends EasyDBWriteTest
+#[CoversClass(EasyDB::class)]
+#[CoversClass(Factory::class)]
+class InsertManyFlatTransactionTest extends EasyDBWriteTestCase
 {
     /**
      * @dataProvider GoodFactoryCreateArgument2EasyDBProvider
@@ -15,6 +20,7 @@ class InsertManyFlatTransactionTest extends EasyDBWriteTest
      *
      * @psalm-param callable():EasyDB $cb
      */
+    #[DataProvider("GoodFactoryCreateArgument2EasyDBProvider")]
     public function testInsertMany(callable $cb)
     {
         $db = $this->EasyDBExpectedFromCallable($cb);

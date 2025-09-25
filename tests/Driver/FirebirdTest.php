@@ -2,11 +2,14 @@
 declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests\Driver;
 
-class FirebirdTest extends BaseTest
+use ParagonIE\EasyDB\EasyDB;
+use ParagonIE\EasyDB\Factory;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(EasyDB::class)]
+#[CoversClass(Factory::class)]
+class FirebirdTest extends DriverTestCase
 {
-    /**
-     * @return string
-     */
     protected function getDsn(): string
     {
         $host = \getenv('FIREBIRD_HOST') ?: '127.0.0.1';
@@ -14,17 +17,11 @@ class FirebirdTest extends BaseTest
         return "firebird:dbname={$host}:{$db}";
     }
 
-    /**
-     * @return string
-     */
     protected function getUsername(): string
     {
         return \getenv('FIREBIRD_USER') ?: 'SYSDBA';
     }
 
-    /**
-     * @return string
-     */
     protected function getPassword(): string
     {
         return \getenv('FIREBIRD_PASS') ?: 'masterkey';

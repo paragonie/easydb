@@ -9,6 +9,7 @@ use Throwable;
 /**
  * Class MustBeOneDimensionalArray
  * @package ParagonIE\EasyDB\Exception
+ * @api
  */
 class MustBeOneDimensionalArray extends EasyDBException
 {

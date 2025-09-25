@@ -4,19 +4,27 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
+use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Exception\InvalidIdentifier;
 use ParagonIE\EasyDB\Exception\InvalidTableName;
 use ParagonIE\EasyDB\Exception\MustBeOneDimensionalArray;
+use ParagonIE\EasyDB\Factory;
 use PDOException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-class InsertTest extends EasyDBWriteTest
+#[CoversClass(EasyDB::class)]
+#[CoversClass(Factory::class)]
+#[CoversClass(MustBeOneDimensionalArray::class)]
+class InsertTest extends EasyDBWriteTestCase
 {
 
     /**
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
-    public function testInsertNoFieldsThrowsException(callable $cb)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
+    public function testInsertNoFieldsThrowsException(callable $cb): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $this->expectException(PDOException::class);
@@ -27,7 +35,8 @@ class InsertTest extends EasyDBWriteTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
-    public function testInsertTableNameThrowsException(callable $cb)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
+    public function testInsertTableNameThrowsException(callable $cb): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $this->expectException(InvalidIdentifier::class);
@@ -38,7 +47,8 @@ class InsertTest extends EasyDBWriteTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
-    public function testInsertMapArgThrowsException(callable $cb)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
+    public function testInsertMapArgThrowsException(callable $cb): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $this->expectException(MustBeOneDimensionalArray::class);
@@ -49,7 +59,8 @@ class InsertTest extends EasyDBWriteTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
-    public function testInsertMapArgKeysThrowsException(callable $cb)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
+    public function testInsertMapArgKeysThrowsException(callable $cb): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $this->expectException(InvalidIdentifier::class);
@@ -60,7 +71,8 @@ class InsertTest extends EasyDBWriteTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
-    public function testInsertIncorrectFieldThrowsException(callable $cb)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
+    public function testInsertIncorrectFieldThrowsException(callable $cb): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $this->expectException(PDOException::class);
@@ -71,7 +83,8 @@ class InsertTest extends EasyDBWriteTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
-    public function testInsert(callable $cb)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
+    public function testInsert(callable $cb): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $db->insert('irrelevant_but_valid_tablename', ['foo' => 1]);
@@ -90,7 +103,8 @@ class InsertTest extends EasyDBWriteTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
-    public function testBuildeInsertSql(callable $cb)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
+    public function testBuildeInsertSql(callable $cb): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $statement = $db->buildInsertQuery('test_table', ['id', 'col1', 'col2']);
@@ -101,7 +115,8 @@ class InsertTest extends EasyDBWriteTest
     /**
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      */
-    public function testBuildInsertIgnoreSql(callable $cb)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
+    public function testBuildInsertIgnoreSql(callable $cb): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
 
@@ -122,7 +137,8 @@ class InsertTest extends EasyDBWriteTest
     /**
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      */
-    public function testBuildInsertOnDuplicateKeyUpdate(callable $cb)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
+    public function testBuildInsertOnDuplicateKeyUpdate(callable $cb): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
 
@@ -145,7 +161,8 @@ class InsertTest extends EasyDBWriteTest
     /**
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      */
-    public function testBuildInsertOnDuplicateKeyUpdateMultiple(callable $cb)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
+    public function testBuildInsertOnDuplicateKeyUpdateMultiple(callable $cb): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
 

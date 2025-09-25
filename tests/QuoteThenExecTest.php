@@ -3,21 +3,26 @@ declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
+use ParagonIE\EasyDB\EasyDB;
+use ParagonIE\EasyDB\Factory;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+
 /**
  * Class ExecTest
  * @package ParagonIE\EasyDB\Tests
  */
-class QuoteThenExecTest extends EasyDBWriteTest
+#[CoversClass(EasyDB::class)]
+#[CoversClass(Factory::class)]
+class QuoteThenExecTest extends EasyDBWriteTestCase
 {
 
     /**
      * @dataProvider goodFactoryCreateArgument2EasyDBInsertManyProvider
-     * @depends      ParagonIE\EasyDB\Tests\QuoteTest::testQuote
-     * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifier
-     * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifierThrowsSomething
      * @param callable $cb
      * @param array $maps
      */
+    #[DataProvider("goodFactoryCreateArgument2EasyDBInsertManyProvider")]
     public function testExec(callable $cb, array $maps)
     {
         $db = $this->easyDBExpectedFromCallable($cb);

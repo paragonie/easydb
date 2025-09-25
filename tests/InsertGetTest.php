@@ -4,9 +4,16 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
+use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Exception\InvalidIdentifier;
 use ParagonIE\EasyDB\Exception\MustBeOneDimensionalArray;
+use ParagonIE\EasyDB\Factory;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
+#[CoversClass(EasyDB::class)]
+#[CoversClass(Factory::class)]
+#[CoversClass(MustBeOneDimensionalArray::class)]
 class InsertGetTest extends InsertTest
 {
 
@@ -14,6 +21,7 @@ class InsertGetTest extends InsertTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
     public function testInsertGetTableNameThrowsException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
@@ -25,6 +33,7 @@ class InsertGetTest extends InsertTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
     public function testInsertGetMapArgThrowsException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
@@ -36,6 +45,7 @@ class InsertGetTest extends InsertTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
     public function testInsertGetMapArgKeysThrowsException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
@@ -47,25 +57,27 @@ class InsertGetTest extends InsertTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
     public function testInsertGet(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $this->assertEquals(
-            $db->insertGet('irrelevant_but_valid_tablename', ['foo' => 'bar'], 'bar'),
-            'bar'
+            'bar',
+            $db->insertGet('irrelevant_but_valid_tablename', ['foo' => 'bar'], 'bar')
         );
     }
     /**
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
     public function testInsertGetException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $this->expectException(\Exception::class);
         $this->assertEquals(
-            $db->insertGet('irrelevant_but_valid_tablename', [], 'bar'),
-            'bar'
+            'bar',
+            $db->insertGet('irrelevant_but_valid_tablename', [], 'bar')
         );
     }
 }

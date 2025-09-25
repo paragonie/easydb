@@ -8,6 +8,7 @@ use PDOException;
  * ConstructorFailed.
  *
  * @package ParagonIE\EasyDB
+ * @api
  */
 class ConstructorFailed extends EasyDBException
 {

@@ -4,19 +4,26 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
+use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Exception\InvalidIdentifier;
 use ParagonIE\EasyDB\Exception\InvalidTableName;
 use ParagonIE\EasyDB\Exception\MustBeOneDimensionalArray;
+use ParagonIE\EasyDB\Factory;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-class Is1DArrayThenDeleteReadOnlyTest extends EasyDBTest
+#[CoversClass(EasyDB::class)]
+#[CoversClass(Factory::class)]
+#[CoversClass(MustBeOneDimensionalArray::class)]
+class Is1DArrayThenDeleteReadOnlyTest extends EasyDBTestCase
 {
 
     /**
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
-     * @depends      ParagonIE\EasyDB\Tests\Is1DArrayTest::testIs1DArray
      * @param callable $cb
      */
-    public function testDeleteThrowsException(callable $cb)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
+    public function testDeleteThrowsException(callable $cb): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $this->expectException(MustBeOneDimensionalArray::class);
@@ -27,7 +34,8 @@ class Is1DArrayThenDeleteReadOnlyTest extends EasyDBTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
-    public function testDeleteTableNameEmptyThrowsException(callable $cb)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
+    public function testDeleteTableNameEmptyThrowsException(callable $cb): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $this->expectException(InvalidTableName::class);
@@ -38,7 +46,8 @@ class Is1DArrayThenDeleteReadOnlyTest extends EasyDBTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
-    public function testDeleteTableNameInvalidThrowsException(callable $cb)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
+    public function testDeleteTableNameInvalidThrowsException(callable $cb): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $this->expectException(InvalidIdentifier::class);
@@ -49,7 +58,8 @@ class Is1DArrayThenDeleteReadOnlyTest extends EasyDBTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
-    public function testDeleteConditionsReturnsNull(callable $cb)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
+    public function testDeleteConditionsReturnsNull(callable $cb): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $this->assertEquals(

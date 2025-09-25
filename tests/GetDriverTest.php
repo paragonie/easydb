@@ -3,26 +3,32 @@ declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
+use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Factory;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-class GetDriverTest extends EasyDBTest
+#[CoversClass(EasyDB::class)]
+#[CoversClass(Factory::class)]
+class GetDriverTest extends EasyDBTestCase
 {
     /**
-     * @param $dsn
+     * @param string $expectedDriver
+     * @param string $dsn
      * @param string|null $username
      * @param string|null $password
      * @param array $options
-     * @param string $expectedDriver
      *
      * @dataProvider goodFactoryCreateArgumentProvider
      */
+    #[DataProvider("goodFactoryCreateArgumentProvider")]
     public function testGetDriver(
-        $expectedDriver,
-        $dsn,
-        $username = null,
-        $password = null,
-        $options = []
-    ) {
+        string $expectedDriver,
+        string $dsn,
+        ?string $username = null,
+        ?string $password = null,
+        array $options = []
+    ): void {
         $db = Factory::create($dsn, $username, $password, $options);
         $this->assertEquals($db->getDriver(), $expectedDriver);
     }

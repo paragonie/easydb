@@ -2,11 +2,14 @@
 declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests\Driver;
 
-class MysqlTest extends BaseTest
+use ParagonIE\EasyDB\EasyDB;
+use ParagonIE\EasyDB\Factory;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(EasyDB::class)]
+#[CoversClass(Factory::class)]
+class MysqlTest extends DriverTestCase
 {
-    /**
-     * @return string
-     */
     protected function getDsn(): string
     {
         $host = \getenv('MYSQL_HOST') ?: '127.0.0.1';
@@ -14,17 +17,11 @@ class MysqlTest extends BaseTest
         return "mysql:host={$host};dbname={$db}";
     }
 
-    /**
-     * @return string
-     */
     protected function getUsername(): string
     {
         return \getenv('MYSQL_USER') ?: 'root';
     }
 
-    /**
-     * @return string
-     */
     protected function getPassword(): string
     {
         return \getenv('MYSQL_PASS') ?: '';

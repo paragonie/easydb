@@ -6,6 +6,9 @@ use ParagonIE\Corner\CornerInterface;
 use ParagonIE\Corner\CornerTrait;
 use Throwable;
 
+/**
+ * @api
+ */
 class MustBeEmpty extends EasyDBException
 {
     use CornerTrait;

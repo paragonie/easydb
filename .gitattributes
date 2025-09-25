@@ -7,3 +7,4 @@
 /.php_cs        export-ignore
 /phpunit*       export-ignore
 /psalm*         export-ignore
+/infection.*    export-ignore

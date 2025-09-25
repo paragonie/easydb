@@ -3,15 +3,17 @@ declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
-use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
+use Throwable;
 use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Factory;
 
 /**
- * Class EasyDBTest
+ * Class EasyDBTestCase
  * @package ParagonIE\EasyDB\Tests
  */
-abstract class EasyDBWriteTest extends EasyDBTest
+#[CoversClass(EasyDB::class)]
+abstract class EasyDBWriteTestCase extends EasyDBTestCase
 {
 
     /**
@@ -21,16 +23,16 @@ abstract class EasyDBWriteTest extends EasyDBTest
     *
     * @psalm-return array<int, array{0:callable():EasyDB}>
     *
-    * @see EasyDBTest::goodFactoryCreateArgumentProvider()
+    * @see EasyDBTestCase::goodFactoryCreateArgumentProvider()
     */
-    public function goodFactoryCreateArgument2EasyDBProvider()
+    public static function goodFactoryCreateArgument2EasyDBProvider(): array
     {
         return array_map(
             function (array $arguments) {
                 $dsn = $arguments[1];
-                $username = isset($arguments[2]) ? $arguments[2] : null;
-                $password = isset($arguments[3]) ? $arguments[3] : null;
-                $options = isset($arguments[4]) ? $arguments[4] : [];
+                $username = $arguments[2] ?? null;
+                $password = $arguments[3] ?? null;
+                $options = $arguments[4] ?? [];
                 return [
                     function () use ($dsn, $username, $password, $options) : EasyDB {
                         $factory = Factory::create(
@@ -46,24 +48,23 @@ abstract class EasyDBWriteTest extends EasyDBTest
                             $factory->run(
                                 'CREATE TABLE table_with_bool (foo char(36) PRIMARY KEY, bar BOOLEAN)'
                             );
-                        } catch (Exception $e) {
+                        } catch (Throwable $e) {
                             $this->markTestSkipped($e->getMessage());
-                            return null;
                         }
                         return $factory;
                     }
                 ];
             },
-            $this->goodFactoryCreateArgumentProvider()
+            static::goodFactoryCreateArgumentProvider()
         );
     }
 
     /**
-    * Remaps EasyDBWriteTest::goodFactoryCreateArgument2EasyDBProvider()
+    * Remaps EasyDBWriteTestCase::goodFactoryCreateArgument2EasyDBProvider()
     */
-    public function goodFactoryCreateArgument2EasyDBInsertManyProvider()
+    public static function goodFactoryCreateArgument2EasyDBInsertManyProvider(): array
     {
-        $cbArgsSets = $this->goodFactoryCreateArgument2EasyDBProvider();
+        $cbArgsSets = static::goodFactoryCreateArgument2EasyDBProvider();
         $args = [
             [
                 [

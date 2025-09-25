@@ -1,14 +1,13 @@
-name: Psalm
+name: Mutation Tests
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  create:
+    tags:
+      - v*
 
 jobs:
   psalm:
-    name: Psalm on PHP ${{ matrix.php-versions }}
+    name: Infection on PHP ${{ matrix.php-versions }}
     runs-on: ${{ matrix.operating-system }}
     strategy:
       matrix:
@@ -22,16 +21,10 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
-          coverage: none
+          coverage: pcov
 
       - name: Install Composer dependencies
         uses: "ramsey/composer-install@v3"
 
-      - name: Add plugin
-        run: composer require --dev psalm/plugin-phpunit
-
-      - name: Static Analysis
-        run: vendor/bin/psalm
-
-      - name: Taint Analysis
-        run: vendor/bin/psalm --taint-analysis
+      - name: Mutation Tests
+        run: composer mutation-test

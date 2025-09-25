@@ -3,13 +3,41 @@ name: CI
 on: [push]
 
 jobs:
+  php8-old:
+    name: PHP ${{ matrix.php-versions }} Test on ${{ matrix.operating-system }}
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        operating-system: ['ubuntu-latest']
+        php-versions: ['8.0', '8.1', '8.2']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: mbstring, intl, sodium
+          ini-values: post_max_size=256M, max_execution_time=180
+          tools: psalm
+
+      - name: Remove Psalm
+        run: composer remove --dev vimeo/psalm
+
+      - name: Install dependencies
+        run: composer install
+
+      - name: PHPUnit tests
+        run: vendor/bin/phpunit
+
   modern:
     name: PHP ${{ matrix.php-versions }} Test on ${{ matrix.operating-system }}
     runs-on: ${{ matrix.operating-system }}
     strategy:
       matrix:
         operating-system: ['ubuntu-latest']
-        php-versions: ['8.0', '8.1', '8.2', '8.3', '8.4', '8.5']
+        php-versions: ['8.3', '8.4', '8.5']
     steps:
       - name: Checkout
         uses: actions/checkout@v4

@@ -4,19 +4,28 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
+use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\EasyStatement;
 use ParagonIE\EasyDB\Exception\InvalidIdentifier;
 use ParagonIE\EasyDB\Exception\InvalidTableName;
 use ParagonIE\EasyDB\Exception\MustBeOneDimensionalArray;
+use ParagonIE\EasyDB\Factory;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-class UpdateTest extends EasyDBWriteTest
+#[CoversClass(EasyDB::class)]
+#[CoversClass(EasyStatement::class)]
+#[CoversClass(Factory::class)]
+#[CoversClass(MustBeOneDimensionalArray::class)]
+class UpdateTest extends EasyDBWriteTestCase
 {
 
     /**
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
-    public function testUpdateArgChangesReturnsNull(callable $cb)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
+    public function testUpdateArgChangesReturnsNull(callable $cb): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $this->assertEquals(
@@ -29,7 +38,8 @@ class UpdateTest extends EasyDBWriteTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
-    public function testUpdateArgConditionsReturnsNull(callable $cb)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
+    public function testUpdateArgConditionsReturnsNull(callable $cb): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $this->assertEquals(
@@ -42,7 +52,8 @@ class UpdateTest extends EasyDBWriteTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
-    public function testUpdateArgChangesThrowsException(callable $cb)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
+    public function testUpdateArgChangesThrowsException(callable $cb): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $this->expectException(MustBeOneDimensionalArray::class);
@@ -53,7 +64,8 @@ class UpdateTest extends EasyDBWriteTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
-    public function testUpdateArgConditionsThrowsException(callable $cb)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
+    public function testUpdateArgConditionsThrowsException(callable $cb): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $this->expectException(MustBeOneDimensionalArray::class);
@@ -64,7 +76,8 @@ class UpdateTest extends EasyDBWriteTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
-    public function testUpdateTableNameThrowsException(callable $cb)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
+    public function testUpdateTableNameThrowsException(callable $cb): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $this->expectException(InvalidTableName::class);
@@ -75,7 +88,8 @@ class UpdateTest extends EasyDBWriteTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
-    public function testUpdateArgChangesKeyThrowsException(callable $cb)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
+    public function testUpdateArgChangesKeyThrowsException(callable $cb): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $this->expectException(InvalidIdentifier::class);
@@ -86,7 +100,8 @@ class UpdateTest extends EasyDBWriteTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
-    public function testUpdateArgConditionsKeyThrowsException(callable $cb)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
+    public function testUpdateArgConditionsKeyThrowsException(callable $cb): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $this->expectException(InvalidIdentifier::class);
@@ -95,10 +110,10 @@ class UpdateTest extends EasyDBWriteTest
 
     /**
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
-     * @depends      ParagonIE\EasyDB\Tests\InsertManyTest::testInsertMany
      * @param callable $cb
      */
-    public function testUpdateEasyStatement(callable $cb)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
+    public function testUpdateEasyStatement(callable $cb): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $db->insertMany('irrelevant_but_valid_tablename', [['foo' => '1'], ['foo' => '2']]);
@@ -132,37 +147,37 @@ class UpdateTest extends EasyDBWriteTest
 
     /**
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
-     * @depends      ParagonIE\EasyDB\Tests\InsertManyTest::testInsertMany
      * @param callable $cb
      */
-    public function testUpdate(callable $cb)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
+    public function testUpdate(callable $cb): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $db->insertMany('irrelevant_but_valid_tablename', [['foo' => '1'], ['foo' => '2']]);
         $this->assertEquals(
-            $db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename'),
-            2
+            2,
+            $db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename')
         );
         $this->assertEquals(
-            $db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename WHERE foo = ?', [1]),
-            1
+            1,
+            $db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename WHERE foo = ?', [1])
         );
         $this->assertEquals(
-            $db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename WHERE foo = ?', [2]),
-            1
+            1,
+            $db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename WHERE foo = ?', [2])
         );
         $this->assertEquals(
-            $db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename WHERE foo = ?', [3]),
-            0
+            0,
+            $db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename WHERE foo = ?', [3])
         );
         $db->update('irrelevant_but_valid_tablename', ['foo' => 3], ['foo' => 2]);
         $this->assertEquals(
-            $db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename WHERE foo = ?', [2]),
-            0
+            0,
+            $db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename WHERE foo = ?', [2])
         );
         $this->assertEquals(
-            $db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename WHERE foo = ?', [3]),
-            1
+            1,
+            $db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename WHERE foo = ?', [3])
         );
     }
 }

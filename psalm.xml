@@ -12,12 +12,15 @@
         </ignoreFiles>
     </projectFiles>
     <issueHandlers>
+        <ClassMustBeFinal errorLevel="info" /> <!-- No. -->
         <RedundantCast errorLevel="info" />
         <DocblockTypeContradiction errorLevel="info" />
         <PropertyTypeCoercion errorLevel="info" />
         <UnnecessaryVarAnnotation errorLevel="suppress" />
         <UnusedVariable errorLevel="info" />
+        <ImplicitToStringCast errorLevel="info" />
         <InvalidCast errorLevel="info" />
+        <PossiblyUnusedMethod errorLevel="info" />
     </issueHandlers>
     <plugins>
         <pluginClass class="Psalm\PhpUnitPlugin\Plugin" />

@@ -45,6 +45,7 @@ use function
  * Class EasyDB
  *
  * @package ParagonIE\EasyDB
+ * @api
  */
 class EasyDB
 {
@@ -318,9 +319,15 @@ class EasyDB
                 $patternWithoutSep = '/[^0-9a-zA-Z_]/';
         }
 
-        // This behavior depends on whether or not separators are allowed.
+        // This behavior depends on whether separators are allowed.
         if ($this->allowSeparators) {
             $str = preg_replace($patternWithSep, '', $string);
+            // If preg_replace() returns NULL, we need to abort.
+            if (is_null($str)) {
+                throw new InvalidIdentifier(
+                    'Invalid identifier: an unknown error has occurred in this method. Please report it to us.'
+                );
+            }
             if (str_contains($str, '.')) {
                 $pieces = explode('.', $str);
                 foreach ($pieces as $i => $p) {
@@ -331,6 +338,12 @@ class EasyDB
             }
         } else {
             $str = preg_replace($patternWithoutSep, '', $string);
+            // If preg_replace() returns NULL, we need to abort.
+            if (is_null($str)) {
+                throw new InvalidIdentifier(
+                    'Invalid identifier: an unknown error has occurred in this method. Please report it to us.'
+                );
+            }
             if ($str !== trim($string)) {
                 if ($str === str_replace('.', '', $string)) {
                     throw new InvalidIdentifier(
@@ -493,6 +506,7 @@ class EasyDB
      * @return         bool
      *
      * @psalm-taint-sink sql $statement
+     * @psalm-suppress RiskyTruthyFalsyComparison
      */
     public function exists(string $statement, ...$params): bool
     {
@@ -1448,7 +1462,7 @@ class EasyDB
      * @param  string ...$args
      * @return int
      *
-     * @psalm-taint-sink sql
+     * @psalm-taint-sink sql $args
      */
     public function exec(...$args): int
     {
@@ -1525,6 +1539,7 @@ class EasyDB
      * @param  string ...$args
      * @return PDOStatement
      * @psalm-taint-sink sql $args
+     * @psalm-suppress InvalidArgument
      */
     public function query(...$args): PDOStatement
     {

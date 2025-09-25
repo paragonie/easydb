@@ -7,6 +7,7 @@ use ParagonIE\Corner\CornerTrait;
  * QueryError.
  *
  * @package ParagonIE\EasyDB
+ * @api
  */
 class EasyDBException extends \RuntimeException implements ExceptionInterface
 {

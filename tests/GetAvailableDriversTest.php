@@ -3,19 +3,26 @@ declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
+use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Factory;
 use PDO;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-class GetAvailableDriversTest extends EasyDBTest
+#[CoversClass(EasyDB::class)]
+#[CoversClass(Factory::class)]
+class GetAvailableDriversTest extends EasyDBTestCase
 {
 
     /**
+     * @param $expectedDriver
      * @param $dsn
      * @param null $username
      * @param null $password
      * @param array $options
      * @dataProvider goodFactoryCreateArgumentProvider
      */
+    #[DataProvider("goodFactoryCreateArgumentProvider")]
     public function testGetAvailableDrivers(
         $expectedDriver,
         $dsn,
@@ -27,32 +34,26 @@ class GetAvailableDriversTest extends EasyDBTest
             $this->markTestSkipped('No drivers available!');
         } else {
             $db = Factory::create($dsn, $username, $password, $options);
-            $this->assertEquals(
-                count(
-                    array_diff_assoc(
-                        PDO::getAvailableDrivers(),
-                        $db->getAvailableDrivers()
-                    )
-                ),
-                0
+            $this->assertCount(
+                0,
+                array_diff_assoc(
+                    PDO::getAvailableDrivers(),
+                    $db->getAvailableDrivers()
+                )
             );
-            $this->assertEquals(
-                count(
-                    array_diff_assoc(
-                        PDO::getAvailableDrivers(),
-                        $db->getPdo()->getAvailableDrivers()
-                    )
-                ),
-                0
+            $this->assertCount(
+                0,
+                array_diff_assoc(
+                    PDO::getAvailableDrivers(),
+                    $db->getPdo()->getAvailableDrivers()
+                )
             );
-            $this->assertEquals(
-                count(
-                    array_diff_assoc(
-                        $db->getAvailableDrivers(),
-                        $db->getPdo()->getAvailableDrivers()
-                    )
-                ),
-                0
+            $this->assertCount(
+                0,
+                array_diff_assoc(
+                    $db->getAvailableDrivers(),
+                    $db->getPdo()->getAvailableDrivers()
+                )
             );
         }
     }

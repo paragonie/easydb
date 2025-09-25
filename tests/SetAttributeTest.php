@@ -5,21 +5,26 @@ namespace ParagonIE\EasyDB\Tests;
 
 use Exception;
 use ParagonIE\EasyDB\EasyDB;
+use ParagonIE\EasyDB\Factory;
 use PDO;
 use PDOException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
+#[CoversClass(EasyDB::class)]
+#[CoversClass(Factory::class)]
 class SetAttributeTest extends GetAttributeTest
 {
 
     /**
      * @dataProvider goodFactoryCreateArgument2EasyDBWithPDOAttributeProvider
-     * @depends      ParagonIE\EasyDB\Tests\GetAttributeTest::testAttribute
      * @param callable $cb
      * @param $attr
      * @param string $attrName
      * @throws Exception
      */
-    public function testAttribute(callable $cb, $attr, string $attrName)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBWithPDOAttributeProvider")]
+    public function testAttribute(callable $cb, $attr, string $attrName): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $skipping = [
@@ -63,11 +68,10 @@ class SetAttributeTest extends GetAttributeTest
                 $initial
             );
         } catch (PDOException $e) {
-            if (strpos(
+            if (str_contains(
                 $e->getMessage(),
                 ': Driver does not support this function: driver does not support that attribute'
-            ) !== false
-            ) {
+            )) {
                 $this->markTestSkipped(
                     'Skipping tests for ' .
                     EasyDB::class .
@@ -115,9 +119,9 @@ class SetAttributeTest extends GetAttributeTest
     * EasyDB data provider
     * Returns an array of callables that return instances of EasyDB
     * @return array
-    * @see EasyDBTest::goodFactoryCreateArgument2EasyDBProvider()
+    * @see EasyDBTestCase::goodFactoryCreateArgument2EasyDBProvider()
     */
-    public function goodFactoryCreateArgument2EasyDBForSetPDOAttributeThrowsExceptionProvider()
+    public static function goodFactoryCreateArgument2EasyDBForSetPDOAttributeThrowsExceptionProvider(): array
     {
         $exceptionProvider = [
             [
@@ -146,7 +150,7 @@ class SetAttributeTest extends GetAttributeTest
             ],
         ];
         return array_reduce(
-            $this->goodFactoryCreateArgument2EasyDBProvider(),
+            static::goodFactoryCreateArgument2EasyDBProvider(),
             function (array $was, array $cbArgs) use ($exceptionProvider) {
                 return array_merge(
                     $was,
@@ -175,6 +179,7 @@ class SetAttributeTest extends GetAttributeTest
      * @param string $exceptionClassName
      * @param string $exceptionMessage
      */
+    #[DataProvider("goodFactoryCreateArgument2EasyDBForSetPDOAttributeThrowsExceptionProvider")]
     public function testSetAttributeThrowsException(
         callable $cb,
         int $attribute,

@@ -2,11 +2,14 @@
 declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests\Driver;
 
-class SqlSrvTest extends BaseTest
+use ParagonIE\EasyDB\EasyDB;
+use ParagonIE\EasyDB\Factory;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(EasyDB::class)]
+#[CoversClass(Factory::class)]
+class SqlSrvTest extends DriverTestCase
 {
-    /**
-     * @return string
-     */
     protected function getDsn(): string
     {
         $host = \getenv('MSSQL_HOST') ?: '127.0.0.1';
@@ -14,17 +17,11 @@ class SqlSrvTest extends BaseTest
         return "sqlsrv:Server={$host};Database={$db}";
     }
 
-    /**
-     * @return string
-     */
     protected function getUsername(): string
     {
         return \getenv('MSSQL_USER') ?: 'sa';
     }
 
-    /**
-     * @return string
-     */
     protected function getPassword(): string
     {
         return \getenv('MSSQL_PASS') ?: '';

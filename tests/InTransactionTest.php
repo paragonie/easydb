@@ -3,9 +3,14 @@ declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
+use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Factory;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-class InTransactionTest extends EasyDBTest
+#[CoversClass(EasyDB::class)]
+#[CoversClass(Factory::class)]
+class InTransactionTest extends EasyDBTestCase
 {
 
     /**
@@ -15,13 +20,14 @@ class InTransactionTest extends EasyDBTest
      * @param array $options
      * @dataProvider goodFactoryCreateArgumentProvider
      */
+    #[DataProvider("goodFactoryCreateArgumentProvider")]
     public function testInTransaction(
-        $expectedDriver,
-        $dsn,
-        $username = null,
-        $password = null,
+        string $expectedDriver,
+        string $dsn,
+        ?string $username = null,
+        ?string $password = null,
         array $options = []
-    ) {
+    ): void {
         $db = Factory::create($dsn, $username, $password, $options);
         $this->assertFalse($db->inTransaction());
         $db->beginTransaction();

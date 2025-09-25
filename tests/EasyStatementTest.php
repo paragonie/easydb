@@ -4,15 +4,18 @@ namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyStatement;
 use ParagonIE\EasyDB\Exception\MustBeNonEmpty;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase as TestCase;
 use RuntimeException;
 
 /**
  * @package ParagonIE\EasyDB\Tests
  */
+#[CoversClass(EasyStatement::class)]
+#[CoversClass(MustBeNonEmpty::class)]
 class EasyStatementTest extends TestCase
 {
-    public function testBasicAndOr()
+    public function testBasicAndOr(): void
     {
         $statement = EasyStatement::open()
             ->with('id = ?', 1)
@@ -23,7 +26,7 @@ class EasyStatementTest extends TestCase
         $this->assertValues($statement, [1, 'today']);
     }
 
-    public function testLogicalIn()
+    public function testLogicalIn(): void
     {
         $statement = EasyStatement::open()
             ->in('role_id IN (?*)', [1, 2, 3])
@@ -39,7 +42,7 @@ class EasyStatementTest extends TestCase
         $this->assertValues($statement, [4, 5, 6]);
     }
 
-    public function testEmptyIn()
+    public function testEmptyIn(): void
     {
         try {
             $statement = EasyStatement::open()
@@ -70,7 +73,7 @@ class EasyStatementTest extends TestCase
         $this->assertValues($statement, [100, 101]);
     }
 
-    public function testGroupingWithAnd()
+    public function testGroupingWithAnd(): void
     {
         $statement = EasyStatement::open()
             ->with('id = ?', 1);
@@ -87,7 +90,7 @@ class EasyStatementTest extends TestCase
         $this->assertValues($statement, [1, 'today']);
     }
 
-    public function testGroupingWithOr()
+    public function testGroupingWithOr(): void
     {
         $statement = EasyStatement::open()
             ->orGroup()
@@ -102,31 +105,31 @@ class EasyStatementTest extends TestCase
         $this->assertValues($statement, [5, 'banned']);
     }
 
-    public function testGroupParent()
+    public function testGroupParent(): void
     {
         $this->expectException(RuntimeException::class);
 
         EasyStatement::open()->endGroup();
     }
 
-    private function assertSql(EasyStatement $statement, $expected)
+    private function assertSql(EasyStatement $statement, $expected): void
     {
         $this->assertSame($expected, $statement->sql());
         $this->assertSame($expected, (string) $statement);
     }
 
-    private function assertValues(EasyStatement $statement, array $values)
+    private function assertValues(EasyStatement $statement, array $values): void
     {
         $this->assertSame($values, $statement->values());
     }
 
-    public function testEmpty()
+    public function testEmpty(): void
     {
         $stmt = EasyStatement::open();
         $this->assertSql($stmt, '1 = 1');
     }
 
-    public function testPrecedence()
+    public function testPrecedence(): void
     {
         $sth1 = EasyStatement::open();
         $sth1->with("a=1");

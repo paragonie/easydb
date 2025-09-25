@@ -4,10 +4,16 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use InvalidArgumentException;
+use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Exception\MustBeOneDimensionalArray;
 use ParagonIE\EasyDB\Factory;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-class Is1DArrayTest extends EasyDBTest
+#[CoversClass(EasyDB::class)]
+#[CoversClass(Factory::class)]
+#[CoversClass(MustBeOneDimensionalArray::class)]
+class Is1DArrayTest extends EasyDBTestCase
 {
 
     /**
@@ -17,6 +23,7 @@ class Is1DArrayTest extends EasyDBTest
      * @param null $password
      * @param array $options
      */
+    #[DataProvider("goodFactoryCreateArgumentProvider")]
     public function testIs1DArray($expectedDriver, $dsn, $username = null, $password = null, $options = [])
     {
         $db = Factory::create($dsn, $username, $password, $options);
@@ -36,6 +43,7 @@ class Is1DArrayTest extends EasyDBTest
      * @param null $password
      * @param array $options
      */
+    #[DataProvider("goodFactoryCreateArgumentProvider")]
     public function testColumnThrowsException($expectedDriver, $dsn, $username = null, $password = null, $options = [])
     {
         $db = Factory::create($dsn, $username, $password, $options);
@@ -51,6 +59,7 @@ class Is1DArrayTest extends EasyDBTest
      * @param null $password
      * @param array $options
      */
+    #[DataProvider("goodFactoryCreateArgumentProvider")]
     public function testSafeQueryThrowsException(
         $expectedDriver,
         $dsn,
@@ -71,6 +80,7 @@ class Is1DArrayTest extends EasyDBTest
      * @param null $password
      * @param array $options
      */
+    #[DataProvider("goodFactoryCreateArgumentProvider")]
     public function testSingleThrowsException($expectedDriver, $dsn, $username = null, $password = null, $options = [])
     {
         $db = Factory::create($dsn, $username, $password, $options);

@@ -4,20 +4,25 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyDB;
+use ParagonIE\EasyDB\Factory;
 use PDO;
 use PDOException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionClass;
 
-class GetAttributeTest extends EasyDBTest
+#[CoversClass(EasyDB::class)]
+#[CoversClass(Factory::class)]
+class GetAttributeTest extends EasyDBTestCase
 {
 
     /**
     * EasyDB data provider
     * Returns an array of callables that return instances of EasyDB
     * @return array
-    * @see EasyDBTest::goodFactoryCreateArgument2EasyDBProvider()
+    * @see EasyDBTestCase::goodFactoryCreateArgument2EasyDBProvider()
     */
-    public function goodFactoryCreateArgument2EasyDBWithPDOAttributeProvider()
+    public static function goodFactoryCreateArgument2EasyDBWithPDOAttributeProvider(): array
     {
         $ref = new ReflectionClass(PDO::class);
         if (defined('ARRAY_FILTER_USE_KEY')) {
@@ -42,7 +47,7 @@ class GetAttributeTest extends EasyDBTest
             );
         }
         return array_reduce(
-            $this->goodFactoryCreateArgument2EasyDBProvider(),
+            static::goodFactoryCreateArgument2EasyDBProvider(),
             function (array $was, array $cbArgs) use ($attrs) {
                 foreach ($attrs as $attrName => $attr) {
                     $args = [$attr, $attrName];
@@ -63,7 +68,8 @@ class GetAttributeTest extends EasyDBTest
      * @param $attr
      * @param string $attrName
      */
-    public function testAttribute(callable $cb, $attr, string $attrName)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBWithPDOAttributeProvider")]
+    public function testAttribute(callable $cb, $attr, string $attrName): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         try {
@@ -72,11 +78,10 @@ class GetAttributeTest extends EasyDBTest
                 $db->getPdo()->getAttribute($attr)
             );
         } catch (PDOException $e) {
-            if (strpos(
+            if (str_contains(
                 $e->getMessage(),
                 ': Driver does not support this function: driver does not support that attribute'
-            ) !== false
-            ) {
+            )) {
                 $this->markTestSkipped(
                     'Skipping tests for ' .
                     EasyDB::class .
@@ -86,9 +91,8 @@ class GetAttributeTest extends EasyDBTest
                         $attrName .
                     '), as driver "' .
                     $db->getDriver() .
-                    '" does not support that attribute'
+                    '" does not support that attribute' . "\n\n" . $e->getMessage()
                 );
-                $this->markTestSkipped($e->getMessage());
             } else {
                 throw $e;
             }

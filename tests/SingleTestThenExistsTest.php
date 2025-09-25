@@ -4,8 +4,14 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyDB;
+use ParagonIE\EasyDB\Factory;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-class SingleTestThenExistsTest extends EasyDBWriteTest
+
+#[CoversClass(EasyDB::class)]
+#[CoversClass(Factory::class)]
+class SingleTestThenExistsTest extends EasyDBWriteTestCase
 {
     protected function getResultForMethod(EasyDB $db, $statement, $params)
     {
@@ -16,16 +22,11 @@ class SingleTestThenExistsTest extends EasyDBWriteTest
 
     /**
      * @dataProvider goodFactoryCreateArgument2EasyDBInsertManyProvider
-     * @depends      ParagonIE\EasyDB\Tests\Is1DArrayThenDeleteReadOnlyTest::testDeleteThrowsException
-     * @depends      ParagonIE\EasyDB\Tests\Is1DArrayThenDeleteReadOnlyTest::testDeleteTableNameEmptyThrowsException
-     * @depends      ParagonIE\EasyDB\Tests\Is1DArrayThenDeleteReadOnlyTest::testDeleteTableNameInvalidThrowsException
-     * @depends      ParagonIE\EasyDB\Tests\Is1DArrayThenDeleteReadOnlyTest::testDeleteConditionsReturnsNull
-     * @depends      ParagonIE\EasyDB\Tests\InsertManyTest::testInsertMany
-     * @depends      ParagonIE\EasyDB\Tests\SingleTest::testMethod
      * @param callable $cb
      * @param array $insertMany
      */
-    public function testExists(callable $cb, array $insertMany)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBInsertManyProvider")]
+    public function testExists(callable $cb, array $insertMany): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $this->assertFalse(

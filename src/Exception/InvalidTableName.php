@@ -9,6 +9,7 @@ use ParagonIE\Corner\CornerTrait;
 /**
  * Class InvalidTableName
  * @package ParagonIE\EasyDB\Exception
+ * @api
  */
 class InvalidTableName extends EasyDBException
 {
