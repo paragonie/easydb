@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests\Driver;
 
 use ParagonIE\EasyDB\EasyDB;
+use ParagonIE\EasyDB\Exception\ConstructorFailed;
 use ParagonIE\EasyDB\Factory;
 use PDOException;
 use PHPUnit\Framework\TestCase;
@@ -82,7 +83,7 @@ abstract class BaseTest extends TestCase
                 )'
                 );
             }
-        } catch (PDOException $e) {
+        } catch (PDOException|ConstructorFailed $e) {
             $this->markTestSkipped($e->getMessage());
         }
     }
