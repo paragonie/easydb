@@ -6,6 +6,7 @@ namespace ParagonIE\EasyDB\Tests;
 use InvalidArgumentException;
 use ParagonIE\EasyDB\Exception\InvalidIdentifier;
 use ParagonIE\EasyDB\Exception\MustBeOneDimensionalArray;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class InsertGetTest extends InsertTest
 {
@@ -14,6 +15,7 @@ class InsertGetTest extends InsertTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
     public function testInsertGetTableNameThrowsException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
@@ -25,6 +27,7 @@ class InsertGetTest extends InsertTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
     public function testInsertGetMapArgThrowsException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
@@ -36,6 +39,7 @@ class InsertGetTest extends InsertTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
     public function testInsertGetMapArgKeysThrowsException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
@@ -47,6 +51,7 @@ class InsertGetTest extends InsertTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
     public function testInsertGet(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
@@ -59,6 +64,7 @@ class InsertGetTest extends InsertTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
     public function testInsertGetException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);

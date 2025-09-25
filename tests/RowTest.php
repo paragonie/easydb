@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyDB;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class RowTest extends SafeQueryTest
 {
@@ -23,12 +24,13 @@ class RowTest extends SafeQueryTest
      * @param array $params
      * @param array $expectedResult
      */
-    public function testMethod(callable $cb, $statement, $offset, $params, $expectedResult)
+    #[DataProvider("goodColArgumentsProvider")]
+    public function testMethod(callable $cb, $statement, $offset, $params, $expectedResult): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
 
         $result = $this->getResultForMethod($db, $statement, $offset, $params);
 
-        $this->assertEquals(array_diff_assoc($result, $expectedResult[0]), []);
+        $this->assertEquals([], array_diff_assoc($result, $expectedResult[0]));
     }
 }

@@ -7,7 +7,7 @@ use ParagonIE\EasyDB\EasyDB;
 
 class FirstTest extends ColumnTest
 {
-    protected function goodColArguments()
+    public static function goodColArguments(): array
     {
         return [
             [

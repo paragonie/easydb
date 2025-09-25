@@ -8,10 +8,10 @@ use ParagonIE\EasyDB\Factory;
 use PDOException;
 use PHPUnit\Framework\TestCase;
 
-abstract class BaseTest extends TestCase
+abstract class DriverTestCase extends TestCase
 {
     /** @var ?EasyDB $db */
-    protected ?EasyDB $db;
+    protected ?EasyDB $db = null;
 
     /**
      * @return string
@@ -166,7 +166,7 @@ abstract class BaseTest extends TestCase
         $this->assertTrue($id > 0, 'Invalid result from insertReturnId()');
     }
 
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $this->db->insert('users', [
             'username' => 'updateuser',
@@ -179,7 +179,7 @@ abstract class BaseTest extends TestCase
         $this->assertEquals('updated@example.com', $email);
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $this->db->insert('users', [
             'username' => 'deleteuser',
@@ -191,7 +191,7 @@ abstract class BaseTest extends TestCase
         $this->assertFalse($this->db->exists('SELECT * FROM users WHERE username = ?', 'deleteuser'));
     }
 
-    public function testExists()
+    public function testExists(): void
     {
         $this->assertFalse($this->db->exists('SELECT * FROM users WHERE username = ?', 'nouser'));
         $this->db->insert('users', [
@@ -201,7 +201,7 @@ abstract class BaseTest extends TestCase
         $this->assertTrue($this->db->exists('SELECT * FROM users WHERE username = ?', 'existsuser'));
     }
 
-    public function testSingle()
+    public function testSingle(): void
     {
         $this->db->insert('users', [
             'username' => 'singleuser',
@@ -210,7 +210,7 @@ abstract class BaseTest extends TestCase
         $this->assertEquals('singleuser', $this->db->single('SELECT username FROM users WHERE username = ?', ['singleuser']));
     }
 
-    public function testCell()
+    public function testCell(): void
     {
         $this->db->insert('users', [
             'username' => 'celluser',
@@ -219,7 +219,7 @@ abstract class BaseTest extends TestCase
         $this->assertEquals('celluser', $this->db->cell('SELECT username FROM users WHERE username = ?', 'celluser'));
     }
 
-    public function testCol()
+    public function testCol(): void
     {
         $this->db->insert('users', ['username' => 'coluser1', 'email' => 'col1@example.com']);
         $this->db->insert('users', ['username' => 'coluser2', 'email' => 'col2@example.com']);
@@ -230,7 +230,7 @@ abstract class BaseTest extends TestCase
         $this->assertContains('coluser2', $col);
     }
 
-    public function testCsv()
+    public function testCsv(): void
     {
         $this->db->insert('users', ['username' => 'csvuser1', 'email' => 'csv1@example.com']);
         $this->db->insert('users', ['username' => 'csvuser2', 'email' => 'csv2@example.com']);
@@ -244,13 +244,13 @@ abstract class BaseTest extends TestCase
         $this->assertEquals($expected, $csv);
     }
 
-    public function testInvalidQuery()
+    public function testInvalidQuery(): void
     {
         $this->expectException(PDOException::class);
         $this->db->run('SELECT * FROM non_existent_table');
     }
 
-    public function testSqlInjectionAttempt()
+    public function testSqlInjectionAttempt(): void
     {
         $this->db->insert('users', ['username' => 'admin', 'email' => 'admin@example.com']);
         $malicious = "' OR 1=1 --";

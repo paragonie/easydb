@@ -2,7 +2,7 @@
 
 namespace ParagonIE\EasyDB\Tests\Driver;
 
-class PgsqlTest extends BaseTest
+class PgsqlTest extends DriverTestCase
 {
     /**
      * @return string

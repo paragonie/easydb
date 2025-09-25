@@ -9,6 +9,7 @@ use Throwable;
 /**
  * Class MustBeNonEmpty
  * @package ParagonIE\EasyDB\Exception
+ * @api
  */
 class MustBeNonEmpty extends EasyDBException
 {

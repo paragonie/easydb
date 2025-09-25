@@ -6,8 +6,9 @@ namespace ParagonIE\EasyDB\Tests;
 use ParagonIE\EasyDB\Factory;
 use PDO;
 use PDOException;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-class EmulatePreparesDisabledTest extends EasyDBTest
+class EmulatePreparesDisabledTest extends EasyDBTestCase
 {
 
     /**
@@ -17,12 +18,13 @@ class EmulatePreparesDisabledTest extends EasyDBTest
      * @param null $password
      * @param array $options
      */
+    #[DataProvider("goodFactoryCreateArgumentProvider")]
     public function testEmulatePreparesDisabled(
         $expectedDriver,
         $dsn,
         $username = null,
         $password = null,
-        $options = []
+        array $options = []
     ) {
         $db = Factory::create($dsn, $username, $password, $options);
         $recheckWithForcedFalse = false;

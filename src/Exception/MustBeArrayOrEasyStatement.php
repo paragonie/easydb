@@ -9,6 +9,7 @@ use Throwable;
 /**
  * Class MustBeArrayOrEasyStatement
  * @package ParagonIE\EasyDB\Exception
+ * @api
  */
 class MustBeArrayOrEasyStatement extends EasyDBException
 {

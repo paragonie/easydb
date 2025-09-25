@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests\Driver;
 
-class FirebirdTest extends BaseTest
+class FirebirdTest extends DriverTestCase
 {
     /**
      * @return string

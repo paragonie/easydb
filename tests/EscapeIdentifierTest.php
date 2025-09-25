@@ -5,19 +5,21 @@ namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Exception as Issues;
+use PHPUnit\Framework\AssertionFailedError;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit_Framework_Error;
 use TypeError;
 
-class EscapeIdentifierTest extends EasyDBTest
+class EscapeIdentifierTest extends EasyDBTestCase
 {
 
     /**
     * EasyDB data provider
     * Returns an array of callables that return instances of EasyDB
     * @return array
-    * @see EasyDBTest::goodFactoryCreateArgument2EasyDBProvider()
+    * @see EasyDBTestCase::goodFactoryCreateArgument2EasyDBProvider()
     */
-    public function goodFactoryCreateArgument2EasyDBWithIdentifierProvider()
+    public static function goodFactoryCreateArgument2EasyDBWithIdentifierProvider(): array
     {
         $provider = [
             [
@@ -46,7 +48,7 @@ class EscapeIdentifierTest extends EasyDBTest
             ],
         ];
         return array_reduce(
-            $this->goodFactoryCreateArgument2EasyDBProvider(),
+            static::goodFactoryCreateArgument2EasyDBProvider(),
             function (array $was, array $cbArgs) use ($provider) {
                 foreach ($provider as $args) {
                     foreach (array_reverse($cbArgs) as $cbArg) {
@@ -64,9 +66,9 @@ class EscapeIdentifierTest extends EasyDBTest
     * EasyDB data provider
     * Returns an array of callables that return instances of EasyDB
     * @return array
-    * @see EasyDBTest::goodFactoryCreateArgument2EasyDBProvider()
+    * @see EasyDBTestCase::goodFactoryCreateArgument2EasyDBProvider()
     */
-    public function goodFactoryCreateArgument2EasyDBWithBadIdentifierProvider()
+    public static function goodFactoryCreateArgument2EasyDBWithBadIdentifierProvider(): array
     {
         $identifiers = [
             1,
@@ -78,7 +80,7 @@ class EscapeIdentifierTest extends EasyDBTest
             []
         ];
         return array_reduce(
-            $this->goodFactoryCreateArgument2EasyDBProvider(),
+            static::goodFactoryCreateArgument2EasyDBProvider(),
             function (array $was, array $cbArgs) use ($identifiers) {
                 foreach ($identifiers as $identifier) {
                     $args = [$identifier];
@@ -93,7 +95,7 @@ class EscapeIdentifierTest extends EasyDBTest
         );
     }
 
-    private function getExpectedEscapedIdentifier($string, $driver, $quote, bool $allowSeparators)
+    private function getExpectedEscapedIdentifier($string, $driver, $quote, bool $allowSeparators): string
     {
         if ($allowSeparators) {
             $str = \preg_replace('/[^\.0-9a-zA-Z_]/', '', $string);
@@ -109,14 +111,11 @@ class EscapeIdentifierTest extends EasyDBTest
         }
 
         if ($quote) {
-            switch ($driver) {
-                case 'mssql':
-                    return '[' . $str . ']';
-                case 'mysql':
-                    return '`' . $str . '`';
-                default:
-                    return '"' . $str . '"';
-            }
+            return match ($driver) {
+                'mssql' => '[' . $str . ']',
+                'mysql' => '`' . $str . '`',
+                default => '"' . $str . '"',
+            };
         }
         return $str;
     }
@@ -127,6 +126,7 @@ class EscapeIdentifierTest extends EasyDBTest
      * @param bool[] $withAllowSeparators
      * @dataProvider goodFactoryCreateArgument2EasyDBWithIdentifierProvider
      */
+    #[DataProvider("goodFactoryCreateArgument2EasyDBWithIdentifierProvider")]
     public function testEscapeIdentifier(callable $cb, $identifier, array $withAllowSeparators)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
@@ -151,6 +151,7 @@ class EscapeIdentifierTest extends EasyDBTest
      * @param callable $cb
      * @param $identifier
      */
+    #[DataProvider("goodFactoryCreateArgument2EasyDBWithBadIdentifierProvider")]
     public function testEscapeIdentifierThrowsSomething(callable $cb, $identifier)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
@@ -163,7 +164,7 @@ class EscapeIdentifierTest extends EasyDBTest
         } catch (TypeError $e) {
             $this->assertTrue(true);
             $thrown = true;
-        } catch (PHPUnit_Framework_Error $e) {
+        } catch (AssertionFailedError $e) {
             if (preg_match(
                 (
                         '/^' .
@@ -174,8 +175,7 @@ class EscapeIdentifierTest extends EasyDBTest
                         ' must be an instance of string, [^ ]+ given$/'
                     ),
                 $e->getMessage()
-            )
-            ) {
+            )) {
                 $this->assertTrue(true);
                 $thrown = true;
             } else {

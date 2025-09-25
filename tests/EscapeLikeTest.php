@@ -5,10 +5,11 @@ namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyDB;
 use PDO;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-class EscapeLikeTest extends EasyDBTest
+class EscapeLikeTest extends EasyDBTestCase
 {
-    public function dataValues()
+    public static function dataValues(): array
     {
         return [
             // input, expected
@@ -24,6 +25,7 @@ class EscapeLikeTest extends EasyDBTest
     /**
      * @dataProvider dataValues
      */
+    #[DataProvider("dataValues")]
     public function testEscapeLike($input, $expected)
     {
         // This defines sqlite, but mysql and postgres share the same rules
@@ -34,9 +36,9 @@ class EscapeLikeTest extends EasyDBTest
         $this->assertSame($expected, $output);
     }
 
-    public function dataMSSQLValues()
+    public static function dataMSSQLValues(): array
     {
-        return array_merge($this->dataValues(), [
+        return array_merge(static::dataValues(), [
             // input, expected
             ['[range]', '\\[range\\]'],
             ['[^negated]', '\\[^negated\\]'],
@@ -45,6 +47,7 @@ class EscapeLikeTest extends EasyDBTest
     /**
      * @dataProvider dataMSSQLValues
      */
+    #[DataProvider("dataMSSQLValues")]
     public function testMSSQLEscapeLike($input, $expected)
     {
         $easydb = new EasyDB($this->getMockPDO(), 'mssql');

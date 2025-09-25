@@ -17,6 +17,7 @@ use function
  * Class Factory
  *
  * @package ParagonIE\EasyDB
+ * @api
  */
 abstract class Factory
 {

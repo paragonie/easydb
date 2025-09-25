@@ -7,6 +7,7 @@ use InvalidArgumentException;
 use ParagonIE\EasyDB\Exception\InvalidIdentifier;
 use ParagonIE\EasyDB\Exception\MustBeOneDimensionalArray;
 use PDOException;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class InsertManyTest extends EasyDBWriteTest
 {
@@ -15,6 +16,7 @@ class InsertManyTest extends EasyDBWriteTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
     public function testInsertManyNoFieldsThrowsException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
@@ -26,6 +28,7 @@ class InsertManyTest extends EasyDBWriteTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
     public function testInsertManyNoFieldsThrowsPdoException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
@@ -37,6 +40,7 @@ class InsertManyTest extends EasyDBWriteTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
     public function testInsertManyArgTableThrowsException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
@@ -48,6 +52,7 @@ class InsertManyTest extends EasyDBWriteTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
     public function testInsertManyArgMapKeysThrowsException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
@@ -59,6 +64,7 @@ class InsertManyTest extends EasyDBWriteTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
     public function testInsertManyArgMapIs1DArrayThrowsException(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
@@ -70,13 +76,14 @@ class InsertManyTest extends EasyDBWriteTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
     public function testInsertMany(callable $cb)
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $db->insertMany('irrelevant_but_valid_tablename', [['foo' => '1'], ['foo' => '2']]);
         $this->assertEquals(
-            $db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename'),
-            2
+            2,
+            $db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename')
         );
     }
 }

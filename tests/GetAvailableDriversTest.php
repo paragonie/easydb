@@ -6,10 +6,11 @@ namespace ParagonIE\EasyDB\Tests;
 use ParagonIE\EasyDB\Factory;
 use PDO;
 
-class GetAvailableDriversTest extends EasyDBTest
+class GetAvailableDriversTest extends EasyDBTestCase
 {
 
     /**
+     * @param $expectedDriver
      * @param $dsn
      * @param null $username
      * @param null $password
@@ -27,32 +28,26 @@ class GetAvailableDriversTest extends EasyDBTest
             $this->markTestSkipped('No drivers available!');
         } else {
             $db = Factory::create($dsn, $username, $password, $options);
-            $this->assertEquals(
-                count(
-                    array_diff_assoc(
-                        PDO::getAvailableDrivers(),
-                        $db->getAvailableDrivers()
-                    )
-                ),
-                0
+            $this->assertCount(
+                0,
+                array_diff_assoc(
+                    PDO::getAvailableDrivers(),
+                    $db->getAvailableDrivers()
+                )
             );
-            $this->assertEquals(
-                count(
-                    array_diff_assoc(
-                        PDO::getAvailableDrivers(),
-                        $db->getPdo()->getAvailableDrivers()
-                    )
-                ),
-                0
+            $this->assertCount(
+                0,
+                array_diff_assoc(
+                    PDO::getAvailableDrivers(),
+                    $db->getPdo()->getAvailableDrivers()
+                )
             );
-            $this->assertEquals(
-                count(
-                    array_diff_assoc(
-                        $db->getAvailableDrivers(),
-                        $db->getPdo()->getAvailableDrivers()
-                    )
-                ),
-                0
+            $this->assertCount(
+                0,
+                array_diff_assoc(
+                    $db->getAvailableDrivers(),
+                    $db->getPdo()->getAvailableDrivers()
+                )
             );
         }
     }

@@ -5,7 +5,7 @@ namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\Factory;
 
-class InTransactionTest extends EasyDBTest
+class InTransactionTest extends EasyDBTestCase
 {
 
     /**
@@ -16,12 +16,12 @@ class InTransactionTest extends EasyDBTest
      * @dataProvider goodFactoryCreateArgumentProvider
      */
     public function testInTransaction(
-        $expectedDriver,
-        $dsn,
-        $username = null,
-        $password = null,
+        string $expectedDriver,
+        string $dsn,
+        ?string $username = null,
+        ?string $password = null,
         array $options = []
-    ) {
+    ): void {
         $db = Factory::create($dsn, $username, $password, $options);
         $this->assertFalse($db->inTransaction());
         $db->beginTransaction();

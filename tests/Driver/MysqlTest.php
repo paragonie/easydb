@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests\Driver;
 
-class MysqlTest extends BaseTest
+class MysqlTest extends DriverTestCase
 {
     /**
      * @return string

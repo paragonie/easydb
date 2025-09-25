@@ -18,6 +18,7 @@
         <UnnecessaryVarAnnotation errorLevel="suppress" />
         <UnusedVariable errorLevel="info" />
         <InvalidCast errorLevel="info" />
+        <PossiblyUnusedMethod errorLevel="info" />
     </issueHandlers>
     <plugins>
         <pluginClass class="Psalm\PhpUnitPlugin\Plugin" />

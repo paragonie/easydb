@@ -8,10 +8,10 @@ use ParagonIE\EasyDB\Factory;
 use PHPUnit\Framework\TestCase as PHPUnit_Framework_TestCase;
 
 /**
- * Class EasyDBTest
+ * Class EasyDBTestCase
  * @package ParagonIE\EasyDB\Tests
  */
-abstract class EasyDBTest extends PHPUnit_Framework_TestCase
+abstract class EasyDBTestCase extends PHPUnit_Framework_TestCase
 {
 
     /**
@@ -19,7 +19,7 @@ abstract class EasyDBTest extends PHPUnit_Framework_TestCase
     * These arguments will not result in a valid EasyDB instance
     * @return array
     */
-    public function badFactoryCreateArgumentProvider()
+    public static function badFactoryCreateArgumentProvider(): array
     {
         return [
             [
@@ -35,43 +35,40 @@ abstract class EasyDBTest extends PHPUnit_Framework_TestCase
     * These arguments will result in a valid EasyDB instance
     * @return array
     */
-    public function goodFactoryCreateArgumentProvider()
+    public static function goodFactoryCreateArgumentProvider(): array
     {
-        switch (getenv('DB')) {
-            case false:
-                return [
-                    [
-                        'sqlite',
-                        'sqlite::memory:',
-                        null,
-                        null,
-                        [],
-                    ],
-                ];
-            break;
+        if (!getenv('DB')) {
+            return [
+                [
+                    'sqlite',
+                    'sqlite::memory:',
+                    null,
+                    null,
+                    [],
+                ],
+            ];
         }
-        $this->markTestIncomplete(
+        static::markTestIncomplete(
             'Could not determine appropriate arguments for ' .
             Factory::class .
             '::create() from getenv()'
         );
-        return [];
     }
 
     /**
     * EasyDB data provider
     * Returns an array of callables that return instances of EasyDB
     * @return array
-    * @see EasyDBTest::goodFactoryCreateArgumentProvider()
+    * @see EasyDBTestCase::goodFactoryCreateArgumentProvider()
     */
-    public function goodFactoryCreateArgument2EasyDBProvider()
+    public static function goodFactoryCreateArgument2EasyDBProvider(): array
     {
         return array_map(
             function (array $arguments) {
                 $dsn = $arguments[1];
-                $username = isset($arguments[2]) ? $arguments[2] : null;
-                $password = isset($arguments[3]) ? $arguments[3] : null;
-                $options = isset($arguments[4]) ? $arguments[4] : [];
+                $username = $arguments[2] ?? null;
+                $password = $arguments[3] ?? null;
+                $options = $arguments[4] ?? [];
                 return [
                     function () use ($dsn, $username, $password, $options) {
                         return Factory::create(
@@ -83,7 +80,7 @@ abstract class EasyDBTest extends PHPUnit_Framework_TestCase
                     }
                 ];
             },
-            $this->goodFactoryCreateArgumentProvider()
+            static::goodFactoryCreateArgumentProvider()
         );
     }
 
@@ -92,7 +89,7 @@ abstract class EasyDBTest extends PHPUnit_Framework_TestCase
     * @param callable $cb
     * @return EasyDB
     */
-    protected function easyDBExpectedFromCallable(callable $cb) : EasyDB
+    protected function easyDBExpectedFromCallable(callable $cb): EasyDB
     {
         return $cb();
     }
@@ -100,9 +97,9 @@ abstract class EasyDBTest extends PHPUnit_Framework_TestCase
     /**
     * Remaps EasyDBWriteTest::goodFactoryCreateArgument2EasyDBProvider()
     */
-    public function goodFactoryCreateArgument2EasyDBQuoteProvider()
+    public static function goodFactoryCreateArgument2EasyDBQuoteProvider(): array
     {
-        $cbArgsSets = $this->goodFactoryCreateArgument2EasyDBProvider();
+        $cbArgsSets = static::goodFactoryCreateArgument2EasyDBProvider();
         $args = [
             [
                 1,
@@ -135,7 +132,7 @@ abstract class EasyDBTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function assertEasydbRegExp($match, $str)
+    public function assertEasydbRegExp($match, $str): void
     {
         if (method_exists($this, 'assertMatchesRegularExpression')) {
             $this->assertMatchesRegularExpression($match, $str);

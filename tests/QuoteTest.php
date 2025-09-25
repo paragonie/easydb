@@ -3,22 +3,23 @@ declare(strict_types=1);
 
 namespace ParagonIE\EasyDB\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 /**
  * Class ExecTest
  * @package ParagonIE\EasyDB\Tests
  */
-class QuoteTest extends EasyDBTest
+class QuoteTest extends EasyDBTestCase
 {
 
     /**
      * @dataProvider goodFactoryCreateArgument2EasyDBQuoteProvider
-     * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifier
-     * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifierThrowsSomething
      * @param callable $cb
      * @param $quoteThis
      * @param array $expectOneOfThese
      */
-    public function testQuote(callable $cb, $quoteThis, array $expectOneOfThese)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBQuoteProvider")]
+    public function testQuote(callable $cb, $quoteThis, array $expectOneOfThese): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
 

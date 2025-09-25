@@ -4,10 +4,11 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyDB;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class RunTest extends ColTest
 {
-    protected function goodColArguments()
+    public static function goodColArguments(): array
     {
         return [
             [
@@ -48,7 +49,8 @@ class RunTest extends ColTest
      * @param array $params
      * @param array $expectedResult
      */
-    public function testMethod(callable $cb, $statement, $offset, $params, $expectedResult)
+    #[DataProvider("goodColArgumentsProvider")]
+    public function testMethod(callable $cb, $statement, $offset, $params, $expectedResult): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
 

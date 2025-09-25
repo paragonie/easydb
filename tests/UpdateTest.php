@@ -8,6 +8,7 @@ use ParagonIE\EasyDB\EasyStatement;
 use ParagonIE\EasyDB\Exception\InvalidIdentifier;
 use ParagonIE\EasyDB\Exception\InvalidTableName;
 use ParagonIE\EasyDB\Exception\MustBeOneDimensionalArray;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class UpdateTest extends EasyDBWriteTest
 {
@@ -16,7 +17,8 @@ class UpdateTest extends EasyDBWriteTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
-    public function testUpdateArgChangesReturnsNull(callable $cb)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
+    public function testUpdateArgChangesReturnsNull(callable $cb): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $this->assertEquals(
@@ -29,7 +31,8 @@ class UpdateTest extends EasyDBWriteTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
-    public function testUpdateArgConditionsReturnsNull(callable $cb)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
+    public function testUpdateArgConditionsReturnsNull(callable $cb): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $this->assertEquals(
@@ -42,7 +45,8 @@ class UpdateTest extends EasyDBWriteTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
-    public function testUpdateArgChangesThrowsException(callable $cb)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
+    public function testUpdateArgChangesThrowsException(callable $cb): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $this->expectException(MustBeOneDimensionalArray::class);
@@ -53,7 +57,8 @@ class UpdateTest extends EasyDBWriteTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
-    public function testUpdateArgConditionsThrowsException(callable $cb)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
+    public function testUpdateArgConditionsThrowsException(callable $cb): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $this->expectException(MustBeOneDimensionalArray::class);
@@ -64,7 +69,8 @@ class UpdateTest extends EasyDBWriteTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
-    public function testUpdateTableNameThrowsException(callable $cb)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
+    public function testUpdateTableNameThrowsException(callable $cb): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $this->expectException(InvalidTableName::class);
@@ -75,7 +81,8 @@ class UpdateTest extends EasyDBWriteTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
-    public function testUpdateArgChangesKeyThrowsException(callable $cb)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
+    public function testUpdateArgChangesKeyThrowsException(callable $cb): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $this->expectException(InvalidIdentifier::class);
@@ -86,7 +93,8 @@ class UpdateTest extends EasyDBWriteTest
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
      * @param callable $cb
      */
-    public function testUpdateArgConditionsKeyThrowsException(callable $cb)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
+    public function testUpdateArgConditionsKeyThrowsException(callable $cb): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $this->expectException(InvalidIdentifier::class);
@@ -95,10 +103,10 @@ class UpdateTest extends EasyDBWriteTest
 
     /**
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
-     * @depends      ParagonIE\EasyDB\Tests\InsertManyTest::testInsertMany
      * @param callable $cb
      */
-    public function testUpdateEasyStatement(callable $cb)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
+    public function testUpdateEasyStatement(callable $cb): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $db->insertMany('irrelevant_but_valid_tablename', [['foo' => '1'], ['foo' => '2']]);
@@ -132,10 +140,10 @@ class UpdateTest extends EasyDBWriteTest
 
     /**
      * @dataProvider goodFactoryCreateArgument2EasyDBProvider
-     * @depends      ParagonIE\EasyDB\Tests\InsertManyTest::testInsertMany
      * @param callable $cb
      */
-    public function testUpdate(callable $cb)
+    #[DataProvider("goodFactoryCreateArgument2EasyDBProvider")]
+    public function testUpdate(callable $cb): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $db->insertMany('irrelevant_but_valid_tablename', [['foo' => '1'], ['foo' => '2']]);

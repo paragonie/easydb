@@ -12,15 +12,12 @@ use PDOStatement;
  */
 class PrepareTest extends EasyDBWriteTest
 {
-
     /**
      * @dataProvider goodFactoryCreateArgument2EasyDBInsertManyProvider
-     * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifier
-     * @depends      ParagonIE\EasyDB\Tests\EscapeIdentifierTest::testEscapeIdentifierThrowsSomething
      * @param callable $cb
      * @param array $maps
      */
-    public function testQuery(callable $cb, array $maps)
+    public function testQuery(callable $cb, array $maps): void
     {
         $db = $this->easyDBExpectedFromCallable($cb);
         $table = 'irrelevant_but_valid_tablename';

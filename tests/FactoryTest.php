@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
  */
 class FactoryTest extends TestCase
 {
-    public function testFactoryCreate()
+    public function testFactoryCreate(): void
     {
         $this->assertInstanceOf(
             EasyDB::class,

@@ -6,6 +6,7 @@ namespace ParagonIE\EasyDB\Tests;
 use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Exception\MustBeOneDimensionalArray;
 use ParagonIE\EasyDB\Factory;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class SafeQueryTest extends RunTest
 {
@@ -21,6 +22,7 @@ class SafeQueryTest extends RunTest
      * @param null $password
      * @param array $options
      */
+    #[DataProvider("goodFactoryCreateArgumentProvider")]
     public function testSafeQueryCalledWithVariadicParamsThrowsException(
         $expectedDriver,
         $dsn,
