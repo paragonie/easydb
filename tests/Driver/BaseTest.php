@@ -125,6 +125,20 @@ abstract class BaseTest extends TestCase
         $this->assertEquals('testuser2', $username);
     }
 
+    public function testInsertReturnID(): void
+    {
+        if ($this->db->getDriver() === 'pgsql') {
+            $sequence = 'users_userid_seq';
+        } else {
+            $sequence = '';
+        }
+        $id = $this->db->insertReturnId('users', [
+            'username' => 'testuserreturnid',
+            'email' => 'returnid@mysql.com'
+        ], $sequence);
+        $this->assertTrue($id > 0, 'Invalid result from insertReturnId()');
+    }
+
     public function testUpdate()
     {
         $this->db->insert('users', [

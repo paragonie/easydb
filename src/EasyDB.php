@@ -785,10 +785,9 @@ class EasyDB
      */
     public function insertReturnId(string $table, array $map, string $sequenceName = ''): string
     {
-        if ($this->dbEngine === 'pgsql') {
+        if ($this->dbEngine === 'pgsql' && empty($sequenceName)) {
             throw new EasyDBException(
-                'Do not use insertReturnId() with PostgreSQL. Use insertGet() instead, ' .
-                'with an explicit column name rather than a sequence name.'
+                'Do not use insertReturnId() with PostgreSQL without a sequence name.'
             );
         }
         if (!$this->insert($table, $map)) {
