@@ -968,13 +968,13 @@ class EasyDB
      *
      * @param  string $statement SQL query without user data
      * @param  string|int|float|bool|null  ...$params Parameters
-     * @return array
+     * @return array|object
      *
      * @throws TypeError
      *
      * @psalm-taint-sink sql $statement
      */
-    public function row(string $statement, ...$params): array
+    public function row(string $statement, ...$params): array|object
     {
         /**
          * @var array|int $result
@@ -988,7 +988,7 @@ class EasyDB
         );
         if (is_array($result)) {
             $first = array_shift($result);
-            if (!is_array($first)) {
+            if (!is_array($first) && !is_object($first)) {
                 /* Do not TypeError on empty results */
                 return [];
             }
