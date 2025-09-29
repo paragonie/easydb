@@ -1,3 +1,8 @@
+# Version 3.1.1
+
+* Allow object return type in row() by @alffonsse in https://github.com/paragonie/easydb/pull/169
+* We now run mutation tests in CI on push, rather than per-tag
+
 # Version 3.1.0
 
 * Calling `insertReturnId()` no longer unavoidably throws on PostgreSQL. Now, it only throws if you don't specify a
