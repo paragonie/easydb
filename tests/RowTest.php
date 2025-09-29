@@ -6,6 +6,7 @@ namespace ParagonIE\EasyDB\Tests;
 use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Exception\MustBeOneDimensionalArray;
 use ParagonIE\EasyDB\Factory;
+use PDO;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -20,6 +21,21 @@ class RowTest extends SafeQueryTest
         array_unshift($args, $statement);
 
         return call_user_func_array([$db, 'row'], $args);
+    }
+
+    #[DataProvider("goodFactoryCreateArgumentProvider")]
+    public function testRowWithDifferentFetchStyle(
+        string $expectedDriver,
+        string $dsn,
+        ?string $username = null,
+        ?string $password = null,
+        array $options = []
+    ): void {
+        $options[PDO::ATTR_DEFAULT_FETCH_MODE] = PDO::FETCH_OBJ;
+        $db = Factory::create($dsn, $username, $password, $options);
+        $args = [1, 2, 3, 4];
+        $results = $db->row('SELECT ? AS foo, ? AS bar UNION SELECT ? AS foo, ? AS bar', ...$args);
+        $this->assertIsObject($results);
     }
 
     /**
