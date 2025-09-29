@@ -24,6 +24,9 @@ class RowTest extends SafeQueryTest
     }
 
     #[DataProvider("goodFactoryCreateArgumentProvider")]
+    /**
+     * @dataProvider goodFactoryCreateArgumentProvider
+     */
     public function testRowWithDifferentFetchStyle(
         string $expectedDriver,
         string $dsn,
