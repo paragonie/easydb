@@ -89,11 +89,11 @@ class EasyDB
      * @param  int    $offset    How many columns from the left are we grabbing
      *                           from each row?
      * @param  scalar|null|object ...$params Parameters
-     * @return array|false
+     * @return array
      *
      * @psalm-taint-sink sql $statement
      */
-    public function col(string $statement, int $offset = 0, ...$params): array|bool
+    public function col(string $statement, int $offset = 0, ...$params): array
     {
         return $this->column($statement, $params, $offset);
     }
@@ -105,11 +105,11 @@ class EasyDB
      * @param  array  $params    Parameters
      * @param  int    $offset    How many columns from the left are we grabbing
      *                           from each row?
-     * @return array|false
+     * @return array
      *
      * @psalm-taint-sink sql $statement
      */
-    public function column(string $statement, array $params = [], int $offset = 0): array|bool
+    public function column(string $statement, array $params = [], int $offset = 0): array
     {
         $stmt = $this->prepare($statement);
         if (!$this->is1DArray($params)) {
@@ -517,11 +517,11 @@ class EasyDB
     /**
      * @param string $statement
      * @param scalar|null|object ...$params
-     * @return array|false
+     * @return array
      *
      * @psalm-taint-sink sql $statement
      */
-    public function first(string $statement, ...$params): array|bool
+    public function first(string $statement, ...$params): array
     {
         return $this->column($statement, $params, 0);
     }
