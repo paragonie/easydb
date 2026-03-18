@@ -976,9 +976,6 @@ class EasyDB
      */
     public function row(string $statement, ...$params): array|object
     {
-        /**
-         * @var array|int $result
-         */
         $result = $this->safeQuery(
             $statement,
             $params,
@@ -1031,7 +1028,7 @@ class EasyDB
      * @param  int    $fetchStyle        PDO::FETCH_STYLE
      * @param  bool   $returnNumAffected Return the number of rows affected?
      * @param  bool   $calledWithVariadicParams Indicates method is being invoked from variadic $params method
-     * @return array|int|object
+     * @return array|int
      *
      * @throws InvalidArgumentException
      * @throws MustBeOneDimensionalArray
@@ -1046,7 +1043,7 @@ class EasyDB
         int $fetchStyle = self::DEFAULT_FETCH_STYLE,
         bool $returnNumAffected = false,
         bool $calledWithVariadicParams = false
-    ): array|int|object {
+    ): array|int {
         if ($fetchStyle === self::DEFAULT_FETCH_STYLE) {
             if (isset($this->options[PDO::ATTR_DEFAULT_FETCH_MODE])) {
                 /**
@@ -1064,7 +1061,7 @@ class EasyDB
             if ($returnNumAffected) {
                 return $stmt->rowCount();
             }
-            return $this->getResultsStrictTyped($stmt, $fetchStyle);
+            return $stmt->fetchAll($fetchStyle);
         }
         if (!$this->is1DArray($params)) {
             if ($calledWithVariadicParams) {
@@ -1084,7 +1081,7 @@ class EasyDB
         if ($returnNumAffected) {
             return (int) $stmt->rowCount();
         }
-        return $this->getResultsStrictTyped($stmt, $fetchStyle);
+        return $stmt->fetchAll($fetchStyle);
     }
 
     /**
@@ -1358,31 +1355,6 @@ class EasyDB
             return 'an instance of ' . get_class($v);
         }
         return (string) var_export($v, true);
-    }
-
-    /**
-     * Helper for PDOStatement::fetchAll() that always returns an array or object.
-     *
-     * @param  PDOStatement $stmt
-     * @param  int           $fetchStyle
-     * @return array|object
-     *
-     * @throws TypeError
-     */
-    protected function getResultsStrictTyped(
-        PDOStatement $stmt,
-        int $fetchStyle = PDO::FETCH_ASSOC
-    ): object|array {
-        /**
-         * @var array|object|bool $results
-         */
-        $results = $stmt->fetchAll($fetchStyle);
-        if (is_array($results)) {
-            return $results;
-        } elseif (is_object($results)) {
-            return $results;
-        }
-        throw new TypeError('Unexpected return type: ' . $this->getValueType($results));
     }
 
     /**
