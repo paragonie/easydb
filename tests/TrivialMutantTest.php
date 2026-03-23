@@ -165,6 +165,9 @@ class TrivialMutantTest extends TestCase
         return $provided;
     }
 
+    /**
+     * @dataProvider easyDbDrivers
+     */
     #[DataProvider("easyDbDrivers")]
     public function testEasyDbDDefaults(EasyDB $db, EasyDB $db2): void
     {
