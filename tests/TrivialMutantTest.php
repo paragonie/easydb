@@ -6,6 +6,7 @@ use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\EasyStatement;
 use ParagonIE\EasyDB\Exception\EasyDBException;
 use ParagonIE\EasyDB\Exception\ConstructorFailed;
+use ParagonIE\EasyDB\Exception\InvalidIdentifier;
 use ParagonIE\EasyDB\Exception\MustBeNonEmpty;
 use ParagonIE\EasyDB\Exception\MustBeOneDimensionalArray;
 use ParagonIE\EasyDB\Factory;
@@ -97,10 +98,73 @@ class TrivialMutantTest extends TestCase
         );
     }
 
+    public function testFactoryFromArrayOptions(): void
+    {
+        $this->expectException(ConstructorFailed::class);
+        Factory::fromArray(['mysql:host=127.0.0.1', 123, 456, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]]);
+    }
+
+    public function testFactoryCreateWithoutColon(): void
+    {
+        $this->expectException(ConstructorFailed::class);
+        Factory::create('invalid_dsn_format');
+    }
+
+    public function testFactoryCreateMysqlWithCharset(): void
+    {
+        if (!extension_loaded('pdo_mysql')) {
+            $this->markTestSkipped('pdo_mysql is not available');
+        }
+        $this->expectException(ConstructorFailed::class);
+        $this->expectExceptionMessage('Could not create a PDO connection. Please check your username and password.');
+        // This will test the case where `;charset=` is already present, so the default isn't appended
+        Factory::create('mysql:host=127.0.0.1;charset=latin1', 'baduser', 'badpass');
+    }
+
     public function testEasyDBEscapeValueSetEmpty(): void
     {
         $db = Factory::create('sqlite::memory:');
         $this->assertSame('(SELECT 1 WHERE FALSE)', $db->escapeValueSet([]));
+    }
+
+    public function testEscapeValueSetExceptionsInt(): void
+    {
+        $db = Factory::create('sqlite::memory:');
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected a integer at index 0 of argument 1 passed to ParagonIE\EasyDB\EasyDB::ParagonIE\EasyDB\EasyDB::escapeValueSet(), received string');
+        $db->escapeValueSet(['invalid'], 'int');
+    }
+
+    public function testEscapeValueSetExceptionsFloat(): void
+    {
+        $db = Factory::create('sqlite::memory:');
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected a number at index 1 of argument 1 passed to ParagonIE\EasyDB\EasyDB::ParagonIE\EasyDB\EasyDB::escapeValueSet(), received NULL');
+        $db->escapeValueSet([1.0, null], 'float');
+    }
+
+    public function testEscapeValueSetExceptionsString(): void
+    {
+        $db = Factory::create('sqlite::memory:');
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected a string at index foo of argument 1 passed to ParagonIE\EasyDB\EasyDB::ParagonIE\EasyDB\EasyDB::escapeValueSet(), received NULL');
+        $db->escapeValueSet(['foo' => null], 'string');
+    }
+
+    public function testEscapeIdentifierExceptionsDots(): void
+    {
+        $db = Factory::create('sqlite::memory:');
+        $this->expectException(InvalidIdentifier::class);
+        $this->expectExceptionMessage('Separators (.) are not permitted.');
+        $db->escapeIdentifier('table.column');
+    }
+
+    public function testEscapeIdentifierExceptionsInvalidChars(): void
+    {
+        $db = Factory::create('sqlite::memory:');
+        $this->expectException(InvalidIdentifier::class);
+        $this->expectExceptionMessage('Invalid identifier: Invalid characters supplied.');
+        $db->escapeIdentifier('table column!');
     }
 
     public function testEasyDBColOffset(): void
@@ -109,6 +173,14 @@ class TrivialMutantTest extends TestCase
         $db->query("CREATE TABLE test_col (a int, b int, c int)");
         $db->insert('test_col', ['a' => 1, 'b' => 2, 'c' => 3]);
         $db->insert('test_col', ['a' => 4, 'b' => 5, 'c' => 6]);
+
+        // test default offset 0 -> a
+        $result0 = $db->col("SELECT * FROM test_col");
+        $this->assertEquals([1, 4], $result0);
+
+        // test column with default offset 0 -> a
+        $result0_col = $db->column("SELECT * FROM test_col");
+        $this->assertEquals([1, 4], $result0_col);
 
         // test offset 1 -> b
         $result = $db->col("SELECT * FROM test_col", 1);
@@ -161,7 +233,7 @@ class TrivialMutantTest extends TestCase
             ));
             $provided[] = [$db, $db2];
         }
-        
+
         return $provided;
     }
 
