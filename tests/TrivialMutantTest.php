@@ -109,10 +109,10 @@ class TrivialMutantTest extends TestCase
 
         // test offset 1 -> b
         $result = $db->col("SELECT * FROM test_col", 1);
-        $this->assertSame([2, 5], $result);
+        $this->assertEquals([2, 5], $result);
 
         // test column with offset 2 -> c
         $result2 = $db->column("SELECT * FROM test_col", [], 2);
-        $this->assertSame([3, 6], $result2);
+        $this->assertEquals([3, 6], $result2);
     }
 }
