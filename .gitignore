@@ -2,5 +2,6 @@
 /vendor/
 /composer.lock
 /composer.phar
+/infection.log
 /.editorconfig
 /.phpunit.result.cache
