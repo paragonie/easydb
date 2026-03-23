@@ -9,6 +9,7 @@ use ParagonIE\EasyDB\Exception\ConstructorFailed;
 use ParagonIE\EasyDB\Exception\MustBeNonEmpty;
 use ParagonIE\EasyDB\Exception\MustBeOneDimensionalArray;
 use ParagonIE\EasyDB\Factory;
+use PDO;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use TypeError;
@@ -114,5 +115,12 @@ class TrivialMutantTest extends TestCase
         // test column with offset 2 -> c
         $result2 = $db->column("SELECT * FROM test_col", [], 2);
         $this->assertEquals([3, 6], $result2);
+    }
+
+    public function testEasyDbDDefaults(): void
+    {
+        $db = Factory::create('sqlite::memory:');
+        $this->assertSame(false, $db->getAttribute(PDO::ATTR_EMULATE_PREPARES));
+        $this->assertSame(PDO::ERRMODE_EXCEPTION, $db->getAttribute(PDO::ATTR_ERRMODE));
     }
 }
