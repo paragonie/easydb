@@ -119,11 +119,22 @@ class TrivialMutantTest extends TestCase
 
     public function testEasyDbDDefaults(): void
     {
-        $db = Factory::create('sqlite::memory:');
+        if (!extension_loaded('pdo_pgsql') || !getenv('PGSQL_HOST')) {
+            $this->markTestSkipped('pdo_pgsql is not available');
+        }
+        $db = Factory::create(
+            'pgsql:host=' . getenv('PGSQL_HOST') . ';dbname=' . getenv('PGSQL_DB'),
+            getenv('PGSQL_USER'),
+            getenv('PGSQL_PASS'),
+        );
         $this->assertSame(false, $db->getAttribute(PDO::ATTR_EMULATE_PREPARES));
         $this->assertSame(PDO::ERRMODE_EXCEPTION, $db->getAttribute(PDO::ATTR_ERRMODE));
 
-        $db2 = new EasyDB(new PDO('sqlite::memory:'));
+        $db2 = new EasyDB(new PDO(
+            'pgsql:host=' . getenv('PGSQL_HOST') . ';dbname=' . getenv('PGSQL_DB'),
+            getenv('PGSQL_USER'),
+            getenv('PGSQL_PASS'),
+        ));
         $this->assertSame(false, $db2->getAttribute(PDO::ATTR_EMULATE_PREPARES));
         $this->assertSame(PDO::ERRMODE_EXCEPTION, $db2->getAttribute(PDO::ATTR_ERRMODE));
     }
