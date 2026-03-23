@@ -122,5 +122,9 @@ class TrivialMutantTest extends TestCase
         $db = Factory::create('sqlite::memory:');
         $this->assertSame(false, $db->getAttribute(PDO::ATTR_EMULATE_PREPARES));
         $this->assertSame(PDO::ERRMODE_EXCEPTION, $db->getAttribute(PDO::ATTR_ERRMODE));
+
+        $db2 = new EasyDB(new PDO('sqlite::memory:'));
+        $this->assertSame(false, $db2->getAttribute(PDO::ATTR_EMULATE_PREPARES));
+        $this->assertSame(PDO::ERRMODE_EXCEPTION, $db2->getAttribute(PDO::ATTR_ERRMODE));
     }
 }
