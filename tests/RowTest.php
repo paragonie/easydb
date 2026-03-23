@@ -58,4 +58,32 @@ class RowTest extends SafeQueryTest
 
         $this->assertEquals([], array_diff_assoc($result, $expectedResult[0]));
     }
+
+
+    /**
+     * @dataProvider goodFactoryCreateArgumentProvider
+     * @param $dsn
+     * @param null $username
+     * @param null $password
+     * @param array $options
+     */
+    #[DataProvider("goodFactoryCreateArgumentProvider")]
+    public function testSafeQueryCalledWithNonDefaultFetchMode(
+        $expectedDriver,
+        $dsn,
+        $username = null,
+        $password = null,
+        array $options = []
+    ) {
+        $options[PDO::ATTR_DEFAULT_FETCH_MODE] = PDO::FETCH_COLUMN;
+        $db = Factory::create($dsn, $username, $password, $options);
+
+        $args = ['1'];
+        $results = $db->row('SELECT ? AS foo', ...$args);
+        $this->assertSame($args, $results);
+
+        $args = ['bar'];
+        $results = $db->safeQuery('SELECT ? AS foo', $args);
+        $this->assertSame(['bar'], $results);
+    }
 }
