@@ -984,6 +984,11 @@ class EasyDB
             true
         );
         if (is_array($result)) {
+            if (array_key_exists(PDO::ATTR_DEFAULT_FETCH_MODE, $this->options)) {
+                if ($this->options[PDO::ATTR_DEFAULT_FETCH_MODE] === PDO::FETCH_COLUMN) {
+                    return $result;
+                }
+            }
             $first = array_shift($result);
             if (!is_array($first) && !is_object($first)) {
                 /* Do not TypeError on empty results */
