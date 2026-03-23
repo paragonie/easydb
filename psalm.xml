@@ -20,6 +20,7 @@
         <UnusedVariable errorLevel="info" />
         <ImplicitToStringCast errorLevel="info" />
         <InvalidCast errorLevel="info" />
+        <RiskyCast errorLevel="info" />
         <PossiblyUnusedMethod errorLevel="info" />
     </issueHandlers>
     <plugins>
