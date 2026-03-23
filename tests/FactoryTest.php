@@ -23,4 +23,12 @@ class FactoryTest extends TestCase
             Factory::create('sqlite::memory:')
         );
     }
+
+    public function testFactoryFromArray(): void
+    {
+        $this->assertInstanceOf(
+            EasyDB::class,
+            Factory::fromArray(['sqlite::memory:'])
+        );
+    }
 }
