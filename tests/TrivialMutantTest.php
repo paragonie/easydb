@@ -10,7 +10,9 @@ use ParagonIE\EasyDB\Exception\MustBeNonEmpty;
 use ParagonIE\EasyDB\Exception\MustBeOneDimensionalArray;
 use ParagonIE\EasyDB\Factory;
 use PDO;
+use PDOException;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use TypeError;
 
@@ -117,25 +119,64 @@ class TrivialMutantTest extends TestCase
         $this->assertEquals([3, 6], $result2);
     }
 
-    public function testEasyDbDDefaults(): void
+    public static function easyDbDrivers(): array
     {
-        if (!extension_loaded('pdo_pgsql') || !getenv('PGSQL_HOST')) {
-            $this->markTestSkipped('pdo_pgsql is not available');
-        }
-        $db = Factory::create(
-            'pgsql:host=' . getenv('PGSQL_HOST') . ';dbname=' . getenv('PGSQL_DB'),
-            getenv('PGSQL_USER'),
-            getenv('PGSQL_PASS'),
-        );
-        $this->assertSame(false, $db->getAttribute(PDO::ATTR_EMULATE_PREPARES));
-        $this->assertSame(PDO::ERRMODE_EXCEPTION, $db->getAttribute(PDO::ATTR_ERRMODE));
+        $provided = [];
 
-        $db2 = new EasyDB(new PDO(
-            'pgsql:host=' . getenv('PGSQL_HOST') . ';dbname=' . getenv('PGSQL_DB'),
-            getenv('PGSQL_USER'),
-            getenv('PGSQL_PASS'),
-        ));
-        $this->assertSame(false, $db2->getAttribute(PDO::ATTR_EMULATE_PREPARES));
-        $this->assertSame(PDO::ERRMODE_EXCEPTION, $db2->getAttribute(PDO::ATTR_ERRMODE));
+        //SQLITE
+        if (extension_loaded('pdo_sqlite')) {
+            $db = Factory::create(
+                'sqlite:' . __DIR__ . '/mutate-kill.sql',
+            );
+            $db2 = new EasyDB(new PDO(
+                'sqlite:' . __DIR__ . '/mutate-kill2.sql',
+            ));
+            $provided[] = [$db, $db2];
+        }
+
+        if (extension_loaded('pdo_pgsql') && getenv('PGSQL_HOST')) {
+            $db = Factory::create(
+                'pgsql:host=' . getenv('PGSQL_HOST') . ';dbname=' . getenv('PGSQL_DB'),
+                getenv('PGSQL_USER'),
+                getenv('PGSQL_PASS'),
+            );
+            $db2 = new EasyDB(new PDO(
+                'pgsql:host=' . getenv('PGSQL_HOST') . ';dbname=' . getenv('PGSQL_DB'),
+                getenv('PGSQL_USER'),
+                getenv('PGSQL_PASS'),
+            ));
+            $provided[] = [$db, $db2];
+        }
+
+        if (extension_loaded('pdo_mysql') && getenv('MYSQL_HOST')) {
+            $db = Factory::create(
+                'mysql:host=' . getenv('MYSQL_HOST') . ';dbname=' . getenv('MYSQL_DB'),
+                getenv('MYSQL_USER'),
+                getenv('MYSQL_PASS'),
+            );
+            $db2 = new EasyDB(new PDO(
+                'mysql:host=' . getenv('MYSQL_HOST') . ';dbname=' . getenv('MYSQL_DB'),
+                getenv('MYSQL_USER'),
+                getenv('MYSQL_PASS'),
+            ));
+            $provided[] = [$db, $db2];
+        }
+        
+        return $provided;
+    }
+
+    #[DataProvider("easyDbDrivers")]
+    public function testEasyDbDDefaults(EasyDB $db, EasyDB $db2): void
+    {
+        try {
+            $this->assertSame(false, $db->getAttribute(PDO::ATTR_EMULATE_PREPARES));
+            $this->assertSame(PDO::ERRMODE_EXCEPTION, $db->getAttribute(PDO::ATTR_ERRMODE));
+            $this->assertSame(false, $db2->getAttribute(PDO::ATTR_EMULATE_PREPARES));
+            $this->assertSame(PDO::ERRMODE_EXCEPTION, $db2->getAttribute(PDO::ATTR_ERRMODE));
+        } catch (PDOException $e) {
+            if (str_contains($e->getMessage(), 'driver does not support that attribute')) {
+                $this->markTestSkipped('driver does not support that attribute');
+            }
+        }
     }
 }
