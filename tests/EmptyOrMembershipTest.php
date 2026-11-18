@@ -12,6 +12,7 @@ use PDO;
 
 #[CoversClass(EasyStatement::class)]
 #[UsesClass(EasyDB::class)]
+#[UsesClass(EasyStatement::class)]
 final class EmptyOrMembershipTest extends TestCase
 {
     public function testEmptyMembershipGroupDoesNotGrantAllRows(): void
