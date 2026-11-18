@@ -899,6 +899,11 @@ class EasyDB
             }
         }
         $columns = array_map([$this, 'escapeIdentifier'], $columns);
+        if (count($columns) !== count(array_unique($columns, SORT_STRING))) {
+            throw new InvalidIdentifier(
+                'Invalid identifier: Duplicate canonical INSERT columns.'
+            );
+        }
 
         /**
         * @var array<int, string>

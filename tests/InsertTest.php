@@ -9,6 +9,7 @@ use ParagonIE\EasyDB\Exception\InvalidIdentifier;
 use ParagonIE\EasyDB\Exception\InvalidTableName;
 use ParagonIE\EasyDB\Exception\MustBeOneDimensionalArray;
 use ParagonIE\EasyDB\Factory;
+use PDO;
 use PDOException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -182,6 +183,39 @@ class InsertTest extends EasyDBWriteTestCase
         $this->assertEasydbRegExp(
             '/insert into .test_table. \(.foo., .bar., .baz.\) VALUES \(\?, \?, \?\) ON DUPLICATE KEY UPDATE .bar. = VALUES\(.bar.\), .baz. = VALUES\(.baz.\)/i',
             $query
+        );
+    }
+
+    public function testRejectsAliasBeforeTrustedColumnAssignment(): void
+    {
+        $pdo = new PDO('sqlite::memory:');
+        $pdo->exec('CREATE TABLE entries (tenant_id INTEGER, label TEXT)');
+        $db = new EasyDB($pdo);
+        $map = json_decode(
+            '{"tenant_id ":666,"label":"synthetic"}',
+            true,
+            512,
+            JSON_THROW_ON_ERROR
+        );
+        $map['tenant_id'] = 7;
+        $this->assertSame(7, $map['tenant_id']);
+        $this->assertArrayHasKey('tenant_id ', $map);
+        $caught = null;
+        try {
+            $db->insert('entries', $map);
+        } catch (InvalidIdentifier $error) {
+            $caught = $error;
+        }
+        $stored = $pdo->query('SELECT tenant_id FROM entries')->fetchColumn();
+        $this->assertFalse(
+            $stored,
+            'Canonical INSERT collision stored tenant_id=' . var_export($stored, true)
+        );
+        $this->assertInstanceOf(InvalidIdentifier::class, $caught);
+        $this->assertSame(
+            0,
+            (int) $pdo->query('SELECT COUNT(*) FROM entries')
+                ->fetchColumn()
         );
     }
 }
