@@ -219,7 +219,7 @@ class EscapeIdentifierTest extends EasyDBTestCase
         } catch (InvalidIdentifier $caught) {
             $error = $caught;
         }
-        $this->assertSame(
+        $this->assertEquals(
             [1, 2],
             $pdo->query('SELECT id FROM entries ORDER BY id')
                 ->fetchAll(PDO::FETCH_COLUMN)

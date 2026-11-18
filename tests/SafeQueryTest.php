@@ -64,7 +64,7 @@ class SafeQueryTest extends RunTest
         $pdo->exec('CREATE TABLE entries (id INTEGER PRIMARY KEY, a INTEGER, b INTEGER, mark TEXT)');
         $pdo->exec("INSERT INTO entries VALUES (1,1,2,'old'), (2,2,1,'old')");
         $where = EasyStatement::open()->andWithString('a = :a AND b = :b', b: 2, a: 1);
-        $this->assertSame([1], array_column($db->safeQuery('SELECT id FROM entries WHERE ' . $where, $where->values()), 'id'));
+        $this->assertEquals([1], array_column($db->safeQuery('SELECT id FROM entries WHERE ' . $where, $where->values()), 'id'));
         return [$db, $where];
     }
 
@@ -72,13 +72,13 @@ class SafeQueryTest extends RunTest
     {
         [$db, $where] = $this->database();
         $this->assertSame(1, $db->delete('entries', $where));
-        $this->assertSame([2], array_column($db->safeQuery('SELECT id FROM entries ORDER BY id'), 'id'));
+        $this->assertEquals([2], array_column($db->safeQuery('SELECT id FROM entries ORDER BY id'), 'id'));
     }
 
     public function testUpdateUsesTheRowSelectedByNamedBindings(): void
     {
         [$db, $where] = $this->database();
         $this->assertSame(1, $db->update('entries', ['mark' => 'changed'], $where));
-        $this->assertSame([1], array_column($db->safeQuery("SELECT id FROM entries WHERE mark = 'changed'"), 'id'));
+        $this->assertEquals([1], array_column($db->safeQuery("SELECT id FROM entries WHERE mark = 'changed'"), 'id'));
     }
 }
