@@ -10,10 +10,12 @@ use ParagonIE\EasyDB\Factory;
 use PDO;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\UsesClass;
 
 #[CoversClass(EasyDB::class)]
 #[CoversClass(Factory::class)]
 #[CoversClass(MustBeOneDimensionalArray::class)]
+#[UsesClass(EasyStatement::class)]
 class SafeQueryTest extends RunTest
 {
     protected function getResultForMethod(EasyDB $db, $statement, $offset, $params)
