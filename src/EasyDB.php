@@ -11,6 +11,7 @@ use ParagonIE\EasyDB\Exception\{
     QueryError
 };
 use PDO;
+use PDOException;
 use PDOStatement;
 use InvalidArgumentException;
 use Throwable;
@@ -274,14 +275,7 @@ class EasyDB
         }
         /** @psalm-taint-escape sql */
         $queryString = 'DELETE FROM ' . $this->escapeIdentifier($table) . ' WHERE ' . $conditions;
-        $params = [];
-
-        /**
-         * @var ?scalar $v
-         */
-        foreach ($conditions->values() as $v) {
-            $params[] = $v;
-        }
+        $params = $conditions->values();
 
         return (int) $this->safeQuery(
             $queryString,
@@ -354,6 +348,9 @@ class EasyDB
                     'Invalid identifier: Invalid characters supplied.'
                 );
             }
+        }
+        if ($str === '') {
+            throw new InvalidIdentifier('Invalid identifier: Must be a non-empty string.');
         }
 
         // MySQL allows weirdly wrong column names:
@@ -755,6 +752,8 @@ class EasyDB
          */
         $first = $maps[$firstKey];
 
+        $columns = array_keys($first);
+        $parameterSets = [];
         /**
          * @var array $map
          */
@@ -764,9 +763,13 @@ class EasyDB
                     'Every map in the second argument should have the same number of columns.'
                 );
             }
+            if (count($map) !== count($columns) || array_diff_key($first, $map)) {
+                throw new PDOException('Every map must contain the same columns.');
+            }
+            /** @psalm-suppress MissingClosureReturnType */
+            $parameterSets[] = array_map(static fn ($column) => $map[$column], $columns);
         }
-
-        $queryString = $this->buildInsertQuery($table, array_keys($first));
+        $queryString = $this->buildInsertQuery($table, $columns);
 
         // Now let's run a query with the parameters
         $stmt = $this->prepare($queryString);
@@ -775,8 +778,8 @@ class EasyDB
         /**
          * @var array $params
          */
-        foreach ($maps as $params) {
-            $stmt->execute(array_values($params));
+        foreach ($parameterSets as $params) {
+            $stmt->execute($params);
             $count += $stmt->rowCount();
         }
         return $count;
@@ -897,6 +900,11 @@ class EasyDB
             }
         }
         $columns = array_map([$this, 'escapeIdentifier'], $columns);
+        if (count($columns) !== count(array_unique($columns, SORT_STRING))) {
+            throw new InvalidIdentifier(
+                'Invalid identifier: Duplicate canonical INSERT columns.'
+            );
+        }
 
         /**
         * @var array<int, string>
@@ -1258,12 +1266,7 @@ class EasyDB
 
         $queryString .= implode(', ', $pre);
         $queryString .= " WHERE {$conditions}";
-        /**
-         * @var string|int|bool|float|null $v
-         */
-        foreach ($conditions->values() as $v) {
-            $params[] = $v;
-        }
+        $params = array_merge($params, $conditions->values());
 
         return (int) $this->safeQuery(
             $queryString,

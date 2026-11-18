@@ -5,7 +5,9 @@ namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Exception as Issues;
+use ParagonIE\EasyDB\Exception\InvalidIdentifier;
 use ParagonIE\EasyDB\Factory;
+use PDO;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -204,5 +206,24 @@ class EscapeIdentifierTest extends EasyDBTestCase
                 );
             }
         }
+    }
+
+    public function testNulOnlyConditionCannotDeleteEveryRow(): void
+    {
+        $pdo = new PDO('sqlite::memory:');
+        $db = new EasyDB($pdo);
+        $pdo->exec('CREATE TABLE entries (id INTEGER PRIMARY KEY); INSERT INTO entries VALUES (1), (2)');
+        $error = null;
+        try {
+            $db->delete('entries', ["\0" => '']);
+        } catch (InvalidIdentifier $caught) {
+            $error = $caught;
+        }
+        $this->assertEquals(
+            [1, 2],
+            $pdo->query('SELECT id FROM entries ORDER BY id')
+                ->fetchAll(PDO::FETCH_COLUMN)
+        );
+        $this->assertInstanceOf(InvalidIdentifier::class, $error);
     }
 }

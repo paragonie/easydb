@@ -235,6 +235,9 @@ class EasyStatement
             if (!$this->allowEmptyInStatements) {
                 throw new MustBeNonEmpty();
             }
+            if (empty($this->parts)) {
+                return $this->orWith('1 = 0');
+            }
             return $this;
         }
         try {

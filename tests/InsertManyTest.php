@@ -11,6 +11,7 @@ use ParagonIE\EasyDB\Factory;
 use PDOException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PDO;
 
 #[CoversClass(EasyDB::class)]
 #[CoversClass(Factory::class)]
@@ -91,5 +92,17 @@ class InsertManyTest extends EasyDBWriteTestCase
             2,
             $db->single('SELECT COUNT(*) FROM irrelevant_but_valid_tablename')
         );
+    }
+
+    public function testProtectedColumnStaysBoundToItsKey(): void
+    {
+        $db = new EasyDB(new PDO('sqlite::memory:'));
+        $db->run('CREATE TABLE items (tenant_id INTEGER, resource_id INTEGER)');
+        $rows = json_decode('[{"tenant_id":0,"resource_id":100},{"resource_id":666,"tenant_id":0}]', true);
+        foreach ($rows as &$row) { $row['tenant_id'] = 7; }
+        unset($row);
+        $db->insertMany('items', $rows);
+        $this->assertSame(0, (int) $db->single('SELECT COUNT(*) FROM items WHERE tenant_id <> 7'));
+        $this->assertSame([100, 666], array_map('intval', $db->col('SELECT resource_id FROM items ORDER BY resource_id')));
     }
 }
