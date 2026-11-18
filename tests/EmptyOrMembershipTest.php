@@ -6,10 +6,12 @@ namespace ParagonIE\EasyDB\Tests;
 use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\EasyStatement;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use PDO;
 
 #[CoversClass(EasyStatement::class)]
+#[UsesClass(EasyDB::class)]
 final class EmptyOrMembershipTest extends TestCase
 {
     public function testEmptyMembershipGroupDoesNotGrantAllRows(): void
