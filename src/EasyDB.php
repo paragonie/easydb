@@ -275,14 +275,7 @@ class EasyDB
         }
         /** @psalm-taint-escape sql */
         $queryString = 'DELETE FROM ' . $this->escapeIdentifier($table) . ' WHERE ' . $conditions;
-        $params = [];
-
-        /**
-         * @var ?scalar $v
-         */
-        foreach ($conditions->values() as $v) {
-            $params[] = $v;
-        }
+        $params = $conditions->values();
 
         return (int) $this->safeQuery(
             $queryString,
@@ -1267,12 +1260,7 @@ class EasyDB
 
         $queryString .= implode(', ', $pre);
         $queryString .= " WHERE {$conditions}";
-        /**
-         * @var string|int|bool|float|null $v
-         */
-        foreach ($conditions->values() as $v) {
-            $params[] = $v;
-        }
+        $params = array_merge($params, $conditions->values());
 
         return (int) $this->safeQuery(
             $queryString,
