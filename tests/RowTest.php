@@ -4,15 +4,18 @@ declare(strict_types=1);
 namespace ParagonIE\EasyDB\Tests;
 
 use ParagonIE\EasyDB\EasyDB;
+use ParagonIE\EasyDB\EasyStatement;
 use ParagonIE\EasyDB\Exception\MustBeOneDimensionalArray;
 use ParagonIE\EasyDB\Factory;
 use PDO;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\UsesClass;
 
 #[CoversClass(EasyDB::class)]
 #[CoversClass(Factory::class)]
 #[CoversClass(MustBeOneDimensionalArray::class)]
+#[UsesClass(EasyStatement::class)]
 class RowTest extends SafeQueryTest
 {
     protected function getResultForMethod(EasyDB $db, $statement, $offset, $params)
