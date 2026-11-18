@@ -766,6 +766,7 @@ class EasyDB
             if (count($map) !== count($columns) || array_diff_key($first, $map)) {
                 throw new PDOException('Every map must contain the same columns.');
             }
+            /** @psalm-suppress MissingClosureReturnType */
             $parameterSets[] = array_map(static fn ($column) => $map[$column], $columns);
         }
         $queryString = $this->buildInsertQuery($table, $columns);
