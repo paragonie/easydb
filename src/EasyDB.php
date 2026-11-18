@@ -356,6 +356,9 @@ class EasyDB
                 );
             }
         }
+        if ($str === '') {
+            throw new InvalidIdentifier('Invalid identifier: Must be a non-empty string.');
+        }
 
         // MySQL allows weirdly wrong column names:
         if ($this->dbEngine !== 'mysql') {
