@@ -11,6 +11,7 @@ use ParagonIE\EasyDB\Exception\{
     QueryError
 };
 use PDO;
+use PDOException;
 use PDOStatement;
 use InvalidArgumentException;
 use Throwable;
@@ -755,6 +756,8 @@ class EasyDB
          */
         $first = $maps[$firstKey];
 
+        $columns = array_keys($first);
+        $parameterSets = [];
         /**
          * @var array $map
          */
@@ -764,9 +767,12 @@ class EasyDB
                     'Every map in the second argument should have the same number of columns.'
                 );
             }
+            if (count($map) !== count($columns) || array_diff_key($first, $map)) {
+                throw new PDOException('Every map must contain the same columns.');
+            }
+            $parameterSets[] = array_map(static fn ($column) => $map[$column], $columns);
         }
-
-        $queryString = $this->buildInsertQuery($table, array_keys($first));
+        $queryString = $this->buildInsertQuery($table, $columns);
 
         // Now let's run a query with the parameters
         $stmt = $this->prepare($queryString);
@@ -775,8 +781,8 @@ class EasyDB
         /**
          * @var array $params
          */
-        foreach ($maps as $params) {
-            $stmt->execute(array_values($params));
+        foreach ($parameterSets as $params) {
+            $stmt->execute($params);
             $count += $stmt->rowCount();
         }
         return $count;
